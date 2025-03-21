@@ -1063,6 +1063,70 @@ public $url_controller = URL_ADMIN . 'temas/';
         $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
+// DESASINGAR PÁGINAS DE TEMAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Mostrar formulario de cargue de archivo excel con listado de temas
+     * a los cuales se les desasingará las páginas de flipbooks que tenga
+     * 2025-02-25
+     */
+    function desasingar_paginas()
+    {
+        //Configuración
+            $data['help_note'] = 'Se desasignarán las páginas de flipbook asociadas a los temas';
+            $data['help_tips'] = array(
+                'La columna A no puede estar vacía.',
+                'Los registos de páginas se eliminarán pero los archivos no se borrarán.',
+            );
+            $data['template_file_name'] = 'f36_desasignacion_paginas_temas.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'temas';
+            $data['destination_form'] = 'admin/temas/desasingar_paginas_e';
+
+        //Vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Desasignar páginas';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = $this->views_folder . 'menus/explore_v';
+            $data['nav_3'] = $this->views_folder  . 'menus/importar_v';
+            
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Ejecuta la desasingación de páginas de flipbook asociadas 
+     * a los temas en archivo excel.
+     * 2025-02-25
+     */
+    function desasingar_paginas_e()
+    {
+        //Proceso
+        $this->load->library('excel_new');
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Tema_model->desasingar_paginas_masivo($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "admin/temas/desasingar_paginas/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado desasingar páginas';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = $this->views_folder . 'menus/explore_v';
+            $data['nav_3'] = $this->views_folder  . 'menus/importar_v';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
+    }
+
 // LECTURAS DINÁMICAS (ledin)
 //-----------------------------------------------------------------------------
 

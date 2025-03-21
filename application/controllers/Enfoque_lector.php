@@ -84,7 +84,7 @@ public $url_controller = URL_APP . 'enfoque_lector/';
         $data['head_title'] = 'Enfoque Lector';
         $data['view_a'] = $this->views_folder . 'chat_ele/chat_ele_v';
 
-        $filePath = PATH_CONTENT . 'chat_ele/respuestas_chat_ele.json';
+        $filePath = PATH_CONTENT . 'chat_ele/preguntas_chat_ele.json';
         $data['preguntas'] = $this->App_model->getJsonContent($filePath);
 
         $this->App_model->view('templates/easypml/empty', $data);

@@ -219,7 +219,7 @@
                             </div>
 
                             <!-- Mostrar imagen si la pregunta tiene respuestas en imagen -->
-                            <?php if ( ! is_null($row_pregunta->archivo_imagen) ) : ?>
+                            <?php if ( ! empty($row_pregunta->archivo_imagen) ) : ?>
                                 <div class="text-center mb-2">
                                     <div class="img-thumbnail">
                                         <img

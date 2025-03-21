@@ -7,6 +7,7 @@
         if ( $seccion == 'importar_pa_e' ) { $clases_sm['importar_pa'] = 'active'; }
         if ( $seccion == 'importar_lecturas_dinamicas_e' ) { $clases_sm['importar_lecturas_dinamicas'] = 'active'; }
         if ( $seccion == 'eliminar_preguntas_abiertas_e' ) { $clases_sm['eliminar_preguntas_abiertas'] = 'active'; }
+        if ( $seccion == 'desasingar_paginas_e' ) { $clases_sm['desasingar_paginas'] = 'active'; }
 
         $clases_sm[$seccion] = 'active';
     
@@ -59,10 +60,17 @@
             'link' => 'admin/temas/eliminar_preguntas_abiertas/',
             'atributos' => 'title="Eliminar preguntas abiertas"'
         );
+
+        $arr_menus['desasingar_paginas'] = array(
+            'icono' => '<i class="fa fa-file"></i>',
+            'texto' => 'Desasingar páginas',
+            'link' => 'admin/temas/desasingar_paginas/',
+            'atributos' => 'title="Desasingar páginas de los temas"'
+        );
         
     //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas', 'eliminar_preguntas_abiertas');
-        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas', 'eliminar_preguntas_abiertas');
+        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas', 'eliminar_preguntas_abiertas', 'desasingar_paginas');
+        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas', 'eliminar_preguntas_abiertas', 'desasingar_paginas');
         $elementos_rol[2] = array('importar', 'importar_ut');
         
     //Definiendo menú mostrar, según el rol del visitante

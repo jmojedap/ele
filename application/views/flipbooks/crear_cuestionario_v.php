@@ -121,9 +121,12 @@
                 <tr>
                     <td><?= form_checkbox($att_check) ?></td>
                     <td class="text-center <?= $clase_evaluado ?>"><i class="fa <?= $icono_evaluado ?>"></i></td>
-                    <td><?= $row_tema->nombre_tema ?></td>
+                    <td><?= $row_tema->nombre_tema ?> (<?= $row_tema->id ?>)</td>
                     <td class="<?php echo $clase ?>">
                         <?= $preguntas->num_rows(); ?>
+                        <?php if ( $this->session->userdata('rol_id') == 0 ) : ?>
+                            <?= json_encode($preguntas->result()); ?>
+                        <?php endif; ?>
                     </td>
 
                     <td><?= $row_tema->cod_tema ?></td>

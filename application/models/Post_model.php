@@ -460,11 +460,11 @@ class Post_model extends CI_Model{
 
     /**
      * Archivos asociadas al post y con una condición específica (album_id)
-     * 2024-08-02
+     * 2025-02-06
      */
     function files($post_id, $condition = null)
     {
-        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position, album_id, ext');
+        $this->db->select('files.id, files.title, url, url_thumbnail, files.integer_1 AS main, position, album_id, ext, integer_1');
         $this->db->where('table_id', '2000');      //Tabla post
         if ( ! is_null($condition) ) { $this->db->where($condition); }
         $this->db->where('related_1', $post_id);   //Relacionado con el post

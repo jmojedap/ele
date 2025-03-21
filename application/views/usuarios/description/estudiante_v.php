@@ -1,6 +1,6 @@
 <?php
     $nombre_institucion = $this->App_model->nombre_institucion($row->institucion_id, 1);
-    $nombre_grupo = 'NA';
+    $nombre_grupo = 'N/A';
     if ( $row->rol_id == 6 ) { $nombre_grupo = $this->App_model->nombre_grupo($row->grupo_id, 1); }
 ?>        
     
@@ -10,7 +10,7 @@
     <span class="text-muted">Username:</span>
     <b class="text-danger"><?= $row->username ?></b> &middot;
  
-    <span class="text-muted"><i class="fa fa-bank"></i></span>
+    <span class="text-muted"><i class="fas fa-university"></i></span>
     <b class="text-danger"><?= $nombre_institucion ?></b> &middot;
  
     <span class="text-muted">Grupo actual:</span>

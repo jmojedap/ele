@@ -230,12 +230,59 @@ class Cuestionarios extends CI_Controller{
     
 //DATOS DE CUESTIONARIO
 //------------------------------------------------------------------------------------------
+
+    /**
+     * Grupos y estudiantes que tienen asignado el cuestionario
+     * 2025-03-17
+     */
+    function grupos($cuestionario_id, $institucion_id = NULL, $grupo_id = 0)
+    {
+        // Cargar datos básicos
+        $data = $this->Cuestionario_model->basico($cuestionario_id);
+
+        // Obtener instituciones relacionadas con el cuestionario
+        $instituciones = $this->Cuestionario_model->instituciones($cuestionario_id);
+        $data['opciones_institucion'] = $this->Pcrn->opciones_dropdown($instituciones, 'id', 'nombre_institucion', 'Institución');
+
+        // Limitar institución si es usuario institucional
+        if ( $this->session->userdata('srol') == 'institucional' ) {
+            $institucion_id = $this->session->userdata('institucion_id');
+        }
+        // Seleccionar institución por defecto si no está definida
+        if ( is_null($institucion_id) && $instituciones->num_rows() > 0 ) {
+            $institucion_id = $instituciones->row()->id;
+        }
+
+        // Obtener grupos relacionados con el cuestionario y la institución
+        $grupos = $this->Cuestionario_model->grupos($cuestionario_id, $institucion_id);
+
+        // Seleccionar grupo por defecto si no está definido
+        if ( $grupo_id == 0 && $grupos->num_rows() > 0 ) {
+            $grupo_id = $grupos->row()->grupo_id;
+        }
+
+        // Obtener estudiantes del grupo seleccionado
+        $data['estudiantes'] = $this->Cuestionario_model->estudiantes($cuestionario_id, $grupo_id);
+        $data['estados_uc'] = $this->Item_model->arr_campo(151, 'item');
+        $data['estadosUC'] = $this->Item_model->arr_options('categoria_id = 151');
+
+        // Asignar variables a la vista
+        $data['instituciones'] = $instituciones;
+        $data['institucion_id'] = $institucion_id;
+        $data['grupos'] = $grupos;
+        $data['grupo_id'] = $grupo_id;
+
+        // Cargar vista
+        $data['view_a'] = 'cuestionarios/grupos/grupos_v';
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
     
     /**
      * Grupos y estudiantes que tienen asignado el cuestionario
      * 
      */
-    function grupos($cuestionario_id, $institucion_id = NULL, $grupo_id = NULL)
+    function grupos_ant($cuestionario_id, $institucion_id = NULL, $grupo_id = NULL)
     {
         //Cargando datos básicos (Cuestionario_model->basico)
             $data = $this->Cuestionario_model->basico($cuestionario_id);
@@ -536,6 +583,7 @@ class Cuestionarios extends CI_Controller{
     /**
      * AJAX
      * Eliminar un conjunto de asignaciones de cuestionario seleccionadas
+     * REEMPLAZADA POR api/cuestionarios/desasingar
      */
     function eliminar_seleccionados_uc()
     {
@@ -1234,7 +1282,7 @@ class Cuestionarios extends CI_Controller{
      * No elimina la asignación del usuario al cuestionario
      * @param type $uc_id 
      */
-    function reiniciar($uc_id, $destino = 1)
+    function z_reiniciar($uc_id, $destino = 1)
     {
         //Reiniciar cuestionario
             $row_uc = $this->Cuestionario_model->reiniciar($uc_id);

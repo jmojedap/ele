@@ -1,4 +1,5 @@
 <form accept-charset="utf-8" method="POST" id="pregunta_form" @submit.prevent="send_form">        
+    <input name="tema_id" type="hidden" class="form-control" v-model="form_values.tema_id">
     <fieldset v-bind:disabled="loading">
         <div class="form-group row">
             <div class="col-md-8 offset-md-4">
@@ -21,6 +22,23 @@
                     >
             </div>
         </div>
+
+        <!-- BUSCAR Y ASIGNAR TEMA -->
+        <?php if ( $this->session->userdata('srol') == 'interno' ) : ?>
+            <div class="mb-3 row">
+                <label for="nombre_tema" class="col-md-4 col-form-label text-end text-right">Tema</label>
+                <div class="col-md-8">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" readonly v-model="tema.nombre_tema">
+                        <div class="input-group-append">
+                            <button class="btn btn-light" type="button" id="button-addon1" v-on:click="removeTema"><i class="fas fa-times"></i></button>
+                            <button class="btn btn-light" type="button" id="button-addon2" data-toggle="modal" data-target="#temasModal"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+        
         <div class="form-group row">
             <label for="texto_pregunta" class="col-md-4 col-form-label text-right">Texto pregunta</label>
             <div class="col-md-8">

@@ -52,14 +52,6 @@ var chatEle = createApp({
         },
         loadIARespuesta: function(){
             typeText(this.respuesta, 10);
-            /*var formValues = new FormData(document.getElementById('ia-chat-form'))
-            axios.post(URL_API + 'chat_ele/get_answer/', formValues)
-            .then(response => {
-                if (response.data.answer.length > 0) {
-                    typeText(response.data.answer, 5);
-                }
-            })
-            .catch( function(error) {console.log(error)} )*/
         },
         agregarIAMensaje(chatElemento){
             this.iaChatMensajes.push(chatElemento)

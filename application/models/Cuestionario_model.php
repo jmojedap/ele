@@ -906,17 +906,19 @@ class Cuestionario_model extends CI_Model
     }
     
     /**
-     * Devuelve un query con los estudiantes de un grupo que están asignados con un determinado cuestionario
+     * Devuelve un query con los estudiantes de un grupo que están asignados con un
+     * determinado cuestionario
+     * 2025-03-21
      * 
-     * @param type $cuestionario_id
-     * @param type $grupo_id
-     * @return type 
+     * @param int $cuestionario_id :: ID del cuestionario
+     * @param int $grupo_id :: ID del grupo
+     * @return object $query :: Resultado de la consulta
      */
     function estudiantes($cuestionario_id, $grupo_id)
     {
         $select = 'nombre, apellidos';
         $select .= ', usuario_cuestionario.id AS uc_id, usuario_cuestionario.usuario_id, fecha_inicio, fecha_fin, usuario_cuestionario.estado';
-        $select .= ', inicio_respuesta';
+        $select .= ', inicio_respuesta, num_con_respuesta';
         
         $this->db->select($select);
         $this->db->join('usuario_cuestionario', 'usuario.id = usuario_cuestionario.usuario_id', 'LEFT');
@@ -935,17 +937,20 @@ class Cuestionario_model extends CI_Model
     
     /**
      * Devuelve un query con los grupos con estudiantes que están asignados a un determinado cuestionario
-     * @param type $cuestionario_id
-     * @return type 
+     * @param int $cuestionario_id :: ID del cuestionario
+     * @param int $institucion_id :: ID de la institución
+     * @return object $query :: Resultado de la consulta 
      */
     function grupos($cuestionario_id, $institucion_id = NULL)
     {
-        $this->db->select('grupo_id, institucion_id');
+        $this->db->select('grupo_id, grupo.institucion_id, nombre_grupo, nivel');
         $this->db->where('cuestionario_id', $cuestionario_id);
-        $this->db->group_by('grupo_id, institucion_id');
-        if ( ! is_null($institucion_id) ) { $this->db->where('institucion_id', $institucion_id); }
+        $this->db->group_by('grupo_id, grupo.institucion_id');
+        $this->db->join('grupo', 'usuario_cuestionario.grupo_id = grupo.id');
+        if ( ! is_null($institucion_id) ) { $this->db->where('usuario_cuestionario.institucion_id', $institucion_id); }
         
         $query = $this->db->get('usuario_cuestionario');
+        //echo $this->db->last_query();
         
         return $query;
     }
@@ -2282,8 +2287,10 @@ class Cuestionario_model extends CI_Model
         $preguntas = $this->Tema_model->preguntas($tema_id);
         foreach ( $preguntas->result() as $row_pregunta ) 
         {
-            $registro['pregunta_id'] = $row_pregunta->id;
-            $this->insertar_cp($registro);
+            if ( strlen($row_pregunta->tema_id) > 0 && $row_pregunta->tema_id == $tema_id ) {
+                $registro['pregunta_id'] = $row_pregunta->id;
+                $this->insertar_cp($registro);
+            }
         }
         
         $this->actualizar_areas($cuestionario_id);

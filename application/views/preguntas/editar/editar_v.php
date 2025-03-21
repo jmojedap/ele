@@ -7,6 +7,7 @@
             <div class="card">
                 <div class="card-body" id="edicion_pregunta">
                     <?php $this->load->view($view_form) ?>
+                    <?php $this->load->view('preguntas/editar/temas_modal_v') ?>
                 </div>
                 <?php $this->load->view('preguntas/editar/vue_v') ?>
             </div>
@@ -15,5 +16,8 @@
             <?php $this->load->view('preguntas/editar/archivo_v') ?>
         </div>
     </div>
+    
+    
+    
 </div>
 

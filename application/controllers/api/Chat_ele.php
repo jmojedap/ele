@@ -21,7 +21,7 @@ class Chat_ele extends CI_Controller{
             $filename = $this->input->post('filename_answer');
         }
 
-        $file_path = PATH_CONTENT . "chat_ele/{$filename}"; // Asegúrate de reemplazar 'archivo.txt' con el nombre de tu archivo
+        $file_path = PATH_CONTENT . "chat_ele/{$filename}";
         $data['answer'] = '';
         $data['error'] = '';
 

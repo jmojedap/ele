@@ -260,4 +260,92 @@ public $url_controller = URL_API . 'temas/';
         ->set_output(json_encode($data));
     }
 
+// ASIGNACIÓN DE CUESTIONARIOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Listado de estudiantes asignados a un cuestionario en un grupo específico
+     * 2025-03-17
+     */
+    function estudiantes($cuestionarioId, $grupoId)
+    {
+        $estudiantes = $this->Cuestionario_model->estudiantes($cuestionarioId, $grupoId);
+        $data['estudiantes'] = $estudiantes->result();
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * AJAX
+     * Eliminar un conjunto de asignaciones de cuestionario seleccionadas
+     * 2025-03-17
+     */
+    function desasignar()
+    {
+        $data['qty_deleted'] = 0;
+        $selected = json_decode($this->input->post('selected'), true);
+        
+        foreach ( $selected as $uc_id ) 
+        {
+
+            $row_uc = $this->Db_model->row_id('usuario_cuestionario', $uc_id);
+            $condition['usuario_id'] = $row_uc->usuario_id;
+            $condition['cuestionario_id'] = $row_uc->cuestionario_id;
+            $data['qty_deleted'] += $this->Cuestionario_model->eliminar_uc($condition);
+        }
+        
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Eliminar las respuestas de un estudiante para un cuestionario
+     * 2025-03-20
+     * 
+     * No elimina la asignación del usuario al cuestionario
+     * @param int $uc_id :: ID de la tabla usuario_cuestionario (UC)
+     */
+    function reiniciar($uc_id)
+    {
+        //Reiniciar cuestionario
+            $data['rowUC'] = $this->Cuestionario_model->reiniciar($uc_id);
+        
+        //Reiniciar, en tabla evento
+            $this->load->model('Evento_model');
+            $this->Evento_model->reiniciar_ctn($uc_id);
+
+        if ( ! is_null($data['rowUC']) ) {
+            $data = array('status' => 1, 'message' => 'Cuestionario reiniciado');
+        } else {
+            $data = array('status' => 0, 'message' => 'El cuestionario no se puede reiniciar');
+        }
+        
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        
+    }
+
+    /**
+     * AJAX JSON
+     * 
+     * Se ejecutan los procesos de finalización de un cuestionario, cálculo de
+     * totales, acumuladores
+     * 
+     * @param int $uc_id: ID registro en tabla usuario_cuestionario
+     */
+    function finalizar($uc_id)
+    {
+        $row_uc = $this->Db_model->row_id('usuario_cuestionario', $uc_id);
+        
+        $this->Cuestionario_model->generar_respuestas($uc_id);
+        $this->Cuestionario_model->actualizar_uc($uc_id);
+        $this->Cuestionario_model->finalizar($uc_id);
+        $this->Cuestionario_model->actualizar_acumuladores($row_uc->usuario_id);
+
+        $data['status'] = 1;
+        $data['message'] = 'Cuestionario finalizado';
+        
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

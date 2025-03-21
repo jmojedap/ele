@@ -277,6 +277,7 @@
                             <?php echo $estados_uc['0' . $row_estudiante->estado]; ?>
                         </td>
 
+                        <!-- CORRECTAS -->
                         <td class="centrado">
                             <?php if ( $row_estudiante->estado >= 3 ){ ?>
                                 <div class="progress">

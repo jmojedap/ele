@@ -579,11 +579,13 @@ class Tema_Model extends CI_Model{
     
     /**
      * Preguntas asociadas a un tema, filtradas por el tipo de pregunta
-     * 2020-02-13
+     * 2025-02-25
      */
     function preguntas($tema_id, $tipo_pregunta_id = 1)
     {
         $this->db->where('tema_id', $tema_id);
+        $this->db->where('tema_id IS NOT NULL');
+        $this->db->where('tema_id <> 0');
         $this->db->where('tipo_pregunta_id', $tipo_pregunta_id);
         $this->db->order_by('orden', 'ASC');
         $preguntas = $this->db->get('pregunta');
@@ -1630,6 +1632,54 @@ class Tema_Model extends CI_Model{
                 $qty_deleted = $this->db->affected_rows();
 
                 $data = array('status' => 1, 'text' => $qty_deleted . ' preguntas eliminadas', 'imported_id' => $row_data[1]);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
+    }
+
+// DESASIGNACIÓN MÁSIVA DE PÁGINAS DE TEMAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Desasinga masivamente páginas de flibpook a un listado de temas en archivo Excel.
+     * 2025-02-25
+     */
+    function desasingar_paginas_masivo($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->desasingar_paginas($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Desasinga las páginas a un tema
+     * 2025-02-25
+     */
+    function desasingar_paginas($row_data)
+    {
+        //Validar
+            $error_text = '';
+            if ( strlen($row_data[0]) == 0 ) { $error_text = "La columna A (Tema) está vacía. "; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                //Guardar en tabla item
+                $this->db->where('tema_id', $row_data[0]);   //ID tema
+                $this->db->delete('pagina_flipbook');
+                
+                $qty_deleted = $this->db->affected_rows();
+
+                $data = array('status' => 1, 'text' => $qty_deleted . ' páginas desasingadas', 'imported_id' => $row_data[0]);
             } else {
                 $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
             }

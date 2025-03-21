@@ -1,7 +1,7 @@
 <?php
 class File_model extends CI_Model{
 
-// FILE MODEL 2021-09-20
+// FILE MODEL 2025-02-06
 //-----------------------------------------------------------------------------
 
 // INFO FUNCTIONS
@@ -209,7 +209,7 @@ class File_model extends CI_Model{
     /**
      * Realiza el upload de un file al servidor, crea el registro asociado en
      * la tabla "file".
-     * 2022-09-07
+     * 2025-02-06
      */
     function upload($user_id, $file_id = NULL)
     {
@@ -285,6 +285,7 @@ class File_model extends CI_Model{
             $arr_row['table_id'] = ( ! is_null($this->input->post('table_id')) ) ? $this->input->post('table_id') : 0;
             $arr_row['related_1'] = ( ! is_null($this->input->post('related_1')) ) ? $this->input->post('related_1') : 0;
             $arr_row['album_id'] = ( ! is_null($this->input->post('album_id')) ) ? $this->input->post('album_id') : 0;
+            $arr_row['integer_1'] = ( ! is_null($this->input->post('integer_1')) ) ? $this->input->post('integer_1') : 0;
             $arr_row['position'] = $this->get_position($arr_row);
             $arr_row['updated_at'] = date('Y-m-d H:i:s');
             $arr_row['updater_id'] = $upload_data['user_id'];
@@ -433,20 +434,19 @@ class File_model extends CI_Model{
     
     /**
      * Crea los files miniaturas de una imagen y la recorta cuadrada
-     * 2022-12-06 se desactiva square_image
+     * 2025-02-06
      */
     function create_thumbnails($row_file)
     {
         $sizes = [];
-        $sizes[] = $this->create_thumbnail($row_file, 'sm_', 320);
-        //$this->square_image($row_file, 'sm_');
+        $sizes['320'] = $this->create_thumbnail($row_file, 'sm_', 320);
 
         return $sizes;
     }
     
     /**
      * Crea la miniatura de una imagen
-     * 2020-07-06
+     * 2025-02-06
      */
     function create_thumbnail($row_file, $prefix, $pixels)
     {
@@ -465,44 +465,14 @@ class File_model extends CI_Model{
                 $config['width'] = $pixels;
             }
 
-            $this->image_lib->initialize($config);
-            $this->image_lib->resize();
-            $this->image_lib->clear();
-
-        return $prefix . $pixels;
-    }
-
-    /**
-     * Recorta una imagen existente de forma cuadrada
-     */
-    function square_image($row_file, $prefix = 'sm_')
-    {
-        $this->load->library('image_lib');
-        $config['maintain_ratio'] = FALSE;
-        $config['image_library'] = 'gd2';
-        $config['library_path'] = '/usr/X11R6/bin/';
-        $config['source_image'] = PATH_UPLOADS . $row_file->folder . $prefix . $row_file->file_name;
-     
-        //Calcular dimensiones
-        $image_size = getimagesize($config['source_image']);
-        if ( $image_size[0] > $image_size[1] )
-        {
-            //Horizontal
-            $config['y_axis'] = 0;
-            $config['x_axis'] = intval(($image_size[0] - $image_size[1]) * 0.5);
-            $config['width'] = $image_size[1];
-            $config['height'] = $image_size[1];
-        } else {
-            //Vertical
-            $config['y_axis'] = intval(($image_size[1] - $image_size[0]) * 0.5);
-            $config['x_axis'] = 0;
-            $config['width'] = $image_size[0];
-            $config['height'] = $image_size[0];
+        $this->image_lib->initialize($config);    
+        
+        if ( ! $this->image_lib->resize()) {
+            return ['status' => 0, 'message' => $this->image_lib->display_errors(), 'config' => $config];
         }
-
-        $this->image_lib->initialize($config);
-        $this->image_lib->crop();
         $this->image_lib->clear();
+
+        return ['status' => 1, 'message' => 'Miniatura creada con éxito', 'path' => $config['new_image']];
     }
 
 // EDICIÓN Y CAMBIO
