@@ -1280,51 +1280,56 @@ class Cuestionario_model extends CI_Model
 
     /**
      * Crea una copia de un cuestionario, incluyendo las temas que lo componen
+     * 2025-05-13
      * 
-     * 
-     * @param type $datos
-     * @return type 
+     * @param array $datos
+     * @return int $cuestionario_id_nuevo :: ID del nuevo cuestionario 
      */
     function generar_copia($datos)
     {
+        // Validar entrada
+        if (empty($datos['cuestionario_id']) || !is_numeric($datos['cuestionario_id'])) {
+            return 0;
+        }
+
+        // Obtener el cuestionario original
+        $cuestionario = $this->Db_model->row_id('cuestionario', $datos['cuestionario_id']);
+        if (!$cuestionario) return 0;
+
+        // Convertir a array y limpiar campos no deseados
+        $aRow = (array) $cuestionario;
         
-        $row_cuestionario = $this->Pcrn->registro('cuestionario', "id = {$datos['cuestionario_id']}");  //Tema original
+        // Sobrescribir campos obligatorios
+        $aRow['creado'] = date('Y-m-d H:i:s');
+        $aRow['editado'] = date('Y-m-d H:i:s');
+        $aRow['creado_usuario_id'] = $this->session->userdata('usuario_id');
+        $aRow['editado_usuario_id'] = $this->session->userdata('usuario_id');
         
-        //Crear nuevo registro en la tabla cuestionario
-            $registro = array(
-                'nombre_cuestionario' => $datos['nombre_cuestionario'],
-                'anio_generacion' =>  $row_cuestionario->anio_generacion,
-                'nivel' =>  $row_cuestionario->nivel,
-                'area_id' =>  $row_cuestionario->area_id,
-                'unidad' =>  $row_cuestionario->unidad,
-                'institucion_id' =>  $this->session->userdata('institucion_id'),
-                'tipo_id' =>  $row_cuestionario->tipo_id,
-                'interno' =>  $row_cuestionario->interno,
-                'privado' =>  $row_cuestionario->privado,
-                'prueba_periodica' =>  $row_cuestionario->prueba_periodica,
-                'descripcion' =>  $datos['descripcion'],
-                'areas' =>  $row_cuestionario->areas,
-                'creado' =>  date('Y-m-d H:i:s'),
-                'editado' =>  date('Y-m-d H:i:s'),
-                'creado_usuario_id' => $this->session->userdata('usuario_id'),
-                'editado_usuario_id' => $this->session->userdata('usuario_id')
-            );
-        
-            $this->db->insert('cuestionario', $registro);
-            $cuestionario_id_nuevo = $this->db->insert_id();
-            
-        //Crear registros de temas incluidos. Tabla cuestionario_tema
-            $this->copiar_preguntas($datos['cuestionario_id'], $cuestionario_id_nuevo);
-            
-        return $cuestionario_id_nuevo;  //Se devuelve el id del nuevo cuestionario
+        // Sobrescribir con valores personalizados (si existen)
+        foreach ($datos as $key => $value) {
+            $aRow[$key] = $value;
+        }
+
+        // Limpiar campos que no deben ser copiados
+        unset($aRow['cuestionario_id'], $aRow['id']);
+
+        // Insertar el nuevo cuestionario
+        //echo json_encode($aRow);
+        $this->db->insert('cuestionario', $aRow);
+        $cuestionario_id_nuevo = $this->db->insert_id();
+
+        // Copiar preguntas/temas
+        $this->copiar_preguntas($datos['cuestionario_id'], $cuestionario_id_nuevo);
+
+        return $cuestionario_id_nuevo;
         
     }
     
     /**
      * Asignar las preguntas de un cuestionario a otro
      * 
-     * @param type $cuestionario_id
-     * @param type $cuestionario_id_nuevo
+     * @param int $cuestionario_id :: ID del cuestionario original
+     * @param int $cuestionario_id_nuevo :: ID del cuestionario nuevo
      */
     function copiar_preguntas($cuestionario_id, $cuestionario_id_nuevo)
     {
@@ -1333,6 +1338,10 @@ class Cuestionario_model extends CI_Model
         $this->db->where('cuestionario_id', $cuestionario_id);
         $this->db->order_by('orden', 'ASC');
         $preguntas = $this->db->get('cuestionario_pregunta');
+        /* echo "<br>";
+        echo json_encode($preguntas->num_rows());
+        echo "<br>";
+        echo json_encode($preguntas->result()); */
 
         foreach ( $preguntas->result() as $row_cp ) {
             $registro_cp['orden'] = $row_cp->orden;
@@ -1344,9 +1353,80 @@ class Cuestionario_model extends CI_Model
         $this->actualizar_areas($cuestionario_id);
     }
 
-    function agregar_pregunta($cuestionario_id, $orden)
+    /**
+     * Clonar masivamente cuestionarios
+     * 2025-05-13
+     */
+    function clonar_cuestionarios($arr_sheet)
     {
+        $data = array('qty_imported' => 0, 'results' => []);
         
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->clonar_cuestionario($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Clonación de un cuestionario, dentro de un proceso masivo
+     * 2025-05-13
+     */
+    function clonar_cuestionario($row_data)
+    {
+        $cuestionarioOriginal = $this->Db_model->row('cuestionario', "id = '{$row_data[0]}'");
+        $institucion = $this->Db_model->row('institucion', "cod = '{$row_data[1]}'");
+        $usuario = $this->Db_model->row('usuario', "id = '{$row_data[2]}'");
+        $tiposCuestionario = [1,2,3,4,5];
+
+        //Validar
+            $error_text = '';
+            if ( strlen($row_data[0]) == 0 ) { $error_text .= "La columna A (Cuestionario ID) está vacía. "; }
+
+            // Validar cuestionario
+            if ( is_null($cuestionarioOriginal) ) { $error_text .= 'El cuestionario con ID "' . $row_data[0] . '" no se encontró. '; } else {
+                $aRow['cuestionario_id'] = $cuestionarioOriginal->id;
+                $aRow['nombre_cuestionario'] = 'Copia de ' . $cuestionarioOriginal->nombre_cuestionario;
+                $aRow['descripcion'] = '(Copia) ' . $cuestionarioOriginal->descripcion;
+            }
+
+            //Validar institución
+            if ( is_null($institucion) ) {
+                $error_text .= 'La institución con ID "' . $row_data[1] . '" no se encontró. '; }
+            else {
+                $aRow['institucion_id'] = $institucion->id;
+            }
+
+            //Validar usuario
+            if ( is_null($usuario) ) {
+                $error_text .= 'El usuario con ID "' . $row_data[2] . '" no se encontró. '; }
+            else {
+                $aRow['creado_usuario_id'] = $usuario->id;
+                $aRow['editado_usuario_id'] = $usuario->id;
+            }
+
+            //Validar tipo de cuestionario
+            if ( ! in_array($row_data[3], $tiposCuestionario) ) {
+                $error_text .= 'El tipo de cuestionario "' . $row_data[3] . '" no es válido. '; }
+            else {
+                $aRow['tipo_id'] = $row_data[3];
+            }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                //Guardar en tabla programa
+                $saved_id = $this->generar_copia($aRow);
+
+                $data = array('status' => 1, 'text' => 'Cuestionario (' . $row_data[0] . ') clonado con ID: ' . $saved_id, 'imported_id' => $saved_id);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
     }
     
     function quitar_pregunta($cuestionario_id, $pregunta_id)

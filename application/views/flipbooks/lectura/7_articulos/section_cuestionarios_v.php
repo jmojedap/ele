@@ -1,4 +1,4 @@
-<h3 class="title-light">Selecciona el cuestionario para resolver o asingar</h3>
+<h3 class="title-light">Selecciona el cuestionario para resolver o asignar</h3>
 <table class="table bg-white mt-3">
     <tbody>
         <tr v-for="(cuestionario, key) in currentUnidad.cuestionarios">

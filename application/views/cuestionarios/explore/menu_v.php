@@ -6,12 +6,15 @@
     $cl_nav_2['cuestionarios_asignaciones'] = '';
     $cl_nav_2['cuestionarios_asignar_masivo'] = '';
     $cl_nav_2['cuestionarios_responder_masivo'] = '';
+    $cl_nav_2['cuestionarios_clonacion_masiva'] = '';
+    $cl_nav_2['cuestionarios_run_clonacion_masiva'] = '';
     $cl_nav_2['respuestas_cargar_json'] = '';
     
     $cl_nav_2[$app_cf_index] = 'active';
     if ( $app_cf_index == 'cuestionarios_responder_masivo_e' ) { $cl_nav_2['cuestionarios_responder_masivo'] = 'active'; }
     if ( $app_cf_index == 'cuestionarios_asignar_masivo_e' ) { $cl_nav_2['cuestionarios_responder_masivo'] = 'active'; }
     if ( $app_cf_index == 'respuestas_cargar_json_e' ) { $cl_nav_2['respuestas_cargar_json'] = 'active'; }
+    if ( $app_cf_index == 'cuestionarios_run_clonacion_masiva' ) { $cl_nav_2['cuestionarios_clonacion_masiva'] = 'active'; }
 ?>
 
 <script>
@@ -22,7 +25,7 @@
     sections.explorar = {
         icon: '',
         text: 'Explorar',
-        class: '<?php echo $cl_nav_2['cuestionarios_explorar'] ?>',
+        class: '<?= $cl_nav_2['cuestionarios_explorar'] ?>',
         cf: 'cuestionarios/explorar',
         anchor: true
     };
@@ -30,7 +33,7 @@
     sections.asignaciones = {
         icon: '',
         text: 'Asignaciones',
-        class: '<?php echo $cl_nav_2['cuestionarios_asignaciones'] ?>',
+        class: '<?= $cl_nav_2['cuestionarios_asignaciones'] ?>',
         cf: 'cuestionarios/asignaciones',
         anchor: true
     };
@@ -38,7 +41,7 @@
     sections.asignar_masivo = {
         icon: '',
         text: 'Asignar',
-        class: '<?php echo $cl_nav_2['cuestionarios_asignar_masivo'] ?>',
+        class: '<?= $cl_nav_2['cuestionarios_asignar_masivo'] ?>',
         cf: 'cuestionarios/asignar_masivo',
         anchor: true
     };
@@ -46,7 +49,7 @@
     sections.responder_masivo = {
         icon: '',
         text: 'Cargar respuestas',
-        class: '<?php echo $cl_nav_2['cuestionarios_responder_masivo'] ?>',
+        class: '<?= $cl_nav_2['cuestionarios_responder_masivo'] ?>',
         cf: 'cuestionarios/responder_masivo',
         anchor: true
     };
@@ -54,22 +57,30 @@
     sections.cargar_json = {
         icon: '',
         text: 'Respuestas JSON',
-        class: '<?php echo $cl_nav_2['respuestas_cargar_json'] ?>',
+        class: '<?= $cl_nav_2['respuestas_cargar_json'] ?>',
         cf: 'respuestas/cargar_json',
+        anchor: true
+    };
+
+    sections.clonacion_masiva = {
+        icon: '',
+        text: 'Clonar',
+        class: '<?= $cl_nav_2['cuestionarios_clonacion_masiva'] ?>',
+        cf: 'cuestionarios/clonacion_masiva',
         anchor: true
     };
 
     sections.nuevo = {
         icon: '',
         text: 'Crear',
-        class: '<?php echo $cl_nav_2['cuestionarios_nuevo'] ?>',
+        class: '<?= $cl_nav_2['cuestionarios_nuevo'] ?>',
         cf: 'cuestionarios/nuevo/add',
         anchor: true
     };
     
     //Secciones para cada rol
-    sections_rol.dvlp = ['explorar', 'nuevo', 'asignar_masivo', 'responder_masivo', 'cargar_json'];
-    sections_rol.admn = ['explorar', 'nuevo', 'asignar_masivo', 'responder_masivo', 'cargar_json'];
+    sections_rol.dvlp = ['explorar', 'nuevo', 'asignar_masivo', 'responder_masivo', 'cargar_json', 'clonacion_masiva'];
+    sections_rol.admn = ['explorar', 'nuevo', 'asignar_masivo', 'responder_masivo', 'cargar_json', 'clonacion_masiva'];
     sections_rol.edtr = ['explorar', 'nuevo', 'asignar_masivo'];
     sections_rol.ains = ['explorar', 'nuevo'];
     sections_rol.dirc = ['explorar', 'nuevo'];

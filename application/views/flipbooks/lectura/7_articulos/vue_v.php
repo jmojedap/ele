@@ -32,7 +32,7 @@ var flipbookApp = createApp({
                 numero:1,
                 titulo:'Unidad 1',
                 subtitulo:'',
-                html:'<h1>Probando</h1>'
+                html:'<h1>Cargando</h1>'
             },
             anotaciones: [],
             anotacion: {anotacion: '', calificacion: 0},

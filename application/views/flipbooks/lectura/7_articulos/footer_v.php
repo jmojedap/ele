@@ -19,9 +19,9 @@
     </div>
 
     <div>
-        <?php $this->load->view('flipbooks/lectura/6_articulos/audios_button_v') ?>
-        <?php $this->load->view('flipbooks/lectura/6_articulos/animaciones_button_v') ?>
-        <?php //$this->load->view('flipbooks/lectura/6_articulos/quices_button_v') ?>
+        <?php $this->load->view('flipbooks/lectura/7_articulos/audios_button_v') ?>
+        <?php $this->load->view('flipbooks/lectura/7_articulos/animaciones_button_v') ?>
+        <?php $this->load->view('flipbooks/lectura/7_articulos/quices_button_v') ?>
 
         <!-- Links asociados al tema DESACTIVADOS 2024-07-07 -->
         <!-- <div class="btn-group dropup">

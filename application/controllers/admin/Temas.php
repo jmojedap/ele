@@ -1063,12 +1063,12 @@ public $url_controller = URL_ADMIN . 'temas/';
         $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
-// DESASINGAR PÁGINAS DE TEMAS
+// DESASIGNAR PÁGINAS DE TEMAS
 //-----------------------------------------------------------------------------
 
     /**
      * Mostrar formulario de cargue de archivo excel con listado de temas
-     * a los cuales se les desasingará las páginas de flipbooks que tenga
+     * a los cuales se les desasignará las páginas de flipbooks que tenga
      * 2025-02-25
      */
     function desasingar_paginas()

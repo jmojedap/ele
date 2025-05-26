@@ -493,31 +493,6 @@ class Cuestionarios extends CI_Controller{
             $data['view_a'] = 'cuestionarios/asignar/asignar_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
-    
-    /**
-     * AJAX JSON
-     * Asigna un cuestionario a un grupo (tabla meta), crea el evento de asignación
-     * en la tabla evento, asigna el cuestionario a los estudiantes del grupo 
-     * (tabla usuario_cuestionario).
-     * 
-     * @param type $cuestionario_id
-     */
-    function asignar_e_ant($cuestionario_id)
-    {
-        $resultado = array('ejecutado' => 0, 'mensaje' => 'Asignaciones NO creadas');
-
-        $cg_id = $this->Cuestionario_model->asignar($cuestionario_id);
-        $resultado = $this->Cuestionario_model->asignar_estudiantes($cg_id);
-        
-        if ( $cg_id > 0 ) 
-        {
-            $resultado['ejecutado'] = 1;
-            $resultado['mensaje'] = 'El cuestionario fue asignado, evento: ' . $cg_id;
-            $resultado['cg_id'] = $cg_id;
-        }
-        
-        $this->output->set_content_type('application/json')->set_output(json_encode($resultado));
-    }
 
     /**
      * AJAX JSON
@@ -583,7 +558,7 @@ class Cuestionarios extends CI_Controller{
     /**
      * AJAX
      * Eliminar un conjunto de asignaciones de cuestionario seleccionadas
-     * REEMPLAZADA POR api/cuestionarios/desasingar
+     * REEMPLAZADA POR api/cuestionarios/desasignar
      */
     function eliminar_seleccionados_uc()
     {
@@ -676,6 +651,66 @@ class Cuestionarios extends CI_Controller{
             $data['view_a'] = 'app/resultado_cargue_v';
             $data['head_subtitle'] = 'Resultado cargue';
             $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+// CLONACIÓN MASIVA DE CUESTIONARIOS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Mostrar formulario de cargue de archivo excel con listado de cuestionarios
+     * que serán clonadados o copiados masivamente.
+     * 2025-05-13
+     */
+    function clonacion_masiva()
+    {
+        //Configuración
+            $data['help_note'] = '¿Cómo clonar cuestionarios?';
+            $data['help_tips'] = array(
+                'La columna A no puede estar vacía.',
+            );
+            $data['template_file_name'] = 'f37_clonacion_cuestionarios.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'cuestionarios';
+            $data['destination_form'] = 'cuestionarios/run_clonacion_masiva';
+
+        //Vista
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Clonar masivamente';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
+            
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Ejecuta la importación de datos de programas masivamente desde archivo excel
+     * 2021-03-30
+     */
+    function run_clonacion_masiva()
+    {
+        //Proceso
+        $this->load->library('excel_new');
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Cuestionario_model->clonar_cuestionarios($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "cuestionarios/clonacion_masiva/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Cuestionarios';
+            $data['head_subtitle'] = 'Resultado clonación masiva';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = 'cuestionarios/explore/menu_v';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
     
 //RESOLVER CUESTIONARIO

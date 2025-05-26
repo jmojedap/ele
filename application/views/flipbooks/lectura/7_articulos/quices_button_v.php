@@ -4,6 +4,7 @@
     target="_blank"
     v-show="quiz.tema_id == currentArticulo.tema_id"
     class="btn btn-light" type="button"
+    title="Responder quiz"
     >
     <img src="<?= URL_IMG . 'flipbook/quices.png' ?>">
 </a>

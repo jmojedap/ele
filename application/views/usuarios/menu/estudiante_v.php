@@ -32,7 +32,7 @@
         
         $arr_menus['anotaciones'] = array(
             'icono' => '<i class="far fa-sticky-note"></i>',
-            'texto' => 'Anotaciones',
+            'texto' => 'Escribe',
             'link' => "usuarios/anotaciones/{$usuario_id}",
             'atributos' => ''
         );
@@ -53,7 +53,7 @@
 
         $arr_menus['actividad_links'] = array(
             'icono' => '',
-            'texto' => 'Links',
+            'texto' => 'Gamificados',
             'link' => "usuarios/actividad_links/{$usuario_id}",
             'atributos' => ''
         );

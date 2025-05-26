@@ -28,7 +28,8 @@ var edicion_preguntas = new Vue({
     methods: {
         send_form: function(){
             this.loading = true
-            axios.post(URL_API + 'preguntas/save/' + this.pregunta_id, $('#pregunta_form').serialize())
+            var formValues = new FormData(document.getElementById('pregunta_form'))
+            axios.post(URL_API + 'preguntas/save/' + this.pregunta_id, formValues)
             .then(response => {
                 toastr['success'](response.data.message)
                 this.loading = false

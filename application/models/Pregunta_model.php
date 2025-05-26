@@ -70,8 +70,8 @@ class Pregunta_model extends CI_Model{
     /**
      * String con condición WHERE SQL para filtrar post
      * 
-     * @param type $filters
-     * @return type
+     * @param array $filters
+     * @return string $condition :: Condición SQL
      */
     function search_condition($filters)
     {
@@ -167,7 +167,7 @@ class Pregunta_model extends CI_Model{
     
     /**
      * Devuelve segmento SQL
-     * 2020-06-01 (Filtro únidad temática)
+     * 2025-05-21 (Filtro únidad temática, doble paréntesis)
      */
     function role_filter()
     {
@@ -179,8 +179,7 @@ class Pregunta_model extends CI_Model{
             $condition = 'id > 0';
         } elseif ( in_array($row_usuario->rol_id, array(3,4,5)) ) {    //Usuarios institucionales
             //Preguntas propias -ó- las de En Línea Editores, que sean de Unidad Temáica (tipo 2)
-            $condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1 AND tema_id IN (SELECT id FROM tema WHERE tema.tipo_id = 2))";
-            //$condition = "(creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1)";
+            $condition = "((creado_usuario_id = {$row_usuario->id}) OR (tipo_pregunta_id = 1 AND tema_id IN (SELECT id FROM tema WHERE tema.tipo_id = 2)))";
         }
         
         return $condition;

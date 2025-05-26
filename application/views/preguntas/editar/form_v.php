@@ -29,7 +29,7 @@
                 <label for="nombre_tema" class="col-md-4 col-form-label text-end text-right">Tema</label>
                 <div class="col-md-8">
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" readonly v-model="tema.nombre_tema">
+                        <input type="text" class="form-control" disabled v-model="tema.nombre_tema">
                         <div class="input-group-append">
                             <button class="btn btn-light" type="button" id="button-addon1" v-on:click="removeTema"><i class="fas fa-times"></i></button>
                             <button class="btn btn-light" type="button" id="button-addon2" data-toggle="modal" data-target="#temasModal"><i class="fas fa-search"></i></button>

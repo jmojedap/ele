@@ -43,7 +43,7 @@
 
     sections.anotaciones = {
         icon: '',
-        text: 'Anotaciones',
+        text: 'Escribe',
         class: '<?php echo $cl_nav_2['grupos_anotaciones'] ?>',
         cf: 'grupos/anotaciones/' + element_id,
         anchor: true
@@ -59,7 +59,7 @@
 
     sections.actividad_links = {
         icon: '',
-        text: 'Links',
+        text: 'Gamificados',
         class: '<?php echo $cl_nav_2['grupos_actividad_links'] ?>',
         cf: 'grupos/actividad_links/' + element_id,
         anchor: true

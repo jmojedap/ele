@@ -525,7 +525,7 @@ class Product_model extends CI_Model{
                 $product_id = $this->pml->if_strlen($row_data[0], 0);
                 $data_save = $this->save("id = {$product_id}", $arr_row);
 
-                //Asingar instituciones
+                //Asignar instituciones
                 if ( strlen($row_data[15]) > 0 )
                 {
                     $arr_institutions = explode(',',$row_data[15]);

@@ -31,9 +31,9 @@
     
                     <?php if ( $this->session->userdata('rol_id') <= 1 ) : ?>                
                         <td>
-                            <?php echo anchor("quices/editar/edit/{$row_quiz->id}", '<i class="fa fa-pencil-alt"></i>', 'class="btn btn-sm btn-light"') ?>
+                            <?php echo anchor("quices/construir/{$row_quiz->id}", '<i class="fa fa-pencil-alt"></i>', 'class="btn btn-sm btn-light"') ?>
                             <?php echo $this->Pcrn->anchor_confirm("admin/temas/quitar_quiz/{$row->id}/{$row_quiz->id}", '<i class="fa fa-times"></i>', 'class="btn btn-sm btn-light" title="Quitar evidencia de este tema"', 'Se retirará el quiz de este tema. No se elimina. ¿Desea continuar?') ?>
-                            <?php echo $this->Pcrn->anchor_confirm("quices/eliminar/{$row_quiz->id}/{$row->id}", '<i class="fa-solid fa-trash"></i>', 'class="btn btn-sm btn-light" title="Eliminar evidencia"') ?>
+                            <?php echo $this->Pcrn->anchor_confirm("quices/eliminar/{$row_quiz->id}/{$row->id}", '<i class="fa fa-trash"></i>', 'class="btn btn-sm btn-light" title="Eliminar evidencia"') ?>
                         </td>
                     <?php endif ?>
                 </tr>

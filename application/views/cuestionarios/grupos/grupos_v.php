@@ -13,7 +13,7 @@
             <?php endif; ?>
 
             <div class="list-group">
-                <a href="" class="list-group-item" v-for="grupo in grupos" v-bind:class="{active: grupoId == grupo.grupo_id}">
+                <a v-for="grupo in grupos" v-bind:href="`<?= URL_APP . 'cuestionarios/grupos/' ?>` + cuestionario.id + `/` + grupo.institucion_id + `/` + grupo.grupo_id" class="list-group-item"  v-bind:class="{active: grupoId == grupo.grupo_id}">
                     Grupo {{ grupo.nombre_grupo }}
                 </a>
             </div>

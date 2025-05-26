@@ -575,9 +575,9 @@ class Develop extends CI_Controller {
 
     function test()
     {
-        $data['head_title'] = 'Pruebas contraseñas';
+        $data['head_title'] = 'Pruebas';
         $data['view_a'] = 'app/test_v';
-        $this->App_model->view(TPL_ADMIN, $data);
+        $this->load->view('app/test_v', $data);
     }
 
     /**

@@ -23,7 +23,7 @@
     }
 ?>
 
-<link rel="stylesheet" href="<?= URL_RESOURCES ?>css/monster/inicio_cards_v1.css">
+<link rel="stylesheet" href="<?= URL_RESOURCES ?>css/monster/inicio_cards_v2.css">
 
 <div id="inicio_app" class="container_narrow">
     <div class="row">

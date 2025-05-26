@@ -11,8 +11,7 @@
       <div class="modal-body">
 
           <input
-              name="buscar" type="text" class="form-control mb-1"
-              required
+              type="text" class="form-control mb-1"
               title="Buscar por nombre, código o ID" placeholder="Buscar por nombre, código o ID"
               v-model="fields.q" v-on:change="getTemas"
           >
