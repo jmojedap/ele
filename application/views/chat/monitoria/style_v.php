@@ -6,7 +6,7 @@
         display: flex;
         flex-direction: column;
         margin: 0 auto;
-        height: calc(100vh - 65px);
+        height: calc(100vh - 250px);
         font-family: "Noto Sans", sans-serif;
         font-optical-sizing: auto;
         font-weight: <weight>;

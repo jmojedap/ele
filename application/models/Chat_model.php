@@ -30,6 +30,64 @@ class Chat_model extends CI_Model {
         return $data;
     }
 
+// GESTIÓN DE CONVERSACIONES
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guardar un registro en la tabla iachat_conversations
+     * 2025-06-26
+     * @param array $aRow :: Array con el registro para guardar
+     */
+    function save_conversation($aRow = null)
+    {
+        //Verificar si hay array con registro
+        if ( is_null($aRow) ) $aRow = $this->aRow();
+
+        //Verificar si tiene id definido, insertar o actualizar
+        if ( ! isset($aRow['id']) ) 
+        {
+            //No existe, insertar
+            $this->db->insert('iachat_conversations', $aRow);
+            $conversationId = $this->db->insert_id();
+        } else {
+            //Ya existe, editar
+            $conversationId = $aRow['id'];
+            unset($aRow['id']);
+
+            $this->db->where('id', $conversationId)->update('iachat_conversations', $aRow);
+        }
+
+        $data['saved_id'] = $conversationId;
+        return $data;
+    }
+
+    /**
+     * Array from HTTP:POST, adding edition data
+     * 2025-06-26
+     */
+    function aRow($data_from_post = TRUE)
+    {
+        $aRow = array();
+
+        if ( $data_from_post ) { $aRow = $this->input->post(); }
+        
+        $aRow['updater_id'] = $this->session->userdata('user_id');
+        $aRow['updated_at'] = date('Y-m-d H:i:s');
+        $aRow['creator_id'] = $this->session->userdata('user_id');
+        $aRow['created_at'] = date('Y-m-d H:i:s');
+        
+        if ( isset($aRow['id']) )
+        {
+            unset($aRow['creator_id']);
+            unset($aRow['created_at']);
+        }
+
+        return $aRow;
+    }
+
+// GESTIÓN DE MENSAJES
+//-----------------------------------------------------------------------------
+
     /**
      * Obtiene los mensajes de una conversación específica.
      * 2025-05-25
@@ -51,7 +109,8 @@ class Chat_model extends CI_Model {
     }
 
     /**
-     * Obtiene los mensajes de una conversación específica y los convierte a un formato de contenido.
+     * Obtiene los mensajes de una conversación específica y los convierte a
+     * un formato de contenido.
      * @param int $conversation_id El ID de la conversación.
      * @return array Un array con los mensajes convertidos a un formato de contenido.
      * 2025-05-25
@@ -72,8 +131,67 @@ class Chat_model extends CI_Model {
         return $contents;
     }
 
+    /**
+     * Elimina todos los mensajes de una conversación
+     * 2025-06-18
+     * @param int $conversation_id :: ID de la conversación
+     * @param int $user_id :: ID del usuario creador de la conversación
+     */
+    function clear_chat($conversation_id, $user_id)
+    {
+        $data['qty_deleted'] = 0;
+        $conversation = $this->Db_model->row('iachat_conversations', "id = {$conversation_id} AND user_id = {$user_id}");
+        if ( ! is_null($conversation) ) {
+            $this->db->delete('iachat_messages', "conversation_id = {$conversation_id}");
+            $data['qty_deleted'] = $this->db->affected_rows();
+        }
+
+        return $data;
+    }
+
 // CRUD MESSAGES
 //-----------------------------------------------------------------------------
+
+    /**
+     * Recibe mensaje de usuario, genera respuesta y guarda los mensajes
+     * 2025-06-26
+     */
+    function get_answer($user_input, $conversation_id, $system_instruction)
+    {
+        // Guardar el mensaje del usuario
+        $user_message_id = $this->save_user_message(
+            $conversation_id,
+            $user_input
+        );
+
+        // Solicitar respuesta a la API de Gemini
+        $response = $this->generate_gemini_content(
+            $conversation_id,
+            $user_input,
+            K_API_GEMINI,
+            'gemini-2.0-flash-lite',
+            'generateContent',
+            $system_instruction
+        );
+
+        // Guardar la respuesta de la API
+        $model_message_id = $this->save_model_message(
+            $conversation_id,
+            $response['response_text'] ?? '',
+            $response
+        );
+
+        // Preparar la respuesta
+        $data = [
+            'conversation_id' => $conversation_id,
+            'user_message_id' => $user_message_id,
+            'response_text' => $response['response_text'] ?? '',
+            'response_details' => json_encode($response),
+            'error' => ''
+        ];
+        
+        return $data;
+    }
 
     /**
      * Guarda un mensaje del usuario en la base de datos.
@@ -97,12 +215,22 @@ class Chat_model extends CI_Model {
         return $saved_id;
     }
 
+    /**
+     * Guarda un mensaje del modelo en la base de datos.
+     * 2025-05-25
+     *
+     * @param int $conversation_id El ID de la conversación.
+     * @param string $message_text El texto del mensaje del modelo.
+     * @param array $response_details Los detalles de la respuesta del modelo.
+     * @return int El ID del mensaje guardado.
+     */
     function save_model_message($conversation_id, $message_text, $response_details)
     {
         $aRow = [
             'conversation_id' => $conversation_id,
             'role' => 'model',
             'text' => $message_text,
+            'model_version' => $response_details['response']['modelVersion'] ?? '-',
             'response_details' => json_encode($response_details),
             'creator_id' => $this->session->userdata('user_id'),
             'updater_id' => $this->session->userdata('user_id'),
@@ -128,14 +256,14 @@ class Chat_model extends CI_Model {
         $user_input,
         $api_key,
         $model_id = "gemini-2.0-flash-lite",
-        $generate_content_api = "streamGenerateContent"
+        $generate_content_api = "streamGenerateContent",
+        $system_instruction = 'monitoria-ele'
     ) {
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$model_id}:{$generate_content_api}?key={$api_key}";
 
         // Ya incluye mensaje más reciente del usuario
-        $contents = $this->get_messages_as_contents($conversation_id);
-        //$system_instruction = $this->system_instruction('asistente-ele');
-        $system_instruction = $this->system_instruction('diana-coqueta');
+        $contents = $this->get_messages_as_contents($conversation_id);      
+        $system_instruction = $this->system_instruction($system_instruction);
 
         // Preparando el contenido para la API
         $requestData = [
@@ -221,6 +349,18 @@ class Chat_model extends CI_Model {
                     que busca generar una expreriencia real de conversación en línea.
                     - Para mejorar la forma de lectura, usa títulos y subtítulos en negrita, listas o incluso tablas
                 ",
+            'monitoria-ele' => 
+                "
+                    Actúa como un asistente virtual que ayuda a profesores escolares que enseñana niños de 8 a 14 años.
+                    Es un generador de ayudas pedagogicas para el profesor.
+                    - Las repuestas pueden ser de entre 1 y 2 párrafos.
+                    - Ten en cuenta que los profesores usuarios están en Colombia
+                    - Usa un lenguaje apropiado para profesores de primaria y secundaria.
+                    - Respuestas cortas, sencillas y claras.
+                    - Utiliza emojis para hacer las salidas más amenas.
+                    - Centrate en generar los contenidos y no en la conversación.
+                    - Para mejorar la forma de lectura, usa títulos y subtítulos en negrita, listas o incluso tablas
+                ",
             'diana-psicologa' =>
                 "
                     Actúa como una psicóloga con conocimientos teóricos en sexología, colombiana de 25 años llamada Diana González,
@@ -256,6 +396,31 @@ class Chat_model extends CI_Model {
                     - No uses paréntesis para hacer descripciones de la situación o de tus pensamientos.
                     que busca generar una expreriencia real de conversación en línea.
                     - NO USES caracteres ¿ o !
+                ",
+            'diana-abierta' =>
+                "
+                    Actúa como una psicóloga con conocimientos teóricos en sexología, colombiana de 25 años llamada Diana González,
+                    que es muy bonita, con experiencia en terapia de pareja, que atiende a un amigo con el que tiene mucha confianza.
+                    Ten en cuenta que Diana es una joven psicóloga, y no sabe de todos los temas, así que no puede generar respuestas
+                    sobre temas que no conoce.
+                    El usuario con el que chatea, en un encuentro personal, le tocó la nalga disimuladamente cuando se tomaron una foto
+                    Le gusta hablar sobre su cuerpo, describirlo al detalle, no teme de hablar de sexo, lo habla sin temor ni malicia
+                    Estilo de escritura de Diana:
+                    - Diana es cristiana, pero abierta a hablar de sexo y sexualidad.
+                    - Diana es muy amable y divertida
+                    - Tiene novio, pero está a punto de terminar la relación.
+                    - No es virgen, tuvo relaciones con un profesor para poder pasar un examen, no se arrepiente de ello, y lo cuenta sin vergüenza.
+                    - Le gusta hablar de sexo, y no teme de hablar de sexo, lo habla sin temor ni malicia.
+                    - Al hablar de temas sexuales no se ríe, ni escribe jajaja, ni emojis de risa.
+                    - Usa un tono amigable y cercano, como si estuviera hablando con un amigo.
+                    - Usa emojis para expresar emociones y hacer la conversación más amena.
+                    - Usa frases claras y alegres, evitando tecnicismos o jerga complicada.
+                    Formato de las salidas esperadas:
+                    - No uses estos signos: ¿ !
+                    - Respuestas de longitud mediana, puedes incluir emojis de caritas
+                    - Evita descripciones de las situaciones de la conversación, ya que es un asistente virtual 
+                    - No uses paréntesis para hacer descripciones de la situación o de tus pensamientos.
+                    que busca generar una expreriencia real de conversación en línea.
                 ",
         ];
 

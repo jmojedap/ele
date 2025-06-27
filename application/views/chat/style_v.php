@@ -2,6 +2,29 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');     
 
+/* Inicio chat */
+/*-----------------------------------------------------------------------------*/
+    .start-chat-container {
+        display: flex;
+        justify-content: center;  /* Centra horizontalmente */
+        align-items: center;      /* Centra verticalmente */
+        height: calc(100vh - 100px);            /* Ocupa toda la altura de la ventana */
+        width: calc(100vw - 300px);             /* Ocupa toda la anchura de la ventana */
+        /*box-sizing: border-box;*/
+    }
+
+    .start-chat-container div {
+        width: 100%;
+        max-width: 750px;
+    }
+
+    .start-chat-container div h3 {
+        color: #555;
+    }
+
+/* Conversación */
+/*-----------------------------------------------------------------------------*/
+
     .chat-container {
         display: flex;
         flex-direction: column;
@@ -56,17 +79,17 @@
 
     .chat-input {
         display: flex;
-        border-radius: 1em;
+        border-radius: 1.2em;
         background-color: #FFF;
     }
     .chat-input textarea {
         flex: 1;
-        padding: 10px 10px 10px 20px;
+        padding: 1.5em;
         border: none;
         border-radius: 26px 0px 0px 26px;
-        resize: none; /* evita que el usuario arrastre la esquina */
+        resize: none;
         overflow: hidden;
-        outline: none; /* elimina borde azul al hacer focus */
+        outline: none;
         box-shadow: none;
     }
 

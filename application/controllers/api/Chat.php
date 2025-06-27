@@ -14,26 +14,31 @@ class Chat extends CI_Controller{
 //---------------------------------------------------------------------------------------------------
 //
 
-    function get_answer_ant()
-    {   
-        $filename = 'mercurio.txt';
-        if ( strlen($this->input->post('filename_answer')) > 0 ) {
-            $filename = $this->input->post('filename_answer');
-        }
+    /**
+     * Crear conversación a partir del primer mensaje o solicitud
+     * de un usuario
+     * 2025-06-26
+     */
+    function create_conversation()
+    {
+        $aRow = $this->Db_model->arr_row(false);
+        $aRow['name'] = 'Conversación ' . date('Y-m-d');
+        $aRow['user_id'] = $this->session->userdata('user_id');
+        
+        $conversationData = $this->Chat_model->save_conversation($aRow);
 
-        $file_path = PATH_CONTENT . "chat_ele/{$filename}";
-        $data['answer'] = '';
-        $data['error'] = '';
-
-        // Verificar si el archivo existe
-        if (file_exists($file_path)) {
-            // Leer el contenido del archivo
-            $data['answer'] = file_get_contents($file_path);
-        } else {
-            // Manejar el caso donde el archivo no existe
-            $data['error'] =  "El archivo no existe.";
+        $user_input = $this->input->post('user_input');
+        
+        $data['conversation_id'] = 0;
+        if ( $conversationData['saved_id'] > 0 ) {
+            $data = $this->Chat_model->get_answer(
+                $user_input,
+                $conversationData['saved_id'],
+                'diana-coqueta'
+            );
         }
         
+        //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
@@ -44,25 +49,27 @@ class Chat extends CI_Controller{
     function get_answer()
     {
         $user_input = $this->input->post('user_input');
+        $conversation_id = $this->input->post('conversation_id');
 
         // Guardar el mensaje del usuario
         $user_message_id = $this->Chat_model->save_user_message(
-            $this->input->post('conversation_id'),
+            $conversation_id,
             $user_input
         );
 
         // Solicitar respuesta a la API de Gemini
         $response = $this->Chat_model->generate_gemini_content(
-            $this->input->post('conversation_id'),
+            $conversation_id,
             $user_input,
             K_API_GEMINI,
             'gemini-2.0-flash-lite',
-            'generateContent'
+            'generateContent',
+            'diana-coqueta'
         );
 
         // Guardar la respuesta de la API
         $model_message_id = $this->Chat_model->save_model_message(
-            $this->input->post('conversation_id'),
+            $conversation_id,
             $response['response_text'] ?? '',
             $response
         );
@@ -77,5 +84,23 @@ class Chat extends CI_Controller{
         
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Elimina todos los mensajes de una conversación, de la tabla
+     * ia_chat_messages
+     * 2025-06-18
+     */
+    function clear_chat()
+    {
+
+        $user_id = $this->input->post('user_id');
+        $conversation_id = $this->input->post('conversation_id');
+
+        $data = $this->Chat_model->clear_chat($conversation_id, $user_id);
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+
     }
 }

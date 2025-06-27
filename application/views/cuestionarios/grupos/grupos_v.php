@@ -70,6 +70,7 @@
                             <th>Estudiantes ({{ estudiantes.length }})</th>
                             <th>Lapso</th>
                             <th>Estado</th>
+                            <th v-show="cuestionario.tipo_id != 5">Resultado</th>
                             <th width="120px"></th>
                         </thead>
                         <tbody>
@@ -97,6 +98,13 @@
                                     <small class="text-muted" v-show="estudiante.estado < 3">
                                         {{ estadoUCName(estudiante.estado) }}
                                     </small>
+                                </td>
+                                <td v-show="cuestionario.tipo_id != 5">
+                                    <div class="progress" v-show="estudiante.estado >= 3">
+                                        <div class="progress-bar" role="progressbar" :style="{ width: getPercentInt(estudiante['resumen']) + '%' }" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                            {{ getPercentInt(estudiante['resumen']) }}%
+                                        </div>
+                                    </div>
                                 </td>
                                 <td>
                                     <?php if ( in_array($this->session->userdata('role'), $rolesResponder) ) { ?>

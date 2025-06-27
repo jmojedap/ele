@@ -11,7 +11,7 @@
                         v-on:click="toggleFilters"
                         v-bind:class="{'btn-secondary': showFilters, 'btn-light': !showFilters }"
                         >
-                        <i class="fa-solid fa-sliders"></i>
+                        <i class="fas fa-sliders-h"></i>
                     </button>
                 </div>
             </div>
@@ -20,13 +20,13 @@
         <div class="col-md-3">
             <a v-bind:href="`<?= URL_ADMIN . "{$controller}/export/?" ?>` + strFilters"
                 class="btn btn-light only-lg" v-bind:title="`Exportar ` + qtyResults + ` registros encontrados a Excel`">
-                <i class="fa-solid fa-download"></i>
+                <i class="fas fa-download"></i>
             </a>
             <button class="btn btn-warning" title="Eliminar elementos seleccionados"
                 data-toggle="modal" data-target="#modal_delete"
                 v-show="selected.length > 0"
                 >
-                <i class="fa-solid fa-trash"></i>
+                <i class="fas fa-trash"></i>
             </button>
         </div>
         

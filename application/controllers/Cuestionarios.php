@@ -235,7 +235,7 @@ class Cuestionarios extends CI_Controller{
      * Grupos y estudiantes que tienen asignado el cuestionario
      * 2025-03-17
      */
-    function grupos($cuestionario_id, $institucion_id = NULL, $grupo_id = 0)
+    function grupos($cuestionario_id, $institucion_id = 0, $grupo_id = 0)
     {
         // Cargar datos básicos
         $data = $this->Cuestionario_model->basico($cuestionario_id);
@@ -249,7 +249,7 @@ class Cuestionarios extends CI_Controller{
             $institucion_id = $this->session->userdata('institucion_id');
         }
         // Seleccionar institución por defecto si no está definida
-        if ( is_null($institucion_id) && $instituciones->num_rows() > 0 ) {
+        if ( $institucion_id == 0 && $instituciones->num_rows() > 0 ) {
             $institucion_id = $instituciones->row()->id;
         }
 
@@ -1266,7 +1266,7 @@ class Cuestionarios extends CI_Controller{
     /**
      * Recibe los datos del formulario cuestionarios/resolver_lote y los guarda en la tabla 
      * usuario_pregunta. 2019-05-09
-     * @param type $uc_id 
+     * @param int $uc_id  :: ID del usuario_cuestionario
      */
     function guardar_lote($uc_id)
     {

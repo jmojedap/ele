@@ -92,6 +92,32 @@ var gruposApp = new Vue({
             if (!date) return ''
             return moment(date, 'YYYY-MM-DD HH:mm:ss').fromNow()            
         },
+        resumenDecoded: function(resumen){
+            if ( !resumen ) return ''
+            try {
+                return JSON.parse(resumen)
+            } catch (e) {
+                console.error('Error decoding resumen:', e)
+                return {}
+            }
+        },
+        // Devuelve el porcentaje de respuestas correctas sobre el total de respuestas
+        getPercent: function(resumen, detalle = 'total'){
+            resumenDecoded = this.resumenDecoded(resumen)
+            if (
+                !resumenDecoded ||
+                !resumenDecoded[detalle] ||
+                !Array.isArray(resumenDecoded[detalle]) ||
+                resumenDecoded[detalle].length < 2 ||
+                resumenDecoded[detalle][1] == 0
+            ) return 0
+            return (resumenDecoded[detalle][0] / resumenDecoded[detalle][1]) * 100
+        },
+        // Devuelve el porcentaje como entero
+        getPercentInt: function(resumen, detalle = 'total'){
+            const percent = this.getPercent(resumen, detalle)
+            return Math.round(percent)
+        },
     }
 })
 </script>

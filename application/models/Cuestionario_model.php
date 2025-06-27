@@ -918,7 +918,7 @@ class Cuestionario_model extends CI_Model
     {
         $select = 'nombre, apellidos';
         $select .= ', usuario_cuestionario.id AS uc_id, usuario_cuestionario.usuario_id, fecha_inicio, fecha_fin, usuario_cuestionario.estado';
-        $select .= ', inicio_respuesta, num_con_respuesta';
+        $select .= ', inicio_respuesta, num_con_respuesta, usuario_cuestionario.resumen';
         
         $this->db->select($select);
         $this->db->join('usuario_cuestionario', 'usuario.id = usuario_cuestionario.usuario_id', 'LEFT');
@@ -1964,8 +1964,8 @@ class Cuestionario_model extends CI_Model
      * Crea o actualiza un registro en la tabla usuario_pregunta
      * Corresponde a la respuesta de un usuario en un cuestionario
      * 
-     * @param type $registro
-     * @return type 
+     * @param array $registro
+     * @return int $up_id :: ID del registro actualizado o creado 
      */
     function guardar_respuesta($registro)
     {   

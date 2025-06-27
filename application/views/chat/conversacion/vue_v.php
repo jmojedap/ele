@@ -32,9 +32,10 @@ var chatApp = createApp({
             this.loading = true;
 
             const formValues = new FormData();
-            formValues.append('user_input', this.user_input);
+            formValues.append('user_input', this.user_input.trim());
             formValues.append('conversation_id', this.conversationId);
             
+            this.user_input = ''; // Limpiar el input del usuario antes de enviar
 
             axios.post(URL_API + 'chat/get_answer/', formValues)
             .then(response => {
@@ -72,6 +73,7 @@ var chatApp = createApp({
             this.$nextTick(() => {
                 this.aplicarFadeInUltimoMensaje();
                 this.scrollToDown();
+                document.getElementById('user-input').focus();
             });
         },
         aplicarFadeInUltimoMensaje() {
@@ -92,6 +94,14 @@ var chatApp = createApp({
             const chatContainer = document.getElementById('chat-messages');
             if (chatContainer) {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+            }
+        },
+        handleKeyDown(event) {
+            if (!event.shiftKey) {
+                event.preventDefault();
+                if (this.user_input.trim() !== '') {
+                    this.handleSubmit();
+                }
             }
         },
         messageClass(message){
@@ -120,6 +130,7 @@ var chatApp = createApp({
         //this.getList()
         this.$nextTick(() => {
             this.scrollToDown();
+            document.getElementById('user-input').focus();
         });
     }
 }).mount('#chatApp');

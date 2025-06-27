@@ -23,6 +23,15 @@ public $url_controller = URL_APP . 'chat/';
     
 //---------------------------------------------------------------------------------------------------
 //
+
+    function inicio()
+    {
+        $data['head_title'] = 'Chat En Línea Editores';
+        $data['sidebar'] = $this->views_folder . 'sidebar/sidebar_v';
+        $data['view_a'] = $this->views_folder . 'inicio/inicio_v';
+        $this->App_model->view('templates/easypml/sidebar', $data);
+    }
+
     /**
      * Vista de chat, conversación
      * 2025-05-22
@@ -30,10 +39,26 @@ public $url_controller = URL_APP . 'chat/';
     function conversacion($conversation_id)
     {
         $data = $this->Chat_model->basic($conversation_id);
+        $data['sidebar'] = $this->views_folder . 'sidebar/sidebar_v';
         $data['view_a'] = $this->views_folder . 'conversacion/conversacion_v';
+
+        $data['messages'] = $this->Chat_model->messages($conversation_id);
+
+        $this->App_model->view('templates/easypml/sidebar', $data);
+    }
+    /**
+     * Vista de chat, monitorIA, módulo de apoyo al profesor
+     * 2025-06-17
+     */
+    function monitoria($conversation_id)
+    {
+        $data = $this->Chat_model->basic($conversation_id);
+        $data['view_a'] = $this->views_folder . 'monitoria/monitoria_v';
 
         $data['messages'] = $this->Chat_model->messages($conversation_id);
 
         $this->App_model->view('templates/easypml/empty', $data);
     }
+
+
 }
