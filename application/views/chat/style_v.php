@@ -2,6 +2,24 @@
 <style>
     @import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');     
 
+/* Botones */
+/*-----------------------------------------------------------------------------*/
+    .btn-tool {
+        display: inline-block;
+        background-color: transparent;
+        height: 1.8em;
+        width: 1.8em;
+        border: 0px;
+        border-radius: 0.4em;
+        color: #333;
+    }
+
+    .btn-tool:hover {
+        background-color: #E3EEF0;
+    }
+
+
+
 /* Inicio chat */
 /*-----------------------------------------------------------------------------*/
     .start-chat-container {
@@ -29,7 +47,7 @@
         display: flex;
         flex-direction: column;
         margin: 0 auto;
-        height: calc(100vh - 65px);
+        height: calc(100vh - 55px);
         font-family: "Noto Sans", sans-serif;
         font-optical-sizing: auto;
         font-weight: <weight>;
@@ -66,7 +84,7 @@
         color: #FFF;
         border-radius: 0.6em 0em 0.6em 0.6em;
         width: calc(100% - 2em);
-        text-align: right;
+        text-align: left;
     }
 
     .chat-respuesta {

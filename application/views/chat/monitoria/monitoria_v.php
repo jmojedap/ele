@@ -23,11 +23,11 @@
                     <tbody>
                         <tr>
                             <td>Tema</td>
-                            <td>{{ tema.titulo }}</td>
+                            <td>{{ tema.nombre_tema }}</td>
                         </tr>
                         <tr>
                             <td>Área</td>
-                            <td>{{ tema.area }}</td>
+                            <td>{{ tema.area_id }}</td>
                         </tr>
                         <tr>
                             <td>Nivel</td>
@@ -84,7 +84,7 @@
         </div>
 
     </div>
-    <?php $this->load->view('common/bs5/modal_delete_v') ?>
+    <?php $this->load->view('common/bs5/modal_delete_set_v') ?>
 </div>
 
 <?php $this->load->view('chat/monitoria/vue_v') ?>

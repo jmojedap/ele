@@ -52,9 +52,9 @@ class Meta extends CI_Controller{
      * Eliminar un registro de la tabla meta
      * 2024-08-10
      */
-    function delete($metaId, $relacionadoId)
+    function delete($metaId, $elementoId)
     {
-        $data['qtyDeleted'] = $this->Meta_model->delete($metaId, $relacionadoId);
+        $data['qtyDeleted'] = $this->Meta_model->delete($metaId, $elementoId);
 
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));

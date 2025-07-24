@@ -5,11 +5,17 @@ var chatApp = createApp({
     data(){
         return{
             conversationId: <?= $row->id ?>,
+            userId: <?= $row->user_id ?>,
             messages: <?= json_encode($messages->result()) ?>,
             user_input: '',
             loading: false,
             respuesta:'',
             htmlResponse: '',
+            deleteConfirmationTexts : {
+                title: 'Borrar mensajes',
+                text: '¿Confirma la eliminación de todos los mensajes?',
+                buttonText: 'Eliminar'
+            }
         }
     },
     methods: {
@@ -124,6 +130,21 @@ var chatApp = createApp({
             const textarea = event.target;
             textarea.style.height = 'auto'; // Resetear altura previa
             textarea.style.height = textarea.scrollHeight + 'px'; // Ajustar a contenido
+        },
+        deleteElements: function(){
+            this.loading = true
+            var formValues = new FormData()
+            formValues.append('conversation_id', this.conversationId);
+            formValues.append('user_id', this.userId);
+            axios.post(URL_API + 'chat/clear_chat/', formValues)
+            .then(response => {
+                if ( response.data.qty_deleted > 0 ) {
+                    toastr['info']('Chat reiniciado');
+                    this.messages = [];
+                }
+                this.loading = false
+            })
+            .catch( function(error) {console.log(error)} )
         },
     },
     mounted(){

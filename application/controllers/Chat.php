@@ -24,6 +24,11 @@ public $url_controller = URL_APP . 'chat/';
 //---------------------------------------------------------------------------------------------------
 //
 
+    /**
+     * Pantalla de inicio del chat, primera solicitud para crear una
+     * conversación
+     * 2025-06-27
+     */
     function inicio()
     {
         $data['head_title'] = 'Chat En Línea Editores';
@@ -50,15 +55,19 @@ public $url_controller = URL_APP . 'chat/';
      * Vista de chat, monitorIA, módulo de apoyo al profesor
      * 2025-06-17
      */
-    function monitoria($conversation_id)
+    function monitoria($conversation_id, $tema_id)
     {
         $data = $this->Chat_model->basic($conversation_id);
-        $data['view_a'] = $this->views_folder . 'monitoria/monitoria_v';
+        
+        //Datos del tema
+        $data['tema'] = $this->Db_model->row('tema', $tema_id);
+        $this->load->model('Tema_model');
+        $condition = "dato_id = 4542 AND elemento_id = {$tema_id}";
+        $data['prompts'] = $this->Tema_model->metadatos($condition, 'prompts');
 
+        $data['view_a'] = $this->views_folder . 'monitoria/monitoria_v';
         $data['messages'] = $this->Chat_model->messages($conversation_id);
 
         $this->App_model->view('templates/easypml/empty', $data);
     }
-
-
 }

@@ -30,6 +30,13 @@ var sections = [
         roles: [0,1,2],
         anchor: true
     },
+    {
+        id: 'prompts_monitoria',
+        text: 'Prompts',
+        cf: 'temas/prompts_monitoria/' + nav3RowId,
+        roles: [0,1,2],
+        anchor: true
+    },
 ];
 
 //Filter role sections

@@ -3,7 +3,8 @@
 //-----------------------------------------------------------------------------
 
 const funciones = [
-    {   nombre: 'motivacion',
+    {   funcion_id: 10,
+        nombre: 'motivacion',
         titulo_corto: 'Motivación',
         titulo: 'Motivación o Contextualización',
         descripcion: 'Genera un texto introductorio que ayude al profesor a motivar a los estudiantes sobre la importancia del tema, resaltando su utilidad en la vida académica, profesional y cotidiana.',
@@ -11,6 +12,7 @@ const funciones = [
         nombre_archivo: 'f1_motivacion.docx'
     },
     {
+        funcion_id: 20,
         nombre: 'exposicion',
         titulo_corto: 'Exposición',
         titulo: 'Exposición o Presentación de Nueva Información',
@@ -19,6 +21,7 @@ const funciones = [
         nombre_archivo: 'f2_exposicion.docx'
     },
     {
+        funcion_id: 30,
         nombre: 'estrategias',
         titulo_corto: 'Estrategias',
         titulo: 'Estrategias Didácticas',
@@ -27,6 +30,7 @@ const funciones = [
         nombre_archivo: 'f3_estrategias_dinamicas.docx'
     },
     {
+        funcion_id: 40,
         nombre: 'evaluacion',
         titulo_corto: 'Evaluación',
         titulo: 'Propuesta de Evaluación',
@@ -35,19 +39,6 @@ const funciones = [
         nombre_archivo: 'f4_propuesta_evaluacion.docx'
     },
 ];
-
-const tema = {
-    id: 10028,
-    titulo: 'Usos de ha, ah, a, hay, ahí, ay',
-    area: 'Lenguaje',
-    nivel: '4',
-    prompts: {
-        motivacion: `Redacta un texto breve que motive a estudiantes de grado 4° a interesarse por aprender a diferenciar palabras que suenan igual pero se escriben distinto, como "ha", "ah", "a", "hay", "ahí" y "ay". Menciona cómo este conocimiento les será útil para expresarse mejor, evitar errores al escribir y entender mejor lo que leen o escuchan. Usa un tono cercano y adaptado a niños de 8 o 9 años.`,
-        exposicion: `Amplía y complementa la información sobre los usos correctos de las palabras "ha", "ah", "a", "hay", "ahí" y "ay", explicando sus diferencias y proporcionando ejemplos breves para cada una. El texto debe ser claro, con un lenguaje adecuado para estudiantes de 4° de primaria, y debe incluir una pequeña tabla o lista comparativa si es posible.`,
-        estrategias: `Sugiere al profesor algunas estrategias didácticas para enseñar el uso correcto de "ha", "ah", "a", "hay", "ahí" y "ay" a estudiantes de grado 4°. Incluye ideas como juegos de palabras, dramatizaciones, ejercicios de completar frases, dictados lúdicos o historias colaborativas. Las estrategias deben ser dinámicas, participativas y adaptadas al contexto escolar.`,
-        evaluacion: `Proporciona al profesor opciones variadas para evaluar si los estudiantes de grado 4° comprendieron y saben aplicar correctamente el uso de "ha", "ah", "a", "hay", "ahí" y "ay". Incluye al menos una opción de prueba escrita, una actividad creativa (como hacer una historieta), y una dinámica grupal. Cada propuesta debe ser clara y fácil de implementar en clase.`
-    }
-};
 
 
 // VueApp
@@ -63,8 +54,14 @@ var chatApp = createApp({
             respuesta:'',
             htmlResponse: '',
             funciones: funciones,
-            tema: tema,
+            tema: <?= json_encode($tema) ?>,
+            prompts: <?= json_encode($prompts->result()) ?>,
             currentFuncion: funciones[0], // Función activa por defecto
+            deleteConfirmationTexts : {
+                title: 'Borrar mensajes',
+                text: '¿Confirma la eliminación de todos los mensajes?',
+                buttonText: 'Eliminar'
+            }
         }
     },
     methods: {
@@ -180,7 +177,7 @@ var chatApp = createApp({
             textarea.style.height = 'auto'; // Resetear altura previa
             textarea.style.height = textarea.scrollHeight + 'px'; // Ajustar a contenido
         },
-        deleteSelected: function(){
+        deleteElements: function(){
             this.loading = true
             var formValues = new FormData()
             formValues.append('conversation_id', this.conversationId);
@@ -189,9 +186,7 @@ var chatApp = createApp({
             .then(response => {
                 if ( response.data.qty_deleted > 0 ) {
                     toastr['info']('Chat reiniciado');
-                    setTimeout(() => {
-                        location.reload();
-                    }, 1000);
+                    this.messages = [];
                 }
                 this.loading = false
             })
@@ -205,8 +200,9 @@ var chatApp = createApp({
             this.setBasePrompt(); // Establecer el prompt base para la función seleccionada
         },
         setBasePrompt: function(){
-            this.user_input = this.tema.prompts[this.currentFuncion.nombre];
+            this.user_input = this.prompts.find(p => p.funcion_id == this.currentFuncion.funcion_id).tema_prompt;
             document.getElementById('user-input').focus();
+            this.autoExpand({ target: document.getElementById('user-input') });
         },
         downloadFile: function(){
             const link = document.createElement('a');
@@ -217,7 +213,6 @@ var chatApp = createApp({
 
     },
     mounted(){
-        //this.getList()
         this.$nextTick(() => {
             this.scrollToDown();
             document.getElementById('user-input').focus();

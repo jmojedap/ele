@@ -43,7 +43,7 @@
         color: #FFF;
         border-radius: 0.6em 0em 0.6em 0.6em;
         width: calc(100% - 2em);
-        text-align: right;
+        text-align: left;
     }
 
     .chat-respuesta {

@@ -34,7 +34,7 @@ class Chat extends CI_Controller{
             $data = $this->Chat_model->get_answer(
                 $user_input,
                 $conversationData['saved_id'],
-                'diana-coqueta'
+                'monitoria-ele'
             );
         }
         
@@ -51,36 +51,11 @@ class Chat extends CI_Controller{
         $user_input = $this->input->post('user_input');
         $conversation_id = $this->input->post('conversation_id');
 
-        // Guardar el mensaje del usuario
-        $user_message_id = $this->Chat_model->save_user_message(
-            $conversation_id,
-            $user_input
-        );
-
-        // Solicitar respuesta a la API de Gemini
-        $response = $this->Chat_model->generate_gemini_content(
-            $conversation_id,
+        $data = $this->Chat_model->get_answer(
             $user_input,
-            K_API_GEMINI,
-            'gemini-2.0-flash-lite',
-            'generateContent',
-            'diana-coqueta'
-        );
-
-        // Guardar la respuesta de la API
-        $model_message_id = $this->Chat_model->save_model_message(
             $conversation_id,
-            $response['response_text'] ?? '',
-            $response
+            'diana-abierta'
         );
-
-        // Preparar la respuesta
-        $data = [
-            'user_message_id' => $user_message_id,
-            'response_text' => $response['response_text'] ?? '',
-            'response_details' => json_encode($response),
-            'error' => ''
-        ];
         
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
@@ -102,5 +77,10 @@ class Chat extends CI_Controller{
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
 
+    }
+
+    function tests(){
+        $query = $this->db->query("SHOW VARIABLES LIKE 'character_set_connection'");
+        print_r($query->row_array());
     }
 }

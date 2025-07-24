@@ -1,9 +1,22 @@
-<?php $this->load->view('chat/conversacion/style_v') ?>
+<?php $this->load->view('chat/style_v') ?>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
 
 <div id="chatApp">
+    <div class="center_box_920 py-2 d-flex justify-content-between">
+        <div>
+            
+        </div>
+        <div class="dropdown">
+            <button class="btn-tool mx-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#deleteModal">Borrar mensajes</a></li>
+            </ul>
+        </div>
+    </div>
     <div class="chat-container">
         <div class="chat-messages" id="chat-messages" ref="chatMessages">
             <div v-for="message in messages" class="chat-mensaje">
@@ -41,6 +54,7 @@
         </div>
 
     </div>
+    <?php $this->load->view('common/bs5/modal_delete_set_v') ?>
 </div>
 
 <?php $this->load->view('chat/conversacion/vue_v') ?>

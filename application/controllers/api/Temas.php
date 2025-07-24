@@ -128,4 +128,71 @@ public $url_controller = URL_API . 'temas/';
         $data['list'] = $articulos->result();
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+// METADATOS
+//-----------------------------------------------------------------------------
+
+    function get_metadatos()
+    {
+        $filters = $this->input->post();  // Puede ser array vacío
+
+        $conditions = ['tabla_id = 4540'];
+
+        if (!empty($filters['tema_id'])) {
+            $tema_id = (int) $filters['tema_id'];
+            $conditions[] = "elemento_id = {$tema_id}";
+        }
+
+        if (!empty($filters['tp'])) {
+            $tp = (int) $filters['tp'];
+            $conditions[] = "dato_id = {$tp}";
+        }
+
+        // Unir todas las condiciones con AND
+        $condition = implode(' AND ', $conditions);
+
+        // Obtener resultados
+        $metadatos = $this->Tema_model->metadatos($condition);
+        $data['metadatos'] = $metadatos->result();
+
+        // Devolver JSON
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($data));
+    }
+
+    /**
+     * Guardar registro de metadato de un tema en la tabla meta
+     * 2025-07-22
+     */
+    function save_meta()
+    {
+        $tema_id = (int) $this->input->post('elemento_id');
+
+        // Validar datos
+        if ($tema_id <= 0 ) {
+            $data['status'] = 0;
+            $data['message'] = 'Datos inválidos';
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+            return;
+        }
+
+        $this->load->model('Meta_model');
+        $aRow = $this->input->post();
+
+        // Guardar metadato
+        $saved_id = $this->Meta_model->save($aRow);
+
+        if ($saved_id) {
+            $data['status'] = 1;
+            $data['message'] = 'Metadato guardado correctamente';
+            $data['saved_id'] = $saved_id;
+        } else {
+            $data['status'] = 0;
+            $data['message'] = 'Error al guardar el metadato';
+        }
+
+        // Devolver JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

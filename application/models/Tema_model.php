@@ -666,6 +666,38 @@ class Tema_Model extends CI_Model{
         
         return $elementos;
     }
+
+// METADATOS DE TEMAS
+//---------------------------------------------------------------------------------------------------------
+
+    /**
+     * Query con metadatos de un tema
+     * 2025-07-22
+     */
+    function metadatos($condition, $select_format = 'general')
+    {
+        $select_format = $this->metadatos_select_format($select_format);
+        $this->db->select($select_format);
+        $this->db->where($condition);
+        $metadatos = $this->db->get('meta');
+
+        return $metadatos;
+    }
+
+    /**
+     * Formato de script SELECT de SQL, para la tabla meta
+     * 2025-07-23
+     * @return string $select_format :: Segmento SELECT para la tabla meta
+     */
+    function metadatos_select_format($format = 'general')
+    {
+        $formats['general'] = '*';
+        $formats['prompts'] = 'id, elemento_id AS tema_id, dato_id,
+            relacionado_id AS funcion_id, texto_1 AS tema_prompt';
+
+        return $formats[$format];
+    }
+
     
 // GESTIÓN DE QUICES (EVIDENCIAS DE APRENDIZAJE) Y TEMAS
 //---------------------------------------------------------------------------------------------------------

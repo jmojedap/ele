@@ -96,7 +96,7 @@ class Meta_model extends CI_Model{
             $deleteable = 1;
         }
 
-        //Debe estar con sesióniniciada
+        //Debe estar con sesión iniciada
         if ( ! $this->session->userdata('logged') ) { $deleteable = 0; }
 
         return $deleteable;
@@ -106,14 +106,14 @@ class Meta_model extends CI_Model{
      * Eliminar un registro de la tabla meta
      * 2024-08-10
      */
-    function delete($metaId, $relacionadoId)
+    function delete($metaId, $elementoId)
     {
         $qtyDeleted = 0;
 
         if ( $this->deleteable($metaId) ) 
         {
                 $this->db->where('id', $metaId)
-                ->where('relacionado_id', $relacionadoId)
+                ->where('elemento_id', $elementoId)
                 ->delete('meta');
 
             $qtyDeleted = $this->db->affected_rows();

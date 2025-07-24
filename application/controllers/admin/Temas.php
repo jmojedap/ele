@@ -141,6 +141,24 @@ public $url_controller = URL_ADMIN . 'temas/';
             $output = array_merge($data,(array)$gc_output);
             $this->load->view(TPL_ADMIN_NEW, $output);
     }
+
+    /**
+     * Vista formulario edición de prompts de monitoría
+     * 2025-07-22
+     */
+    function prompts_monitoria($tema_id)
+    {
+        $data = $this->Tema_model->basic($tema_id);
+        $condition = "tabla_id = 4540 AND elemento_id = {$tema_id} AND dato_id = 4542";
+
+        $data['arrTiposPrompt'] = $this->Item_model->arr_options('categoria_id = 81');
+        
+        $data['prompts'] = $this->Tema_model->metadatos($condition);
+        $data['nav_3'] = $this->views_folder . 'menus/recursos_v';
+        $data['view_a'] = $this->views_folder . 'prompts_monitoria/prompts_monitoria_v';
+
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
     
 // SECCIONES DATOS
 //-----------------------------------------------------------------------------
