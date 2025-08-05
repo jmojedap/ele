@@ -4,85 +4,80 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.5/dist/purify.min.js"></script>
 
 <div id="chatApp">
-    <div class="center_box_920">
-        <div class="row py-2">
-            <div v-for="funcion in funciones" class="col-md-3 text-center">
-                <button class="btn" v-bind:class="{'btn-main': funcion.active}" v-on:click="setFuncion(funcion)">
-                    {{ funcion.titulo_corto }}
-                </button>
-            </div>
-        </div>
+    <div class="container pt-2">
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
+                
+
+                <!-- Example single danger button -->
+                 <strong>Función de generación</strong>
+                <div class="dropdown-center mb-3 mt-1">
+                    <button type="button" class="btn btn-light dropdown-toggle w-100" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ currentFuncion.titulo_corto }}
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item disabled">Función de generación:</a></li>
+                        <li v-for="funcion in funciones">
+                            <a class="dropdown-item" href="#" v-bind:class="{'active': currentFuncion == funcion }" v-on:click="setFuncion(funcion)">{{ funcion.titulo }}</a>
+                        </li>
+                    </ul>
+                </div>
+
                 <strong class="text-center">{{ currentFuncion.titulo }}</strong>
                 <br>
                 <p>{{ currentFuncion.descripcion }}</p>
-            </div>
-            <div class="col-md-6">
+
                 <table class="table table-sm">
                     <tbody>
                         <tr>
-                            <td>Tema</td>
-                            <td>{{ tema.nombre_tema }}</td>
+                            <td class="text-muted">Tema</td>
+                            <td class="color-text-8">{{ tema.nombre_tema }}</td>
                         </tr>
                         <tr>
-                            <td>Área</td>
-                            <td>{{ tema.area_id }}</td>
-                        </tr>
-                        <tr>
-                            <td>Nivel</td>
-                            <td>{{ tema.nivel }}</td>
+                            <td class="text-muted">Área</td>
+                            <td>{{ areaName(tema.area_id) }} &middot; Grado {{ tema.nivel }}</td>
                         </tr>
                     </tbody>
                 </table>
+
+                <form accept-charset="utf-8" method="POST" id="ia-chat-form" @submit.prevent="handleSubmit">
+                    <fieldset v-bind:disabled="loading">
+                        <input type="hidden" name="conversation_id" id="conversation_id" v-model="conversationId">
+                        <div class="chat-input mb-2">
+                            <textarea name="user_input" id="user-input" v-model="user_input" rows="5"
+                                @input="autoExpand($event)"
+                                @keydown.enter="handleKeyDown"
+                                required
+                                placeholder="Haz una petición a MonitorIA de En Línea Editores"></textarea>
+                        </div>
+                        <div class="text-end">
+                            <button class="btn btn-submit btn-lg" type="submit">
+                                Generar
+                            </button>
+                        </div>
+                    <fieldset>
+                </form>
+            
             </div>
-        </div>
-        <div class="tools-bar">
-            <button class="btn btn-sm btn-light me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                <i class="fas fa-sync"></i>
-            </button>
-            <button class="btn btn-sm btn-light" title="Descargar resultado" v-on:click="downloadFile" v-bind:disabled="messages.length == 0">
-                <i class="fas fa-download"></i>
-            </button>
-        </div>
-    </div>
-    
-    <div class="chat-container">
-        <div class="chat-messages" id="chat-messages" ref="chatMessages">
-            <div v-for="message in messages" class="chat-mensaje">
-                <div class="d-flex">
-                    <div class="me-2" v-if="message.role == 'model'">
-                        <img class="bg-white rounded-circle w40p border" src="<?= URL_RESOURCES ?>images/users/sm_teacher.png" alt="Chat En Línea Editores" class="chat-avatar">
+            <div class="col-md-8">
+                <div class="center_box_750">
+                    <div class="tools-bar my-2">
+                        <button class="btn btn-sm btn-light me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                            <i class="fas fa-sync"></i>
+                        </button>
+                        <a class="btn btn-sm btn-light" title="Imprimir resultado" v-bind:href="`<?= URL_APP ?>chat/monitoria_print/` + conversationId + `/` + lastMessage.id"
+                            v-bind:disabled="messages.length == 0" target="_blank">
+                            <i class="fas fa-print"></i>
+                        </a>
                     </div>
-                    <div v-html="markdownToHtml(message.text)" v-bind:class="messageClass(message)"></div>
-                    <div class="ms-2" v-if="message.role == 'user'">
-                        <img class="rounded-circle w40p border" src="<?= URL_RESOURCES ?>images/users/sm_user.png" alt="Chat En Línea Editores" class="chat-avatar">
+                    <h1 class="text-center">{{ tema.nombre_tema }}</h1>
+                    <div v-show="loading" class="text-center p-4">
+                        <i class="fas fa-spin fa-spinner fa-3x text-main"></i>
                     </div>
+                    <div v-html="responseHtml" id="generated-content" v-show="!loading"></div>
                 </div>
             </div>
-            <div class="text-center" v-show="loading">
-                <div class="spinner-border text-secondary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
         </div>
-
-        <div class="px-2">
-            <form accept-charset="utf-8" method="POST" id="ia-chat-form" @submit.prevent="handleSubmit">
-                <fieldset v-bind:disabled="loading" class="center_box_750">
-                    <input type="hidden" name="conversation_id" id="conversation_id" v-model="conversationId">
-                    <div class="chat-input">
-                        <textarea name="user_input" id="user-input" v-model="user_input" rows="2"
-                            @input="autoExpand($event)"
-                            @keydown.enter="handleKeyDown"
-                            required
-                            placeholder="Haz una petición a MonitorIA de En Línea Editores"></textarea>
-                        <button type="submit"><i class="fas fa-arrow-up"></i></button>
-                    </div>
-                <fieldset>
-            </form>
-        </div>
-
     </div>
     <?php $this->load->view('common/bs5/modal_delete_set_v') ?>
 </div>

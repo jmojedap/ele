@@ -17,4 +17,4 @@
     </div>
     <?php $this->load->view($view_a) ?>
 </div>
-<footer class="main_footer">En Línea Editores &copy; 2019</footer>
+<footer class="main_footer">En Línea Editores &copy; 2025</footer>

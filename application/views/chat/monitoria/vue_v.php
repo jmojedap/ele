@@ -46,33 +46,37 @@ const funciones = [
 var chatApp = createApp({
     data(){
         return{
+            loading: false,
             conversationId: <?= $row->id ?>,
             userId: <?= $row->user_id ?>,
             messages: <?= json_encode($messages->result()) ?>,
-            user_input: '',
-            loading: false,
-            respuesta:'',
-            htmlResponse: '',
+            lastMessage: {
+                id: 0, 
+            },
+            user_input: 'Genera un texto',
+            responseText:'',
+            responseHtml: '',
             funciones: funciones,
+            functionId: 0,
+            currentFuncion: funciones[0], // Función activa por defecto
             tema: <?= json_encode($tema) ?>,
             prompts: <?= json_encode($prompts->result()) ?>,
-            currentFuncion: funciones[0], // Función activa por defecto
             deleteConfirmationTexts : {
                 title: 'Borrar mensajes',
                 text: '¿Confirma la eliminación de todos los mensajes?',
                 buttonText: 'Eliminar'
-            }
+            },
+            arrAreas: <?= json_encode($arrAreas) ?>,
         }
     },
     methods: {
         handleSubmit: function(){
             this.loading = true
-            console.log(this.user_input)
             var newMessage = {
                 role:'user',
                 text: this.user_input,
             }
-            this.addNewMessage(newMessage)
+            //this.addNewMessage(newMessage)
             this.getResponse()
         },
         getResponse: function() {
@@ -86,25 +90,28 @@ var chatApp = createApp({
             const formValues = new FormData();
             formValues.append('user_input', this.user_input.trim());
             formValues.append('conversation_id', this.conversationId);
+            formValues.append('system_instruction_key', 'monitoria-tema');
             
             this.user_input = ''; // Limpiar el input del usuario antes de enviar
 
             axios.post(URL_API + 'chat/get_answer/', formValues)
             .then(response => {
-                this.respuesta = response.data.response_text ?? 'Ocurrió un error al obtener la respuesta.';
-                this.htmlResponse = this.markdownToHtml(this.respuesta);
+                this.responseText = response.data.response_text ?? 'Ocurrió un error al obtener la respuesta.';
+                //this.responseHtml = this.markdownToHtml(this.responseText);
 
                 var newMessage = {
+                    id: response.data.model_message_id,
+                    conversation_id: this.conversationId,
                     role:'model',
-                    text: this.htmlResponse
+                    text: this.responseText
                 }
                 this.addNewMessage(newMessage)
-                this.loading = false;
                 this.user_input = '';
+                this.loading = false;
             })
             .catch(error => {
                 console.error(error);
-                this.htmlResponse = '<p>Error al obtener la respuesta del Chat.</p>';
+                this.responseText = 'Error al obtener la respuesta del Modelo.';
             });
         },
         // Convertir respuesta de Markdown a HTML
@@ -113,40 +120,41 @@ var chatApp = createApp({
             const rawHtml = marked.parse(markdownText); //
 
             // Sanitizar si DOMPurify está disponible
-            var htmlResponse = window.DOMPurify
+            var responseHtml = window.DOMPurify
                 ? DOMPurify.sanitize(rawHtml)
                 : rawHtml;
 
-            return htmlResponse;
+            return responseHtml;
         },
         addNewMessage(newMessage) {
             this.messages.push(newMessage);
-
-            this.$nextTick(() => {
-                this.aplicarFadeInUltimoMensaje();
-                this.scrollToDown();
-                document.getElementById('user-input').focus();
-            });
+            this.setResponseContent();
         },
-        aplicarFadeInUltimoMensaje() {
-            const chatContainer = document.getElementById('chat-messages');
-            const mensajes = chatContainer.querySelectorAll('.chat-mensaje');
-            const ultimoMensaje = mensajes[mensajes.length - 1];
-
-            if (ultimoMensaje) {
-                ultimoMensaje.classList.add('fade-enter');
-                void ultimoMensaje.offsetWidth; // Forzar reflow
+        // Establecer el contenido HTML de la respuesta a partir de los mensajes, se toma el último mensaje que envió el modelo
+        setResponseContent: function(){
+            if ( this.messages.length > 0 ) {
+                this.lastMessage = this.messages.slice().reverse().find(msg => msg.role === 'model');
+                console.log(this.lastMessage);
+                this.responseHtml = this.lastMessage ? this.markdownToHtml(this.lastMessage.text) : '';
+                this.$nextTick(() => {
+                    this.aplicarFadeInGeneratedContent();
+                    document.getElementById('user-input').focus();
+                });
+            }
+        },
+        aplicarFadeInGeneratedContent() {
+            const contentElement = document.getElementById('generated-content');
+            
+            if (contentElement) {
+                contentElement.classList.remove('fade-enter'); // por si quedó de antes
+                void contentElement.offsetWidth; // Forzar reflow
+                
+                contentElement.classList.add('fade-enter');
 
                 setTimeout(() => {
-                    ultimoMensaje.classList.remove('fade-enter');
-                }, 20);
-            }
-        },
-        scrollToDown() {
-            const chatContainer = document.getElementById('chat-messages');
-            if (chatContainer) {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
+                    contentElement.classList.remove('fade-enter');
+                }, 1000); // Tiempo suficiente para la animación
+            }  
         },
         handleKeyDown(event) {
             if (!event.shiftKey) {
@@ -155,22 +163,6 @@ var chatApp = createApp({
                     this.handleSubmit();
                 }
             }
-        },
-        messageClass(message){
-            if ( message.role == 'user') {
-                return 'chat-pregunta'
-            }
-            return 'chat-respuesta'
-        },
-        setIAInput: function(pregunta){
-            this.user_input = pregunta.enunciado_pregunta
-            this.respuesta = pregunta.respuesta
-        },
-        showPregunta: function(pregunta){
-            if ( pregunta.area_id != this.areaId ) return false
-            if ( pregunta.nivel != this.nivel ) return false
-            if ( pregunta.numero_unidad != this.unidad ) return false
-            return true
         },
         autoExpand(event) {
             const textarea = event.target;
@@ -192,7 +184,7 @@ var chatApp = createApp({
             })
             .catch( function(error) {console.log(error)} )
         },
-        // Funciones adicionales al chat
+        // Establecer tipo de funciones de generación de la herramienta
         setFuncion: function(funcion) {
             this.funciones.forEach(f => f.active = false); // Desactivar todas las funciones
             funcion.active = true; // Activar la función seleccionada
@@ -210,13 +202,18 @@ var chatApp = createApp({
             link.download = this.currentFuncion.nombre_archivo;
             link.click();
         },
+        areaName: function(areaId) {
+            const area = this.arrAreas.find(a => a.id === areaId);
+            return area ? area.name : 'Área desconocida';
+        }
 
     },
     mounted(){
         this.$nextTick(() => {
-            this.scrollToDown();
+            //this.scrollToDown();
             document.getElementById('user-input').focus();
         });
+        this.setResponseContent();
     }
 }).mount('#chatApp');
 </script>

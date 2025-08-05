@@ -166,9 +166,7 @@ class Preguntas extends CI_Controller{
             $data['arrHabilidades'] = $this->Item_model->arr_options('categoria_id = 159');
             $data['arrProcesos'] = $this->Item_model->arr_options('categoria_id = 160');
             $data['tema'] = $this->Db_model->row_id('tema', $data['row']->tema_id);
-
         //
-
         
         //Array data espefícicas
             $data['view_description'] = 'preguntas/pregunta_v';

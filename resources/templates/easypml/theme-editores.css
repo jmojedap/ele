@@ -3,6 +3,7 @@
 /* Fuentes */
 /*-----------------------------------------------------------------------------*/
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap');
 
 
 :root{
@@ -41,7 +42,7 @@
     --color-text-5: #fdb02b;
     --color-text-6: #ec6c38;
     --color-text-7: #ee3248;
-    --color-text-8: #ea3471;
+    --color-text-8: #C53C99;
 }
 
 /* Botones */

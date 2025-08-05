@@ -40,6 +40,7 @@ var chatApp = createApp({
             const formValues = new FormData();
             formValues.append('user_input', this.user_input.trim());
             formValues.append('conversation_id', this.conversationId);
+            formValues.append('system_instruction_key', 'diana-massage');
             
             this.user_input = ''; // Limpiar el input del usuario antes de enviar
 

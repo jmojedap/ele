@@ -51,23 +51,53 @@ public $url_controller = URL_APP . 'chat/';
 
         $this->App_model->view('templates/easypml/sidebar', $data);
     }
+
+// MÓDULO MONITORÍA DE TEMAS
+//-----------------------------------------------------------------------------
+
+    function monitoria_inicio($type = 'monitoria-tema', $related_id = 0)
+    {
+        $data['head_title'] = 'MonitorIA - Inicio';
+        $data['tema'] = $this->Db_model->row_id('tema', $related_id);
+        $data['view_a'] = $this->views_folder . 'monitoria_inicio/inicio_v';
+        $this->App_model->view('templates/easypml/empty', $data);
+    }
+
     /**
      * Vista de chat, monitorIA, módulo de apoyo al profesor
      * 2025-06-17
      */
-    function monitoria($conversation_id, $tema_id)
+    function monitoria($conversation_id)
     {
         $data = $this->Chat_model->basic($conversation_id);
+        $tema_id = $data['row']->related_id;
         
         //Datos del tema
-        $data['tema'] = $this->Db_model->row('tema', $tema_id);
+        $data['tema'] = $this->Db_model->row_id('tema', $tema_id);
         $this->load->model('Tema_model');
         $condition = "dato_id = 4542 AND elemento_id = {$tema_id}";
         $data['prompts'] = $this->Tema_model->metadatos($condition, 'prompts');
 
+        $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
         $data['view_a'] = $this->views_folder . 'monitoria/monitoria_v';
         $data['messages'] = $this->Chat_model->messages($conversation_id);
 
         $this->App_model->view('templates/easypml/empty', $data);
+    }
+
+    /**
+     * Imprimir una respuesta generada por la IA
+     * 2025-08-04
+     */
+    function monitoria_print($conversation_id, $message_id)
+    {
+        $data = $this->Chat_model->basic($conversation_id);
+
+        $data['tema'] = $this->Db_model->row_id('tema', $data['row']->related_id);
+        $data['message'] = $this->Db_model->row_id('iachat_messages', $message_id);
+        $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
+
+        $data['view_a'] = $this->views_folder . 'monitoria_print_v';
+        $this->App_model->view('templates/easypml/print_v', $data);
     }
 }

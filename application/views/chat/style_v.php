@@ -1,6 +1,7 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');     
+    @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap');
 
 /* Botones */
 /*-----------------------------------------------------------------------------*/
@@ -16,6 +17,16 @@
 
     .btn-tool:hover {
         background-color: #E3EEF0;
+    }
+
+    .btn-main {
+        background-color: var(--color-text-8);
+        color: #FFF;
+        border-radius: 50%;
+    }
+
+    .btn-main:hover {
+        color: #FFF;
     }
 
 
@@ -48,7 +59,7 @@
         flex-direction: column;
         margin: 0 auto;
         height: calc(100vh - 55px);
-        font-family: "Noto Sans", sans-serif;
+        font-family: "Signika Negative", sans-serif;
         font-optical-sizing: auto;
         font-weight: <weight>;
         font-style: normal;

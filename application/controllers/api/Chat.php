@@ -17,25 +17,29 @@ class Chat extends CI_Controller{
     /**
      * Crear conversación a partir del primer mensaje o solicitud
      * de un usuario
-     * 2025-06-26
+     * 2025-08-04
      */
     function create_conversation()
     {
-        $aRow = $this->Db_model->arr_row(false);
-        $aRow['name'] = 'Conversación ' . date('Y-m-d');
-        $aRow['user_id'] = $this->session->userdata('user_id');
+        $arr_row = $this->Db_model->arr_row(false);
+        $arr_row['name'] = $this->input->post('name') ?? 'Conversación ' . date('Y-m-d');
+        $arr_row['type'] = $this->input->post('type') ?? 'chat';
+        $arr_row['related_id'] = $this->input->post('related_id') ?? 0;
+        $arr_row['user_id'] = $this->session->userdata('user_id');
         
-        $conversationData = $this->Chat_model->save_conversation($aRow);
-
-        $user_input = $this->input->post('user_input');
+        $condition = "user_id = {$arr_row['user_id']} AND type = '{$arr_row['type']}' AND related_id = {$arr_row['related_id']}";
+        $data['saved_id'] = $this->Db_model->save('iachat_conversations', $condition, $arr_row);
         
-        $data['conversation_id'] = 0;
-        if ( $conversationData['saved_id'] > 0 ) {
-            $data = $this->Chat_model->get_answer(
-                $user_input,
-                $conversationData['saved_id'],
-                'monitoria-ele'
-            );
+        //Si se recibe ya una petición inicial
+        if ( ! empty($this->input->post('user_input')) ) {
+            $user_input = $this->input->post('user_input');
+            if ( $data['saved_id'] > 0 ) {
+                $data['answer'] = $this->Chat_model->get_answer(
+                    $user_input,
+                    $data['saved_id'],
+                    'monitoria-ele'
+                );
+            }
         }
         
         //Salida JSON
@@ -48,14 +52,14 @@ class Chat extends CI_Controller{
      */
     function get_answer()
     {
-        $user_input = $this->input->post('user_input');
-        $conversation_id = $this->input->post('conversation_id');
+        $request_settings = [
+            'user_input' => $this->input->post('user_input'),
+            'conversation_id' => $this->input->post('conversation_id'),
+            'system_instruction_key' => $this->input->post('system_instruction_key'),
+            'model' => 'gemini-2.0-flash-lite'
+        ];
 
-        $data = $this->Chat_model->get_answer(
-            $user_input,
-            $conversation_id,
-            'diana-abierta'
-        );
+        $data = $this->Chat_model->get_answer($request_settings);
         
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
