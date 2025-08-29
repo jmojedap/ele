@@ -204,6 +204,120 @@ class Chat_model extends CI_Model {
         return $saved_id;
     }
 
+    /**
+     * Envía una solicitud a la API de Gemini para generar contenido.
+     * 2025-08-14
+     *
+     * @param array $request_settings :: Configuración de la solicitud.
+     * @return array|false Retorna la respuesta decodificada de la API o false si falla.
+     */
+    public function generate_gemini_content($request_settings)
+    {
+        // Construir la URL de la API
+        $url = "https://generativelanguage.googleapis.com/v1beta/models/";
+        $url .= "{$request_settings['model_id']}:";
+        $url .= "{$request_settings['generate_content_format']}";
+        $url .= "?key={$request_settings['api_key']}";
+
+        // Preparando el contenido para la API
+        $requestData = [
+            "contents" => $request_settings['contents'],
+            "system_instruction" => [
+                'parts' => [
+                    ['text' => $request_settings['system_instruction']]
+                ]
+            ],
+            "generationConfig" => [
+                "temperature" => 1.6,
+                "maxOutputTokens" => 1000,
+                "responseMimeType" => "text/plain"
+            ],
+        ];
+
+        $payload = json_encode($requestData);
+
+        $responseData = $this->execute_request($url, $payload);
+        //$responseData = $this->execute_request_testing($url, $payload);
+
+        $responseData['response_text'] = 'Ocurrió un error al obtener la respuesta.';
+        if (isset($responseData['response']['candidates'][0]['content']['parts'][0]['text'])) {
+            $response_text = $responseData['response']['candidates'][0]['content']['parts'][0]['text'];
+            $responseData['response_text'] = $response_text;
+        }
+
+        return $responseData;
+    }
+
+    /**
+     * Ejecuta una solicitud HTTP POST a la API de Gemini.
+     * 2025-05-25
+     * @param string $url La URL de la API a la que se enviará la solicitud.
+     * @param string $payload El cuerpo de la solicitud en formato JSON.
+     */
+    function execute_request($url, $payload)
+    {
+        // Valores por defecto
+        $data['error'] = '';
+        $data['response'] = [];
+
+        // Ejecutar la solicitud
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $curl_error = curl_error($ch);
+
+        curl_close($ch);
+
+        if ($response === false) {
+            $data['error'] = $curl_error;
+        } else {
+            $data['response'] = json_decode($response, true);
+        }
+
+        if ($http_code !== 200) {
+            $data['error'] = 'API request failed with status ' . $http_code . ': ' . $response;
+        } else {
+            $data['response'] = json_decode($response, true);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Simular una respuesta de API de Gemini predefinida y estática para pruebas de 
+     * interacción en desarrollo de frontend
+     * 2025-08-05
+     */
+    function execute_request_testing()
+    {
+        $data = [
+            'response' => [
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => 'Esta es una respuesta simulada para pruebas: ' . date('Y-m-d H:i:s')]
+                            ]
+                        ]
+                    ]
+                ],
+                'modelVersion' => 'gemini-2.0-flash-lite',
+                'usageMetadata' => [
+                    'promptTokenCount' => 10,
+                    'candidatesTokenCount' => 20
+                ]
+            ]
+        ];
+
+        return $data;
+    }
+
     function conversation_summary($conversation_id)
     {
         $this->db->select('id, user_id, created_at');
@@ -223,7 +337,7 @@ class Chat_model extends CI_Model {
      */
     function system_instruction($key = 'monitoria-ele')
     {
-        $file_content = file_get_contents(PATH_CONTENT . 'ai_system_instructions/' . $key . '.md');
+        $file_content = file_get_contents(PATH_CONTENT . 'iachats/system_instruction/' . $key . '.md');
         $file_content = str_replace("\r\n", "\n", $file_content); // Normalizar saltos de línea
         $file_content = str_replace("\n", ' ', $file_content); // Reemplazar saltos de línea por espacios
         $file_content = trim($file_content); // Eliminar espacios al inicio y al final

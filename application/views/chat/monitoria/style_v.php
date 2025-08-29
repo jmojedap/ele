@@ -1,6 +1,8 @@
 
 <style>
     @import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');     
+    @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap');
+
 
     .chat-container {
         display: flex;
@@ -75,13 +77,16 @@
         border: none;
         background-color: #c53c99;
         color: white;
-        border-radius: 50px;
         min-width: 120px;
     }
 
     .btn-submit:hover {
         background-color: #b13589ff;
         color: #FFF;
+    }
+
+    .btn-round {
+        border-radius: 23px;
     }
 
     .chat-input input:focus {

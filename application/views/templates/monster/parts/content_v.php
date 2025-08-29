@@ -57,7 +57,7 @@
 
             
             <footer class="footer">
-                © 2024 &middot; En Línea Editores &middot; Colombia
+                © 2025 &middot; En Línea Editores &middot; Colombia
             </footer>
             
         </div>

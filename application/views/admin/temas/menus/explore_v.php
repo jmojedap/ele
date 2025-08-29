@@ -39,6 +39,10 @@ if ( sectionId == 'temas_asignar_quices' ) nav_2[2].class = 'active'
 if ( sectionId == 'temas_importar_pa' ) nav_2[2].class = 'active'
 if ( sectionId == 'temas_importar_lecturas_dinamicas' ) nav_2[2].class = 'active'
 if ( sectionId == 'temas_eliminar_preguntas_abiertas' ) nav_2[2].class = 'active'
+if ( sectionId == 'temas_desasingar_paginas' ) nav_2[2].class = 'active'
+if ( sectionId == 'temas_importar_articulos' ) nav_2[2].class = 'active'
+if ( sectionId == 'temas_importar_articulos_e' ) nav_2[2].class = 'active'
+
 </script>
 
 <?php

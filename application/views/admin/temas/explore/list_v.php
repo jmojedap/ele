@@ -8,6 +8,7 @@
             <th width="100px">Código</th>
             <th>Tema</th>
             <th>Nivel - Área</th>
+            <th></th>
             <th width="50px"></th>
         </thead>
         <tbody>
@@ -28,6 +29,13 @@
                 <td>
                     <span class="etiqueta nivel w2">{{ element.nivel }}</span>
                     <span class="etiqueta" v-bind:class="`bg-area-` + element.area_id">{{ areaName(element.area_id) }}</span>
+                </td>
+
+                <td>
+                    <a class="btn btn-light" v-bind:href="`<?= URL_APP ?>chat/monitoria_inicio/monitoria-tema/` + element.id" target="_blank">
+                        <img src="<?= URL_IMG ?>app/ia-generate.png" alt="Generar con AI" width="20">
+                        MonitorIA
+                    </a>
                 </td>
                 
                 <td>

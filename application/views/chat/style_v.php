@@ -1,4 +1,3 @@
-
 <style>
     @import url('https://fonts.googleapis.com/css2?family=ABeeZee:ital@0;1&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');     
     @import url('https://fonts.googleapis.com/css2?family=Signika+Negative:wght@400;700&display=swap');
@@ -22,7 +21,7 @@
     .btn-main {
         background-color: var(--color-text-8);
         color: #FFF;
-        border-radius: 50%;
+        border-radius: 23px;
     }
 
     .btn-main:hover {

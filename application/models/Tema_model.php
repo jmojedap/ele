@@ -1936,4 +1936,96 @@ class Tema_Model extends CI_Model{
     
         return $articulos;
     }
+
+// CREACIÓN DE ARTÍCULOS HTML A LOS TEMAS Y ASIGNARLES IMÁGENES
+//-----------------------------------------------------------------------------
+
+    /**
+     * Creación masiva de artículos html (post tipo 126) asociados a temas
+     * 2025-08-16
+     */
+    function importar_articulos($arr_sheet)
+    {
+        $data = ['qty_imported' => 0, 'results' => []];
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->importar_articulo($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Crea un artículo y lo asigna a un tema
+     * 2025-08-19
+     */
+    function importar_articulo($row_data)
+    {
+        //Validar
+            $error_text = '';
+            if ( strlen($row_data[0]) == 0 ) { $error_text .= "La columna A (Tema) está vacía. "; }
+            if ( strlen($row_data[1]) == 0 ) { $error_text .= "La columna B (Carpeta) está vacía. "; }
+            if ( strlen($row_data[2]) == 0 ) { $error_text .= "La columna C (Nombre archivo) está vacía. "; }
+
+        //El tema existe
+            $tema = $this->Db_model->row('tema', "cod_tema = '{$row_data[0]}'");
+            if ( is_null($tema) ) { 
+                $error_text .= "El tema no existe: " . $row_data[0] . '. ';
+            }
+        //Existe archivo
+            $file_path = PATH_CONTENT . 'articulos/' . $row_data[1] . '/' . $row_data[2];
+            if ( ! file_exists($file_path) ) { $error_text .= "El archivo no existe: " . $file_path . '. '; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                $text = 'OK. Por cargar';
+
+                //Identificar artículo existente
+                $condition = "tipo_id = 126 AND referente_1_id = {$tema->id} AND texto_1 LIKE '%masivo%'";
+                $articulo = $this->Db_model->row('post', $condition);
+
+                $contenido_inicial = '';
+                if ( ! is_null($articulo) ) {
+                    $contenido_inicial = $articulo->contenido;
+                }
+
+                $nuevo_contenido = '<hr><img style="width: 100%;" src="' . URL_CONTENT . 'articulos/' . $row_data[1] . '/' . $row_data[2] . '" alt="' . $tema->nombre_tema . '">';
+                
+                //Con formar arr_row
+                $arr_row['tipo_id'] = 126;
+                $arr_row['nombre_post'] = $tema->nombre_tema;
+                $arr_row['slug'] = $this->Db_model->unique_slug($tema->nombre_tema, 'post');
+                $arr_row['contenido'] = $contenido_inicial . $nuevo_contenido;
+                $arr_row['referente_1_id'] = $tema->id;
+                $arr_row['referente_2_id'] = $tema->area_id;
+                $arr_row['texto_1'] = '-masivo-';
+                $arr_row['area_id'] = $tema->area_id;
+                $arr_row['nivel'] = $tema->nivel;
+                $arr_row['status'] = 2; //Borrador
+                $arr_row['editor_id'] = $this->session->userdata('user_id');
+                $arr_row['editado'] = date('Y-m-d H:i:s');
+
+                if ( is_null($articulo) ) {
+                    $arr_row['creado'] = date('Y-m-d H:i:s');
+                    $arr_row['usuario_id'] = $this->session->userdata('user_id');
+                    $text = 'OK. Artículo creado: ';
+                }
+
+                $imported_id = $this->Db_model->save('post', $condition, $arr_row);
+                $text = 'OK. Artículo creado: ' . $imported_id;
+                if ($articulo) {
+                    $text = 'OK. Artículo editado: ' . $imported_id;
+                }
+
+                $data = array('status' => 1, 'text' => $text, 'imported_id' => $imported_id);
+            } else {
+                $data = array('status' => 0, 'text' => $error_text, 'imported_id' => 0);
+            }
+
+        return $data;
+    }
 }

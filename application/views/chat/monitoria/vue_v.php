@@ -40,6 +40,7 @@ const funciones = [
     },
 ];
 
+const maxTokens = <?= $max_tokens ?>;
 
 // VueApp
 //-----------------------------------------------------------------------------
@@ -47,13 +48,14 @@ var chatApp = createApp({
     data(){
         return{
             loading: false,
+            conversation: <?= json_encode($row) ?>,
             conversationId: <?= $row->id ?>,
             userId: <?= $row->user_id ?>,
             messages: <?= json_encode($messages->result()) ?>,
             lastMessage: {
                 id: 0, 
             },
-            user_input: 'Genera un texto',
+            user_input: 'Genera el contenido',
             responseText:'',
             responseHtml: '',
             funciones: funciones,
@@ -76,7 +78,6 @@ var chatApp = createApp({
                 role:'user',
                 text: this.user_input,
             }
-            //this.addNewMessage(newMessage)
             this.getResponse()
         },
         getResponse: function() {
@@ -89,15 +90,17 @@ var chatApp = createApp({
 
             const formValues = new FormData();
             formValues.append('user_input', this.user_input.trim());
+            formValues.append('generation_function', this.currentFuncion.descripcion);
             formValues.append('conversation_id', this.conversationId);
             formValues.append('system_instruction_key', 'monitoria-tema');
             
             this.user_input = ''; // Limpiar el input del usuario antes de enviar
 
-            axios.post(URL_API + 'chat/get_answer/', formValues)
+            axios.post(URL_API + 'chat/get_answer_monitoria/', formValues)
             .then(response => {
                 this.responseText = response.data.response_text ?? 'Ocurrió un error al obtener la respuesta.';
                 //this.responseHtml = this.markdownToHtml(this.responseText);
+                this.conversation = response.data.conversation;
 
                 var newMessage = {
                     id: response.data.model_message_id,
@@ -106,7 +109,7 @@ var chatApp = createApp({
                     text: this.responseText
                 }
                 this.addNewMessage(newMessage)
-                this.user_input = '';
+                this.user_input = 'Genera el contenido';
                 this.loading = false;
             })
             .catch(error => {
@@ -165,9 +168,10 @@ var chatApp = createApp({
             }
         },
         autoExpand(event) {
-            const textarea = event.target;
-            textarea.style.height = 'auto'; // Resetear altura previa
-            textarea.style.height = textarea.scrollHeight + 'px'; // Ajustar a contenido
+            const el = event?.target || this.$refs.userInput;
+            if (!el) return;
+            el.style.height = 'auto';
+            el.style.height = el.scrollHeight + 'px';
         },
         deleteElements: function(){
             this.loading = true
@@ -191,29 +195,38 @@ var chatApp = createApp({
             this.currentFuncion = funcion; // Actualizar la función actual
             this.setBasePrompt(); // Establecer el prompt base para la función seleccionada
         },
-        setBasePrompt: function(){
-            this.user_input = this.prompts.find(p => p.funcion_id == this.currentFuncion.funcion_id).tema_prompt;
-            document.getElementById('user-input').focus();
-            this.autoExpand({ target: document.getElementById('user-input') });
-        },
-        downloadFile: function(){
-            const link = document.createElement('a');
-            link.href = `<?= URL_CONTENT ?>/development/monitoria_demo/${this.currentFuncion.nombre_archivo}`;
-            link.download = this.currentFuncion.nombre_archivo;
-            link.click();
+        setBasePrompt() {
+            this.user_input = this.prompts.find(
+                p => p.funcion_id == this.currentFuncion.funcion_id
+            ).tema_prompt;
+
+            this.$nextTick(() => {
+                const el = this.$refs.userInput;
+                if (!el) return;
+                el.focus();
+                this.autoExpand({ target: el });
+            });
         },
         areaName: function(areaId) {
             const area = this.arrAreas.find(a => a.id === areaId);
             return area ? area.name : 'Área desconocida';
-        }
-
+        },
+        /* goToNextMessage: function(direction) {
+            r
+        } */
     },
     mounted(){
         this.$nextTick(() => {
-            //this.scrollToDown();
             document.getElementById('user-input').focus();
         });
         this.setResponseContent();
-    }
+    },
+    computed: {
+        //Porcentaje de uso de tokens número entero
+        percentUsageTokens: function() {
+            const usedTokens = this.conversation.token_count;
+            return Math.round((usedTokens / maxTokens) * 100);
+        }
+    },
 }).mount('#chatApp');
 </script>

@@ -81,6 +81,7 @@ public $url_controller = URL_APP . 'chat/';
         $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
         $data['view_a'] = $this->views_folder . 'monitoria/monitoria_v';
         $data['messages'] = $this->Chat_model->messages($conversation_id);
+        $data['max_tokens'] = 20000;
 
         $this->App_model->view('templates/easypml/empty', $data);
     }

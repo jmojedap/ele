@@ -475,9 +475,9 @@ public $url_controller = URL_ADMIN . 'temas/';
 //---------------------------------------------------------------------------------------------------
     
     /**
-     * Mostrar formulario de importación de temas mediante archivo MS Excel.
+     * Formulario de importación de temas mediante archivo Excel.
      * El resultado del formulario se envía a 'admin/temas/importar_e'
-     * 
+     * 2025-08-19
      */
     function importar()
     {
@@ -1353,6 +1353,72 @@ public $url_controller = URL_ADMIN . 'temas/';
         $data['head_title'] = $data['articulo']->nombre_post;
         $data['view_a'] = $this->views_folder . 'articulos/leer_v';
         $this->App_model->view($data['view_a'], $data);
+    }
+
+    // DESASIGNAR PÁGINAS DE TEMAS
+//-----------------------------------------------------------------------------
+
+    /**
+     * Mostrar formulario de importación de listado de temas para crear y asignar
+     * posts tipo artículo de forma masiva, con formato básico predeterminado
+     * 2025-08-19
+     */
+    function importar_articulos()
+    {
+        //Configuración
+            $data['help_note'] = 'Se crearán artículos HTML (post tipo 126) asociados a los temas
+            y se le asignarán las imágenes precargadas.';
+            $data['help_tips'] = array(
+                'Las columnas A, B y C no pueden estar vacías.',
+                'Las carpetas referenciadas en la columna B deben estar en la ubicación "content\articulos" del servidor.',
+                'El archivo referenciado en la columna C debe estar en la carpeta referenciada en la columna B del formato.',
+            );
+            $data['template_file_name'] = 'f38_creacion_articulos_temas.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'temas_articulos';
+            $data['destination_form'] = 'admin/temas/importar_articulos_e';
+
+        //Vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Crear artículos';
+            $data['view_a'] = 'common/import_v';
+            $data['nav_2'] = $this->views_folder . 'menus/explore_v';
+            $data['nav_3'] = $this->views_folder  . 'menus/importar_v';
+            
+        $this->load->view(TPL_ADMIN_NEW, $data);
+    }
+
+    /**
+     * Ejecuta la desasingación de páginas de flipbook asociadas 
+     * a los temas en archivo excel.
+     * 2025-02-25
+     */
+    function importar_articulos_e()
+    {
+        //Proceso
+        $this->load->library('excel_new');
+        $imported_data = $this->excel_new->arr_sheet_default($this->input->post('sheet_name'));
+        
+        if ( $imported_data['status'] == 1 )
+        {
+            $data = $this->Tema_model->importar_articulos($imported_data['arr_sheet']);
+        }
+
+        //Cargue de variables
+            $data['status'] = $imported_data['status'];
+            $data['message'] = $imported_data['message'];
+            $data['arr_sheet'] = $imported_data['arr_sheet'];
+            $data['sheet_name'] = $this->input->post('sheet_name');
+            $data['back_destination'] = "admin/temas/importar_articulos/";
+        
+        //Cargar vista
+            $data['head_title'] = 'Temas';
+            $data['head_subtitle'] = 'Resultado crear artículos HTML';
+            $data['view_a'] = 'common/import_result_v';
+            $data['nav_2'] = $this->views_folder . 'menus/explore_v';
+            $data['nav_3'] = $this->views_folder  . 'menus/importar_v';
+
+        $this->App_model->view(TPL_ADMIN_NEW, $data);
     }
 
 }

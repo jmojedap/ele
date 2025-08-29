@@ -1,0 +1,21 @@
+.enunciado {
+    text-align: center;
+    color: #6d6d6d;
+    font-size: 2em;
+    font-weight: bold;
+}
+
+
+.btn-opcion:hover{
+    color: white;
+    background-color: #82d0fb;
+}
+
+.btn-opcion.active{
+    color: white;
+    background-color: #3eb8f9;
+}
+
+.btn-opcion.bg-success, .btn-opcion.bg-danger{
+    color: white;
+}

@@ -1,4 +1,4 @@
-<?php $this->load->view('chat/style_v') ?>
+<?php $this->load->view('chat/monitoria/style_v') ?>
 
 <div id="inicioMonitoriaApp">
     <div class="center_box_750 mt-5">
@@ -14,16 +14,16 @@
                     <input type="hidden" name="related_id" v-model="tema.id">
                     <div class="mb-3 row">
                         <label for="name" class="col-md-4 col-form-label text-end">Nombre del proyecto: </label>
-                        <div class="col-md-8">
-                            <div class="input-group">
-                                <input
-                                    name="name" type="text" class="form-control"
-                                    required
-                                    title="Nombre de la MonitorIA" placeholder="Nombre de la MonitorIA"
-                                    v-model="fields.name"
-                                >
-                                <button class="btn btn-main" type="submit">Crear</button>
-                            </div>
+                        <div class="col-md-6">
+                            <input
+                                name="name" type="text" class="form-control"
+                                required
+                                title="Nombre de la MonitorIA" placeholder="Nombre de la MonitorIA"
+                                v-model="fields.name"
+                            >
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-submit btn-round" type="submit">Crear</button>
                         </div>
                     </div>
                 <fieldset>
@@ -47,7 +47,7 @@ var inicioMonitoriaApp = createApp({
             loading: false,
             tema: <?= json_encode($tema) ?>,
             fields: {
-                name: tema.nombre_tema + ' - Monitoría',
+                name: tema.nombre_tema + ' - MonitorIA',
             },
         }
     },

@@ -52,15 +52,40 @@ class Chat extends CI_Controller{
      */
     function get_answer()
     {
+        $this->load->library('Gemini_client');
+        $conversation_id = $this->input->post('conversation_id');
+        $user_input = $this->input->post('user_input');
+
+        // Guardar el mensaje del usuario
+        /*$user_message_id = $this->Chat_model->save_user_message(
+            $conversation_id,
+            $user_input,
+        );*/
+
+        // Preparar la instrucción del sistema
+        $system_instruction_key = $this->input->post('system_instruction_key') ?? 'monitoria-tema';
+        $system_instruction_base = $this->gemini_client->system_instruction($system_instruction_key);
+        $system_instruction_parts[] = ['text' => $system_instruction_base];
+
         $request_settings = [
             'user_input' => $this->input->post('user_input'),
-            'conversation_id' => $this->input->post('conversation_id'),
-            'system_instruction_key' => $this->input->post('system_instruction_key'),
-            'model' => 'gemini-2.0-flash-lite'
+            'system_instruction_parts' => $system_instruction_parts,
+            'model' => 'gemini-2.0-flash-lite',
+            'contents' => $this->Chat_model->get_messages_as_contents($conversation_id),
         ];
 
-        $data = $this->Chat_model->get_answer($request_settings);
-        
+        $data = $this->gemini_client->generate($request_settings);
+
+        // Guardar la respuesta de la API
+        $model_message_id = $this->Chat_model->save_model_message(
+            $conversation_id,
+            $data['response_text'] ?? '',
+            $data
+        );
+
+        $data['model_message_id'] = $model_message_id;
+        $data['conversation'] = $this->Db_model->row_id('iachat_conversations', $conversation_id);
+
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
@@ -86,5 +111,65 @@ class Chat extends CI_Controller{
     function tests(){
         $query = $this->db->query("SHOW VARIABLES LIKE 'character_set_connection'");
         print_r($query->row_array());
+    }
+
+// FUNCIONES PARA HERRAMIENTA MONITORIA
+//-----------------------------------------------------------------------------
+
+    /**
+     * 
+     */
+    function get_answer_monitoria()
+    {
+        $this->load->library('Gemini_client');
+        $user_input = $this->input->post('user_input');
+        $system_instruction_key = 'monitoria-tema';
+
+        $conversation_id = $this->input->post('conversation_id');
+        $rowConversation = $this->Db_model->row_id('iachat_conversations', $conversation_id);
+        $row_tema = $this->Db_model->row_id('tema', $rowConversation->related_id);
+        $row_area = $this->Db_model->row_id('item', $row_tema->area_id);
+
+        // Preparar la instrucción del sistema
+        $system_instruction_key = 'monitoria-tema';
+        $system_instruction_base = $this->Chat_model->system_instruction($system_instruction_key);
+        $system_instruction_parts = [];
+        $system_instruction_parts[] = ['text' => $system_instruction_base];
+
+        $contents_parts = [];
+        $contents_parts[] = ["text" => $this->input->post('generation_function')];
+        $contents_parts[] = ["text" => $user_input];
+        $contents_parts[] = ['text' => "El tema es " . $row_tema->nombre_tema . ' del área temática de ' . $row_area->item];
+        $contents_parts[] = ['text' => "Los estudiantes que están abordando el tema tienen cerca de " . 
+            ($row_tema->nivel + 5) . " años de edad."];
+
+        $request_settings = [
+            'user_input' => $this->input->post('user_input'),
+            'system_instruction_parts' => $system_instruction_parts,
+            'model' => 'gemini-2.0-flash-lite',
+            'contents' =>[
+                [   
+                    "role" => "user",
+                    "parts" => $contents_parts
+                ]
+            ],
+        ];
+
+        $data = $this->gemini_client->generate($request_settings);
+
+        // Guardar la respuesta de la API
+        $model_message_id = $this->Chat_model->save_model_message(
+            $conversation_id,
+            $data['response_text'] ?? '',
+            $data
+        );
+
+        $data['model_message_id'] = $model_message_id;
+        $data['conversation'] = $this->Db_model->row_id('iachat_conversations', $conversation_id);
+
+        //$data['request'] = $request_settings;
+
+        //Salida JSON
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 }

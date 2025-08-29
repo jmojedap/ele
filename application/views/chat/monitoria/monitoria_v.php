@@ -6,7 +6,7 @@
 <div id="chatApp">
     <div class="container pt-2">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-5">
                 
 
                 <!-- Example single danger button -->
@@ -41,17 +41,18 @@
                 </table>
 
                 <form accept-charset="utf-8" method="POST" id="ia-chat-form" @submit.prevent="handleSubmit">
-                    <fieldset v-bind:disabled="loading">
+                    <fieldset v-bind:disabled="loading || percentUsageTokens >= 100">
                         <input type="hidden" name="conversation_id" id="conversation_id" v-model="conversationId">
                         <div class="chat-input mb-2">
                             <textarea name="user_input" id="user-input" v-model="user_input" rows="5"
+                                ref="userInput"
                                 @input="autoExpand($event)"
                                 @keydown.enter="handleKeyDown"
                                 required
                                 placeholder="Haz una petición a MonitorIA de En Línea Editores"></textarea>
                         </div>
                         <div class="text-end">
-                            <button class="btn btn-submit btn-lg" type="submit">
+                            <button class="btn btn-submit btn-round btn-lg" type="submit">
                                 Generar
                             </button>
                         </div>
@@ -59,7 +60,7 @@
                 </form>
             
             </div>
-            <div class="col-md-8">
+            <div class="col-md-7">
                 <div class="center_box_750">
                     <div class="tools-bar my-2">
                         <button class="btn btn-sm btn-light me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
@@ -73,6 +74,17 @@
                     <h1 class="text-center">{{ tema.nombre_tema }}</h1>
                     <div v-show="loading" class="text-center p-4">
                         <i class="fas fa-spin fa-spinner fa-3x text-main"></i>
+                    </div>
+                    <div class="progress mb-2" style="height: 2px;" v-bind:title="`Uso de tokens: ${percentUsageTokens}%`">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" v-bind:style="`width: ${percentUsageTokens}%`"></div>
+                    </div>
+                    <div class="d-flex my-2 justify-content-between">
+                        <button class="btn btn-circle">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="btn btn-circle">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
                     </div>
                     <div v-html="responseHtml" id="generated-content" v-show="!loading"></div>
                 </div>

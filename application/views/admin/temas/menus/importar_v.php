@@ -1,86 +1,91 @@
+<script>
+var sectionId = '<?= $this->uri->segment(2) . '_' . $this->uri->segment(3) ?>'
+var sections = [
+    {
+        id: 'temas_importar',
+        text: 'Temas',
+        cf: 'temas/importar/',
+        roles: [0,1,2],
+        anchor: true,
+    },
+    {
+        id: 'temas_importar_articulos',
+        text: 'Artículos',
+        cf: 'temas/importar_articulos/',
+        roles: [0,1,2],
+        anchor: true,
+    },
+    {
+        id: 'temas_importar_ut',
+        text: 'Elementos UT',
+        cf: 'temas/importar_ut/',
+        roles: [0,1,2],
+        anchor: true,
+    },
+    {
+        id: 'temas_copiar_preguntas',
+        text: 'Copiar preguntas',
+        cf: 'temas/copiar_preguntas/',
+        roles: [0,1],
+        anchor: true,
+    },
+    {
+        id: 'temas_asignar_quices',
+        text: 'Asignar evidencias',
+        cf: 'temas/asignar_quices/',
+        roles: [0,1],
+        anchor: true,
+    },
+    {
+        id: 'temas_importar_pa',
+        text: 'Preguntas abiertas',
+        cf: 'temas/importar_pa/',
+        roles: [0,1],
+        anchor: true,
+    },
+    {
+        id: 'temas_importar_lecturas_dinamicas',
+        text: 'Lecturas dinámicas',
+        cf: 'temas/importar_lecturas_dinamicas/',
+        roles: [0,1],
+        anchor: true,
+    },
+    {
+        id: 'temas_eliminar_preguntas_abiertas',
+        text: 'Preguntas abiertas',
+        cf: 'temas/eliminar_preguntas_abiertas/',
+        roles: [0,1],
+        anchor: true,
+    },
+    {
+        id: 'temas_desasingar_paginas',
+        text: 'Desasingar páginas',
+        cf: 'temas/desasingar_paginas/',
+        roles: [0,1],
+        anchor: true,
+    },
+]
+
+//Filter role sections
+var nav_3 = sections.filter(section => section.roles.includes(parseInt(APP_RID)))
+
+//Set active class
+nav_3.forEach((section,i) => {
+    nav_3[i].class = ''
+    if ( section.id == sectionId ) nav_3[i].class = 'active'
+})
+
+if ( sectionId == 'temas_importar_e' ) nav_3[0].class = 'active';
+if ( sectionId == 'temas_importar_articulos_e' ) nav_3[1].class = 'active';
+if ( sectionId == 'temas_importar_ut_e' ) nav_3[2].class = 'active';
+if ( sectionId == 'temas_copiar_preguntas_e' ) nav_3[3].class = 'active';
+if ( sectionId == 'temas_asignar_quices_e' ) nav_3[4].class = 'active';
+if ( sectionId == 'temas_importar_pa_e' ) nav_3[5].class = 'active';
+if ( sectionId == 'temas_importar_lecturas_dinamicas_e' ) nav_3[6].class = 'active';
+if ( sectionId == 'temas_eliminar_preguntas_abiertas_e' ) nav_3[7].class = 'active';
+if ( sectionId == 'temas_desasingar_paginas_e' ) nav_3[8].class = 'active';
+
+</script>
+
 <?php
-    //Submenú
-        $seccion = $this->uri->segment(3);
-        if ( $seccion == 'importar_ut_e' ) { $clases_sm['importar_ut'] = 'active'; }
-        if ( $seccion == 'copiar_preguntas_e' ) { $clases_sm['copiar_preguntas'] = 'active'; }
-        if ( $seccion == 'asignar_quices_e' ) { $clases_sm['asignar_quices'] = 'active'; }
-        if ( $seccion == 'importar_pa_e' ) { $clases_sm['importar_pa'] = 'active'; }
-        if ( $seccion == 'importar_lecturas_dinamicas_e' ) { $clases_sm['importar_lecturas_dinamicas'] = 'active'; }
-        if ( $seccion == 'eliminar_preguntas_abiertas_e' ) { $clases_sm['eliminar_preguntas_abiertas'] = 'active'; }
-        if ( $seccion == 'desasingar_paginas_e' ) { $clases_sm['desasingar_paginas'] = 'active'; }
-
-        $clases_sm[$seccion] = 'active';
-    
-    //Atributos de los elementos del menú
-        $arr_menus['importar'] = array(
-            'icono' => '<i class="fa fa-bars"></i>',
-            'texto' => 'Temas',
-            'link' => 'admin/temas/importar/',
-            'atributos' => 'title="Importar temas desde MS Excel"'
-        );
-            
-        $arr_menus['importar_ut'] = array(
-            'icono' => '<i class="fa fa-sitemap"></i>',
-            'texto' => 'Elementos UT',
-            'link' => 'admin/temas/importar_ut/',
-            'atributos' => 'title="Importar elementos de unidades temáticas"'
-        );
-        
-        $arr_menus['copiar_preguntas'] = array(
-            'icono' => '<i class="fa fa-clone"></i>',
-            'texto' => 'Copiar preguntas',
-            'link' => 'admin/temas/copiar_preguntas/',
-            'atributos' => 'title="Copiar preguntas de un tema a otro, formato Excel"'
-        );
-        
-        $arr_menus['asignar_quices'] = array(
-            'icono' => '<i class="fa fa-angle-double-right"></i>',
-            'texto' => 'Asignar evidencias',
-            'link' => 'admin/temas/asignar_quices/',
-            'atributos' => 'title="Asingar las evidencias de un tema a otro"'
-        );
-
-        $arr_menus['importar_pa'] = array(
-            'icono' => '<i class="fas fa-feather-alt"></i>',
-            'texto' => 'Preguntas abiertas',
-            'link' => 'admin/temas/importar_pa/',
-            'atributos' => 'title="Importar preguntas abiertas a los temas"'
-        );
-
-        $arr_menus['importar_lecturas_dinamicas'] = array(
-            'icono' => '<i class="far fa-file-alt"></i>',
-            'texto' => 'Lecturas dinámicas',
-            'link' => 'admin/temas/importar_lecturas_dinamicas/',
-            'atributos' => 'title="Importar lecturas dinámicas a los temas"'
-        );
-
-        $arr_menus['eliminar_preguntas_abiertas'] = array(
-            'icono' => '<i class="fa fa-trash"></i>',
-            'texto' => 'Preguntas abiertas',
-            'link' => 'admin/temas/eliminar_preguntas_abiertas/',
-            'atributos' => 'title="Eliminar preguntas abiertas"'
-        );
-
-        $arr_menus['desasingar_paginas'] = array(
-            'icono' => '<i class="fa fa-file"></i>',
-            'texto' => 'Desasingar páginas',
-            'link' => 'admin/temas/desasingar_paginas/',
-            'atributos' => 'title="Desasingar páginas de los temas"'
-        );
-        
-    //Elementos de menú según el rol del visitante
-        $elementos_rol[0] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas', 'eliminar_preguntas_abiertas', 'desasingar_paginas');
-        $elementos_rol[1] = array('importar', 'importar_ut', 'copiar_preguntas', 'asignar_quices', 'importar_pa', 'importar_lecturas_dinamicas', 'eliminar_preguntas_abiertas', 'desasingar_paginas');
-        $elementos_rol[2] = array('importar', 'importar_ut');
-        
-    //Definiendo menú mostrar, según el rol del visitante
-        $elementos = $elementos_rol[$this->session->userdata('rol_id')];
-        
-    //Array data para la vista: comunes/menu_v
-        $data_menu['elementos'] = $elementos;
-        $data_menu['clases_sm'] = $clases_sm;
-        $data_menu['arr_menus'] = $arr_menus;
-        $data_menu['seccion_sm'] = $seccion;
-    
-    //Cargue vista
-        $this->load->view('comunes/bs4/submenu_v', $data_menu);
+$this->load->view('common/bs4/nav_3_v');
