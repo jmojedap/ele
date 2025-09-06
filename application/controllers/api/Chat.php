@@ -57,10 +57,10 @@ class Chat extends CI_Controller{
         $user_input = $this->input->post('user_input');
 
         // Guardar el mensaje del usuario
-        /*$user_message_id = $this->Chat_model->save_user_message(
+        $user_message_id = $this->Chat_model->save_user_message(
             $conversation_id,
             $user_input,
-        );*/
+        );
 
         // Preparar la instrucción del sistema
         $system_instruction_key = $this->input->post('system_instruction_key') ?? 'monitoria-tema';
