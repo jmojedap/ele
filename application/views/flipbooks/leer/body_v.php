@@ -129,7 +129,7 @@
                             <ul class="dropdown-menu">
                                 <?php if ( $elementos_fb['crear_cuestionario'] ){ ?>
                                     <li>
-                                        <a href="<?php echo base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" title="Crear cuestionario a partir de los temas de este libro" target="_blank">
+                                        <a href="<?php echo base_url("admin/flipbooks/crear_cuestionario/{$row->id}") ?>" title="Crear cuestionario a partir de los temas de este libro" target="_blank">
                                             <i class="fa fa-plus"></i>
                                             Cuestionario
                                         </a>
@@ -138,7 +138,7 @@
 
                                 <?php if ( $elementos_fb['programar_temas'] ){ ?>
                                     <li>
-                                        <a href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar temas de contenido" target="_blank">
+                                        <a href="<?php echo base_url("admin/flipbooks/programar_temas/{$row->id}") ?>" title="Programar temas de contenido" target="_blank">
                                             <i class="fa fa-calendar-o"></i> Programar
                                         </a>
                                     </li>

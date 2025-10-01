@@ -12,7 +12,7 @@
                         Abrir
                     </a>
                     <?php if ( $this->session->userdata('rol_id') <= 6 ) { ?>
-                        <a href="<?php echo base_url("flipbooks/anotaciones/{$row_flipbook->flipbook_id}") ?>" class="btn btn-secondary" <?php echo $att_link ?>>
+                        <a href="<?php echo base_url("admin/flipbooks/anotaciones/{$row_flipbook->flipbook_id}") ?>" class="btn btn-secondary" <?php echo $att_link ?>>
                             Anotaciones
                         </a>
                     <?php } ?>

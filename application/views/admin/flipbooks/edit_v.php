@@ -61,8 +61,8 @@
                             <label for="taller_id" class="col-md-4 col-form-label text-end text-right">Taller
                                 asociado</label>
                             <div class="col-md-8">
-                                <select name="taller_id" v-model="fields.taller_id" class="form-select form-control"
-                                    required>
+                                <select name="taller_id" v-model="fields.taller_id" class="form-select form-control">
+                                    <option value="">-NINGUNO-</option>
                                     <option v-for="optionTaller in arrTalleres" v-bind:value="optionTaller.id">
                                         {{ optionTaller.anio_generacion }} | {{ optionTaller.name }}</option>
                                 </select>

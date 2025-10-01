@@ -6,10 +6,13 @@
             </th>
             <th width="10px" class="table-warning">ID</th>
             <th>Contenido</th>
-            <th>Leer</th>
+            <th width="80px">Leer</th>
             <th>Nivel &middot; Área</th>
+            <th>Taller</th>
+            <th>Programa</th>
 
-            <th width="50px"></th>
+            <th width="50px">JSON</th>
+            <!-- <th width="50px"></th> -->
         </thead>
         <tbody>
             <tr v-for="(element, key) in list" v-bind:id="`row_` + element.id" v-bind:class="{'table-info': selected.includes(element.id) }">
@@ -36,12 +39,30 @@
                         {{ areaName(element.area_id, 'short_name') }}
                     </span>
                 </td>
-                
+
                 <td>
+                    <a v-bind:href="`<?= URL_ADMIN . "flipbooks/paginas/" ?>` + element.taller_id">
+                        Taller {{ element.taller_id }}
+                    </a>
+                </td>
+                <td>
+                    <a v-bind:href="`<?= URL_ADMIN . "programas/temas/" ?>` + element.programa_id">
+                        Programa {{ element.programa_id }}
+                    </a>
+                </td>
+
+                <td>
+                    <button class="btn btn-light crear_json" v-on:click="crearJSON(element.id)"
+                        title="Actualizar archivo JSON de contenido">
+                        <i class="far fa-file-alt"></i>
+                    </button>
+                </td>
+                
+                <!-- <td>
                     <button class="a4" data-toggle="modal" data-target="#detail_modal" @click="setCurrent(key)">
                         <i class="fa fa-info"></i>
                     </button>
-                </td>
+                </td> -->
             </tr>
         </tbody>
     </table>

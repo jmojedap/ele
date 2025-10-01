@@ -11,8 +11,8 @@
     //Atributos de los elementos del menú
         
         $arr_menus['explorar'] = array(
-            'icono' => '<i class="fa fa-search"></i>',
-            'texto' => '',
+            'icono' => '<i class="fa fa-left-row"></i>',
+            'texto' => 'Contenidos',
             'link' => 'flipbooks/explore',
             'atributos' => 'title="Explorar contenidos"',
         );

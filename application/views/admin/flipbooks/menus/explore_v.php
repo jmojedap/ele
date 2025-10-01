@@ -5,19 +5,22 @@
             text: 'Explorar',
             id: 'flipbooks_explore',
             cf: 'flipbooks/explore',
-            roles: [0,1,2,9]
+            roles: [0,1,2,9],
+            anchor: true
         },
         {
             text: 'Asignar talleres',
-            id: '',
+            id: 'flipbooks_asignar_taller',
             cf: 'flipbooks/asignar_taller',
-            roles: [0,1]
+            roles: [0,1],
+            anchor: true
         },
         {
             text: 'Nuevo',
-            id: 'flipbooks_add',
+            id: 'flipbooks_nuevo',
             cf: 'flipbooks/nuevo/add',
-            roles: [0,1,2]
+            roles: [0,1,2],
+            anchor: true
         },
     ]
     

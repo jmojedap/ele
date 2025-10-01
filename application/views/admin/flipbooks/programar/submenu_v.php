@@ -1,7 +1,7 @@
 <?php
 
-        $seccion_sm = $this->uri->segment(2);
-        if ( $this->uri->segment(2) == 'importar_programacion_e' ) { $seccion_sm = 'importar_programacion'; }
+        $seccion_sm = $this->uri->segment(3);
+        if ( $this->uri->segment(3) == 'importar_programacion_e' ) { $seccion_sm = 'importar_programacion'; }
 
         $clases_sm[$seccion_sm] = 'active';
     
@@ -9,14 +9,14 @@
         $arr_menus['programar_temas'] = array(
             'icono' => '<i class="fa fa-list-alt"></i>',
             'texto' => 'Programar',
-            'link' => "flipbooks/programar_temas/{$row->id}",
+            'link' => "admin/flipbooks/programar_temas/{$row->id}",
             'atributos' => 'title="Programar los temas"'
         );
             
         $arr_menus['importar_programacion'] = array(
             'icono' => '<i class="fa fa-file-excel-o"></i>',
             'texto' => 'Importar',
-            'link' => "flipbooks/importar_programacion/{$row->id}",
+            'link' => "admin/flipbooks/importar_programacion/{$row->id}",
             'atributos' => 'title="Importar la programación de temas"'
         );
         
@@ -39,4 +39,4 @@
     
     //Cargue vista
         $this->load->view('comunes/bs4/submenu_v', $data_menu);
-        $this->load->view('flipbooks/programar/grupos_v');
+        $this->load->view('admin/flipbooks/programar/grupos_v');

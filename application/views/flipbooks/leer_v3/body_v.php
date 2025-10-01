@@ -148,11 +148,11 @@
                         
                     <div class="sep2 hidden">
                         <?php if ( $elementos_fb['crear_cuestionario'] ){ ?>
-                            <?= anchor("flipbooks/crear_cuestionario/{$row->id}", '<i class="fa fa-question"></i> Cuestionario', 'class="btn btn-default btn-block" title="Crear cuestionario a partir de los temas del Contenido" target="_blank"') ?>
+                            <?= anchor("admin/flipbooks/crear_cuestionario/{$row->id}", '<i class="fa fa-question"></i> Cuestionario', 'class="btn btn-default btn-block" title="Crear cuestionario a partir de los temas del Contenido" target="_blank"') ?>
                         <?php } ?>
 
                         <?php if ( $elementos_fb['programar_temas'] ){ ?>
-                            <?= anchor("flipbooks/programar_temas/{$row->id}", '<i class="fa fa-calendar-o"></i> Programar', 'class="btn btn-default btn-block" title="Programar temas de contenido" target="_blank"') ?>
+                            <?= anchor("admin/flipbooks/programar_temas/{$row->id}", '<i class="fa fa-calendar-o"></i> Programar', 'class="btn btn-default btn-block" title="Programar temas de contenido" target="_blank"') ?>
                         <?php } ?>
 
                         <?php if ( $elementos_fb['plan_aula'] ){ ?>
@@ -170,7 +170,7 @@
                             <ul class="dropdown-menu">
                                 <?php if ( $elementos_fb['crear_cuestionario'] ){ ?>
                                     <li>
-                                        <?= anchor("flipbooks/crear_cuestionario/{$row->id}", '<i class="fa fa-question"></i> Cuestionario', 'title="Crear cuestionario a partir de los temas del Contenido" target="_blank"') ?>
+                                        <?= anchor("admin/flipbooks/crear_cuestionario/{$row->id}", '<i class="fa fa-question"></i> Cuestionario', 'title="Crear cuestionario a partir de los temas del Contenido" target="_blank"') ?>
                                     </li>
                                 <?php } ?>
 

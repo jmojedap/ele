@@ -23,7 +23,7 @@
                     <i class="fas fa-calendar-days text-color-green"></i>
                     Programador
                 </a>
-                <a class="d-flex flex-column text-center unidad-menu" href="<?= base_url("flipbooks/programar_temas/{$row->id}") ?>" target="_blank" title="Programar fechas a los temas de este contenido">
+                <a class="d-flex flex-column text-center unidad-menu" href="<?= base_url("admin/flipbooks/programar_temas/{$row->id}") ?>" target="_blank" title="Programar fechas a los temas de este contenido">
                     <i class="fas fa-calendar-check text-color-green"></i>
                     Programar temas
                 </a>

@@ -44,7 +44,7 @@ class Search_model extends CI_Model{
             'rol',      //Rol de usuario
             'e',        //Editado, fecha de edición
             'est',      //Estado
-            'a',        //Área 
+            'a',        //Área
             'n',        //Nivel escolar, grado escolar
             'i',        //Institución
             'g',        //Grupo

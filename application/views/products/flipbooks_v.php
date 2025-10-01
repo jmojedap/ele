@@ -64,7 +64,7 @@
             <tr v-for="(flipbook, flipbook_key) in flipbooks">
                 <td>{{ flipbook.id }}</td>
                 <td>
-                    <a v-bind:href="`<?php echo base_url("flipbooks/info/") ?>` + `/` + flipbook.id">
+                    <a v-bind:href="`<?php echo base_url("admin/flipbooks/info/") ?>` + `/` + flipbook.id">
                         {{ flipbook.title }}
                     </a>
                 </td>

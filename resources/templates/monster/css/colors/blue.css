@@ -36,11 +36,11 @@ File: scss
 /*Top bar
 *******************/
 .topbar {
-  background: rgb(135,214,48);
-  background: -moz-linear-gradient(90deg, rgba(135,214,48,1) 0%, rgba(71,129,19,1) 100%);
-  background: -webkit-linear-gradient(90deg, rgba(135,214,48,1) 0%, rgba(71,129,19,1) 100%);
-  background: linear-gradient(90deg, rgba(135,214,48,1) 0%, rgba(71,129,19,1) 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#87d630",endColorstr="#478113",GradientType=1);
+  background: #43BAF3;
+  background: -moz-linear-gradient(90deg, rgba(67,186,243,1) 0%, rgba(25,103,148,1) 100%);
+  background: -webkit-linear-gradient(90deg, rgba(67,186,243,1) 0%, rgba(25,103,148,1) 100%);
+  background: linear-gradient(90deg, rgba(67,186,243,1) 0%, rgba(25,103,148,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#43BAF3", endColorstr="#196794", GradientType=1);
 }
 
 .topbar .top-navbar .navbar-header .navbar-brand .dark-logo {

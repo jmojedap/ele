@@ -4,9 +4,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="detail_modal_label">{{ element.nombre_flipbook }}</h5>
-                <buttonnivel type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
-                </buttonnivel
+                </button
             </div>
             <div class="modal-body">
                 <table class="table table-borderless table-sm">
@@ -35,7 +35,7 @@
                 </table>
             </div>
             <div class="modal-footer">
-                    <a class="btn btn-primary w100p" v-bind:href="`<?= URL_ADMIN . 'flipbooks/info/' ?>` + element.id">Abrir</a>
+                    <a class="btn btn-primary w100p" v-bind:href="`<?= URL_ADMIN . 'flipbooks/info/' ?>` + element.id">Abrir NO</a>
                     <button type="button" class="btn btn-secondary w100p" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

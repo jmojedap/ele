@@ -13,7 +13,7 @@
     {
         $('#campo-temas').change(function(){
             var tema_id = $(this).val();
-            window.location = '<?= base_url("flipbooks/anotaciones/{$row->id}") ?>/' + tema_id;
+            window.location = '<?= base_url("admin/flipbooks/anotaciones/{$row->id}") ?>/' + tema_id;
         });
         
     });

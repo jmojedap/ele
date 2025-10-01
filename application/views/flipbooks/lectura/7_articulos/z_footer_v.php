@@ -26,7 +26,7 @@
             <a class="btn btn-light" href="<?= base_url('eventos/calendario') ?>" target="_blank" title="Calendario programador">
                 <i class="fa-regular fa-calendar-days"></i> Programador
             </a>
-            <a class="btn btn-light" href="<?= base_url("flipbooks/programar_temas/{$row->id}") ?>" target="_blank" title="Programar fechas a los temas de este contenido">
+            <a class="btn btn-light" href="<?= base_url("admin/flipbooks/programar_temas/{$row->id}") ?>" target="_blank" title="Programar fechas a los temas de este contenido">
                 <i class="fa-regular fa-calendar-check"></i> Programador temas
             </a>
         </div>

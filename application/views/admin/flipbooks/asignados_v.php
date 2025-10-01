@@ -9,7 +9,7 @@
     {
         $('#campo_instituciones').change(function(){
             var institucion_id = $(this).val();
-            window.location = '<?= base_url("flipbooks/asignados/{$row->id}") ?>/' + institucion_id;
+            window.location = '<?= base_url("admin/flipbooks/asignados/{$row->id}") ?>/' + institucion_id;
         });
         
     });

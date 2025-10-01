@@ -88,7 +88,7 @@
 </script>
 
 <div id="add_file">
-    <div class="card mb-2">
+    <div class="card w-100 mb-2">
         <div class="card-header">
             Imagen asociada
         </div>

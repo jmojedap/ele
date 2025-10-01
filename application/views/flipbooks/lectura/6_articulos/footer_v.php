@@ -50,10 +50,10 @@
                 <i class="fa-solid fa-pencil"></i>
                 <span class="only-lg ms-1">Escribe</span>
             </button>
-            <a class="btn btn-light" href="<?= base_url("flipbooks/programar_temas/{$row->id}") ?>" target="_blank" title="Programar fechas a los temas de este contenido">
+            <a class="btn btn-light" href="<?= base_url("admin/flipbooks/programar_temas/{$row->id}") ?>" target="_blank" title="Programar fechas a los temas de este contenido">
                 <i class="fa-regular fa-calendar-check"></i>
             </a>
-            <a class="btn btn-light" href="<?= base_url("flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario con los temas de este contenido">
+            <a class="btn btn-light" href="<?= base_url("admin/flipbooks/crear_cuestionario/{$row->id}") ?>" target="_blank" title="Crear un cuestionario con los temas de este contenido">
                 <i class="fas fa-question"></i>
             </a>
             <a class="btn btn-light" href="<?= base_url('eventos/calendario') ?>" target="_blank" title="Calendario programador">

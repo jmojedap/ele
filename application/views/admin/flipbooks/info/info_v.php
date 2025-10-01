@@ -58,4 +58,4 @@
     </div>
 </div>
 
-<?php $this->load->view('flipbooks/info/vue_v') ?>
+<?php $this->load->view('admin/flipbooks/info/vue_v') ?>

@@ -133,18 +133,18 @@
         $opciones_menus['admin/temas/asignar_quices'] = array('recursos', 'temas', 'temas');
         $opciones_menus['admin/temas/asignar_quices_e'] = array('recursos', 'temas', 'temas');
 
-        $opciones_menus['flipbooks/explorar'] = array('recursos', 'flipbooks', 'contenidos');
-        $opciones_menus['flipbooks/asignar_taller'] = array('recursos', 'flipbooks', 'contenidos');
-        $opciones_menus['flipbooks/asignar_taller_e'] = array('recursos', 'flipbooks', 'contenidos');
-        $opciones_menus['flipbooks/nuevo'] = array('recursos', 'flipbooks', 'contenidos');
-        $opciones_menus['flipbooks/temas'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/nuevo_cuestionario'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/paginas'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/aperturas'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/asignados'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/anotaciones'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/copiar_flipbook'] = array('recursos', 'flipbooks', 'flipbooks');
-        $opciones_menus['flipbooks/editar'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/explore'] = array('recursos', 'flipbooks', 'contenidos');
+        $opciones_menus['admin/flipbooks/asignar_taller'] = array('recursos', 'flipbooks', 'contenidos');
+        $opciones_menus['admin/flipbooks/asignar_taller_e'] = array('recursos', 'flipbooks', 'contenidos');
+        $opciones_menus['admin/flipbooks/nuevo'] = array('recursos', 'flipbooks', 'contenidos');
+        $opciones_menus['admin/flipbooks/temas'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/nuevo_cuestionario'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/paginas'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/aperturas'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/asignados'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/anotaciones'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/copiar_flipbook'] = array('recursos', 'flipbooks', 'flipbooks');
+        $opciones_menus['admin/flipbooks/editar'] = array('recursos', 'flipbooks', 'flipbooks');
         
         $opciones_menus['contenidos_ap/explorar'] = array('recursos', 'contenidos_ap', 'contenidos ap');
         $opciones_menus['contenidos_ap/nuevo'] = array('recursos', 'contenidos_ap', 'contenidos ap');

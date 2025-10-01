@@ -58,8 +58,12 @@
                         text: 'Contenidos',
                         active: false,
                         icon: 'fa fa-book',
-                        cf: 'flipbooks/explorar',
-                        sections: []
+                        cf: 'admin/flipbooks/explore',
+                        sections: [
+                            'admin/flipbooks/explore',
+                            'admin/flipbooks/asignar_taller',
+                            'admin/flipbooks/temas'
+                        ]
                     },
                     {
                         text: 'Páginas',

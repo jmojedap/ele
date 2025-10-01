@@ -41,10 +41,10 @@
     //Ajax
     function programar_tema()
     {
-        $.ajax({        
-            type: 'POST',
-            url: url_api + 'eventos/programar_tema',
-            data: {
+        $.ajax({        
+            type: 'POST',
+            url: url_api + 'eventos/programar_tema',
+            data: {
                 flipbook_id : flipbook_id,
                 tema_id : tema_id,
                 num_pagina : num_pagina,
@@ -59,15 +59,15 @@
                 }
                 
             }
-        });
+        });
     }
     
     //Ajax
     function desprogramar(){
-        $.ajax({        
-            type: 'POST',
-            url: url_api + 'eventos/delete_selected',
-            data: {
+        $.ajax({        
+            type: 'POST',
+            url: url_api + 'eventos/delete_selected',
+            data: {
                 selected : evento_id
             },
             success: function(response){
@@ -78,7 +78,7 @@
                     toastr['error']('No se eliminó asignación de fecha, es posible que otro usuario la haya realizado')
                 }
             }
-        });
+        });
     }
     
     function programado(evento_id)

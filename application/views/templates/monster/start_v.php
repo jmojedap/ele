@@ -31,7 +31,7 @@
         </div>
         <div class="fixed-bottom text-center pb-2">
             <span style="color: #FFFFFF">
-                © 2022 &middot; En Línea Editores &middot; Colombia
+                © 2025 &middot; En Línea Editores &middot; Colombia
             </span>
         </div>
         

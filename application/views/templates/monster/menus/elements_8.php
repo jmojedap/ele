@@ -39,7 +39,7 @@
                     text: 'Contenidos',
                     active: false,
                     icon: 'fa fa-book',
-                    cf: 'flipbooks/explorar',
+                    cf: 'admin/flipbooks/explore',
                     sections: []
                 },
                 {

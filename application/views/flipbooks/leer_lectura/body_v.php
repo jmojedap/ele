@@ -161,7 +161,7 @@
             <!-- HERRAMIENTAS DERECHA -->
             <div class="col-md-3">
                 <?php if ( $es_profesor ) { ?>
-                    <a class="btn btn-light btn-block" href="<?php echo base_url("flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas de este contenido">
+                    <a class="btn btn-light btn-block" href="<?php echo base_url("admin/flipbooks/programar_temas/{$row->id}") ?>" title="Programar fechas a los temas de este contenido">
                         <img src="<?php echo URL_IMG ?>flipbook/cd_programar_temas.png" alt="Imagen programador">
                     </a>
                     <a class="btn btn-light btn-block mb-2" href="<?php echo base_url('eventos/calendario') ?>" title="Calendario programador">

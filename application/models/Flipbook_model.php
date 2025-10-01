@@ -15,6 +15,19 @@ class Flipbook_model extends CI_Model {
         return $basico;
     }
 
+    function basic($flipbook_id)
+    {
+        $row = $this->datos_flipbook($flipbook_id);
+
+        $basico['flipbook_id'] = $flipbook_id;
+        $basico['row'] = $row;
+        $basico['head_title'] = $row->nombre_flipbook;
+        $basico['nav_2'] = 'admin/flipbooks/menus/row_v';
+        $basico['view_description'] = 'admin/flipbooks/flipbook_v';
+
+        return $basico;
+    }
+
 // EXPLORE FUNCTIONS - flipbooks/explore
 //-----------------------------------------------------------------------------
     
@@ -29,13 +42,13 @@ class Flipbook_model extends CI_Model {
         //Elemento de exploración
             $data['controller'] = 'flipbooks';                       //Nombre del controlador
             $data['cf'] = 'flipbooks/explore/';                      //Nombre del controlador
-            $data['views_folder'] = 'flipbooks/explore/';      //Carpeta donde están las vistas de exploración
+            $data['views_folder'] = 'admin/flipbooks/explore/';      //Carpeta donde están las vistas de exploración
             $data['numPage'] = $num_page;                       //Número de la página
             
         //Vistas
             $data['head_title'] = 'Contenidos';
             $data['view_a'] = $data['views_folder'] . 'explore_v';
-            $data['nav_2'] = $data['views_folder'] . 'menu_v';
+            $data['nav_2'] = 'admin/flipbooks/menus/explore_v';
         
         return $data;
     }
@@ -113,7 +126,7 @@ class Flipbook_model extends CI_Model {
         $condition .= $this->role_filter() . ' AND ';
 
         //q words condition
-        $words_condition = $this->Search_model->words_condition($filters['q'],['nombre_flipbooks', 'descripcion', 'anio_generacion']);
+        $words_condition = $this->Search_model->words_condition($filters['q'],['nombre_flipbook', 'descripcion', 'anio_generacion']);
         if ( $words_condition )
         {
             $condition .= $words_condition . ' AND ';
@@ -121,7 +134,7 @@ class Flipbook_model extends CI_Model {
         
         //Otros filtros
         if ( $filters['type'] != '' ) { $condition .= "tipo_flipbook_id = {$filters['type']} AND "; }
-        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['area_id']} AND "; }
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
         if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
         if ( $filters['condition'] != '' ) { $condition .= "{$filters['condition']} AND "; }
         
@@ -440,7 +453,13 @@ class Flipbook_model extends CI_Model {
         return TRUE;
     }
 
-    function eliminar($flipbook_id) {
+    /**
+     * Eliminar un flipbook tabla flipibooks
+     * 2025-09-24
+     * @param int $flipbook_id :: Id del flipbook que se requiere eliminar
+     */
+    function delete($flipbook_id)
+    {
         //Tabla tema
         $this->db->where('id', $flipbook_id);
         $this->db->delete('flipbook');
@@ -457,6 +476,8 @@ class Flipbook_model extends CI_Model {
         $this->db->where('tabla_id', 4300); //Tabla flipbook
         $this->db->where('elemento_id', $flipbook_id);
         $this->db->delete('meta');
+
+        return $this->db->affected_rows();
     }
 
     /**
@@ -607,7 +628,8 @@ class Flipbook_model extends CI_Model {
 
         //Formulario Add
         $crud->add_fields(
-                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion', 'editado', 'editor_id', 'creado', 'creador_id'
+                'nombre_flipbook', 'anio_generacion', 'area_id', 'nivel', 'descripcion',
+                'editado', 'editor_id', 'creado', 'creador_id'
         );
 
         //Opciones nivel
@@ -1671,7 +1693,7 @@ class Flipbook_model extends CI_Model {
 
         //Filtro por tema
         if ($tema_id > 0) {
-            $this->db->where('tema_id', $tema_id);
+            $this->db->where('pagina_flipbook.tema_id', $tema_id);
         }
 
         $anotaciones = $this->db->get('pagina_flipbook_detalle');
@@ -1841,7 +1863,7 @@ class Flipbook_model extends CI_Model {
     }
 
     /**
-     * Array para enviarse a la vista flipbooks/ver_flipbook_full
+     * Array para enviarse a la vista flipbooks/admin/ver_flipbook_full
      * 
      * Para flipbook array, recursos asociados a un flipbook
      */

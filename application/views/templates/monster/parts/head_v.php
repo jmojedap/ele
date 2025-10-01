@@ -64,4 +64,6 @@
     <?php endif; ?>
 
     <!-- Google Analytics -->
-    <?php $this->load->view('head_includes/google_analytics'); ?>
+     <?php if ( VER_LOCAL != TRUE  ) : ?>
+        <?php $this->load->view('head_includes/google_analytics'); ?>
+     <?php endif; ?>

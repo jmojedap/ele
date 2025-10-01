@@ -17,7 +17,7 @@
 
         <?php
             $link_taller = $this->App_model->nombre_flipbook($row->taller_id);
-            if ( ! is_null($row->taller_id) ) { $link_taller = anchor("flipbooks/ver_flipbook/{$row->taller_id}", $link_taller, 'target="_blank"'); }
+            if ( ! is_null($row->taller_id) ) { $link_taller = anchor("admin/flipbooks/info/{$row->taller_id}", $link_taller, 'target="_blank"'); }
         ?>
         <span class="text-muted">Taller asociado</span>
         <span class="text-danger"> <?= $link_taller ?></span>

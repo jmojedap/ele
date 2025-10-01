@@ -1,4 +1,3 @@
-
 <script>
 // Vue App
 //-----------------------------------------------------------------------------
@@ -24,8 +23,9 @@ var appExplore = new Vue({
         loading: false,
         activeFilters: false,
         arrTipo: <?= json_encode($arrTipo) ?>,
-        arrNivel: <?= json_encode($opcionesNivel) ?>,
+        arrNivel: <?= json_encode($arrNivel) ?>,
         arrArea: <?= json_encode($arrArea) ?>,
+        opcionesNivel: <?= json_encode($opcionesNivel) ?>,
     },
     methods: {
         getList: function(e, numPage = 1){
@@ -104,6 +104,15 @@ var appExplore = new Vue({
             var item = this.arrArea.find(row => row.id == value)
             if ( item != undefined ) areaName = item[field]
             return areaName
+        },
+        crearJSON: function(flipbookId){
+            axios.get(URL_API + 'flipbooks/crear_json/' + flipbookId)
+            .then(response => {
+                if ( response.data.status == 1 ) {
+                    toastr['success']("Archivo actualizado ID: " + flipbookId);
+                }
+            })
+            .catch(function(error) { console.log(error) })
         },
     }
 })

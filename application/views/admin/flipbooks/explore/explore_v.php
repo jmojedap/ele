@@ -11,7 +11,7 @@
                         v-on:click="toggleFilters"
                         v-bind:class="{'btn-secondary': showFilters, 'btn-light': !showFilters }"
                         >
-                        <i class="fas fa-chevron-down"></i>
+                        <i class="fas fa-sliders-h"></i>
                     </button>
                 </div>
             </div>
@@ -55,7 +55,7 @@
         </div>
     </div>
 
-    <?php $this->load->view($views_folder . 'detail_v'); ?>
+    <?php //$this->load->view($views_folder . 'detail_v'); ?>
     <?php $this->load->view('common/modal_delete_selected_v'); ?>
 </div>
 

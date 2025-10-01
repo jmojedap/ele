@@ -33,6 +33,7 @@
                     >
                         <i class="fas fa-external-link-alt"></i>
                     </a>
+
                     <a class="btn btn-sm btn-light" title="Vista previa" v-bind:href="`<?= URL_CONTENT ?>cuestionarios/` + cuestionario.archivo_imprimible"
                         target="_blank" v-show="cuestionario.archivo_imprimible.length > 0"
                     >
@@ -43,3 +44,11 @@
         </tr>
     </tbody>
 </table>
+
+<div>
+    <a class="btn btn-light" title="Crear cuestionario desde temas del contenido" v-bind:href="`<?= base_url('admin/flipbooks/crear_cuestionario/') ?>` + flipbook.id"
+        target="_blank" 
+    >
+        <i class="fas fa-plus"></i> Crear cuestionario
+    </a>
+</div>

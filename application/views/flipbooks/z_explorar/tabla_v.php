@@ -38,7 +38,7 @@
                 //Taller
                     $nombre_taller = $this->App_model->nombre_flipbook($row_resultado->taller_id);
                     $href_taller = NULL;
-                    if ( ! is_null($row_resultado->taller_id) ) { $href_taller = base_url("flipbooks/paginas/{$row_resultado->taller_id}"); }
+                    if ( ! is_null($row_resultado->taller_id) ) { $href_taller = base_url("admin/flipbooks/paginas/{$row_resultado->taller_id}"); }
             ?>
                 <tr id="fila_<?php echo $row_resultado->id ?>">
                     <td>

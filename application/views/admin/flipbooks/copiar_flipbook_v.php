@@ -1,6 +1,6 @@
 <div class="card m-auto" style="max-width: 750px;">
     <div class="card-body">
-        <form action="<?php echo base_url('flipbooks/generar_copia') ?>" accept-charset="utf-8" method="POST">
+        <form action="<?php echo base_url('admin/flipbooks/generar_copia') ?>" accept-charset="utf-8" method="POST">
             <input type="hidden" name="flipbook_id" value="<?php echo $row->id ?>">
 
             <div class="form-group row">

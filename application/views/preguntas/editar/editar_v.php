@@ -13,11 +13,9 @@
             </div>
         </div>
         <div class="col-md-4">
-            <?php $this->load->view('preguntas/editar/archivo_v') ?>
+            HOLA
+            <?php //$this->load->view('preguntas/editar/archivo_v') ?>
         </div>
     </div>
-    
-    
-    
 </div>
 

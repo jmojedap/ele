@@ -42,7 +42,7 @@
                     Detener
                 </button>
                 <div class="btn-group stopped" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-secondary" disabled>Velocidad</button>
+                    <button type="button" class="btn btn-secondary" disabled>Nivel</button>
                     <?php foreach ( $arr_lapses as $key => $lapse ) { ?>
                     <?php
                         $cl_lapse = $this->Pcrn->clase_activa($key, $lapse_index, 'btn-primary', 'btn-light');

@@ -63,7 +63,7 @@
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
-                        Ritmo <br> lector
+                        Velocidad <br> lectora
                     </div>
                 </a>
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('practicas_lectoras')"
@@ -73,7 +73,7 @@
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
-                        Ejercitación <br> lectora
+                        Actividades
                     </div>
                 </a>
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
@@ -83,7 +83,7 @@
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
-                        Lecturas
+                        Ritmo lector
                     </div>
                 </a>
                 <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('juegos_descargables')"
@@ -93,7 +93,7 @@
                         <i class="fas fa-chevron-circle-right"></i>
                     </div>
                     <div class="ms-1">
-                        Juegos descargables
+                        Recursos <br> descargables
                     </div>
                 </a>
             </div>
