@@ -107,7 +107,7 @@
                         sections: []
                     },
                     {
-                        text: 'Quices',
+                        text: 'Quices (Evidencias)',
                         active: false,
                         icon: 'fa fa-question',
                         cf: 'quices/explorar',
@@ -140,6 +140,13 @@
                         icon: 'far fa-folder',
                         cf: 'recursos/archivos',
                         sections: ['recursos/archivos', 'recursos/asignar', 'recursos/asignar_e', 'recursos/procesos_archivos', 'recursos/archivos_no_asignados']
+                    },
+                    {
+                        text: 'Contenidos IA',
+                        active: false,
+                        icon: 'fas fa-robot',
+                        cf: 'admin/iachat/panel',
+                        sections: ['iachat/panel']
                     },
                 ],
                 sections: []

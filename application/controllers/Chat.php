@@ -55,11 +55,21 @@ public $url_controller = URL_APP . 'chat/';
 // MÓDULO MONITORÍA DE TEMAS
 //-----------------------------------------------------------------------------
 
+    /**
+     * Pantalla de inicio de la herramienta de MonitorIA
+     * 2025-10-02
+     */
     function monitoria_inicio($type = 'monitoria-tema', $related_id = 0)
     {
         $data['head_title'] = 'MonitorIA - Inicio';
         $data['tema'] = $this->Db_model->row_id('tema', $related_id);
         $data['view_a'] = $this->views_folder . 'monitoria_inicio/inicio_v';
+
+        $this->db->select('id, name, related_id, updated_at');
+        $this->db->where('related_id', $related_id);
+        $this->db->where('type', 'monitoria-tema');
+        $data['conversations'] = $this->db->get('iachat_conversations');
+
         $this->App_model->view('templates/easypml/empty', $data);
     }
 
@@ -80,7 +90,10 @@ public $url_controller = URL_APP . 'chat/';
 
         $data['arrAreas'] = $this->Item_model->arr_options('categoria_id = 1');
         $data['view_a'] = $this->views_folder . 'monitoria/monitoria_v';
-        $data['messages'] = $this->Chat_model->messages($conversation_id);
+        $messages_settings['limit'] = 100;
+        $messages_settings['order_by'] = 'created_at';
+        $messages_settings['order_type'] = 'DESC';
+        $data['messages'] = $this->Chat_model->messages($conversation_id, $messages_settings);
         $data['max_tokens'] = 20000;
 
         $this->App_model->view('templates/easypml/empty', $data);

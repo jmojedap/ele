@@ -26,7 +26,8 @@ var flipbookApp = createApp({
             bookData:{
                 articulos:[],
                 links:[],
-                unidades: []
+                unidades: [],
+                quices: [],
             },
             currentUnidad: {
                 numero:1,
@@ -188,6 +189,10 @@ var flipbookApp = createApp({
             var filteredLinks = this.bookData.links.filter(item => item.tema_id == this.currentArticulo.tema_id)
             console.log(filteredLinks)
             return filteredLinks
+        },
+        filteredQuices(){
+            var filteredQuices = this.bookData.quices.filter(item => item.tema_id == this.currentArticulo.tema_id)
+            return filteredQuices
         },
         cantidadPreguntasAbiertasTema(){
             var preguntasAbiertasTema = this.preguntasAbiertasAsignadas.filter(item => item.tema_id == this.currentArticulo.tema_id)

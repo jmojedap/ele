@@ -28,7 +28,7 @@
                 <?= anchor("usuarios/resultados/{$usuario_id}/{$uc_id}", 'Comparativos', 'class=" '. $clase_resultados .'"') ?>
                 <?= anchor("usuarios/resultados_area/{$usuario_id}/{$uc_id}", 'Por área', 'class=" '. $clase_resultados_area .'"') ?>
             </td>
-            <td>
+            <td class="d-none">
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         Por competencia

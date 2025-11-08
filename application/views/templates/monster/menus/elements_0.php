@@ -103,7 +103,7 @@
                         sections: []
                     },
                     {
-                        text: 'Quices',
+                        text: 'Quices (Evidencias)',
                         active: false,
                         icon: 'fa fa-question',
                         cf: 'quices/explorar',
@@ -136,6 +136,13 @@
                         icon: 'fas fa-image',
                         cf: 'admin/files/explore',
                         sections: ['files/explore', 'files/edit', 'files/add', 'files/info', 'files/cropping', 'files/change']
+                    },
+                    {
+                        text: 'Contenidos IA',
+                        active: false,
+                        icon: 'fas fa-robot',
+                        cf: 'admin/iachat/panel',
+                        sections: ['iachat/panel']
                     },
                 ],
                 sections: []

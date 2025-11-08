@@ -55,7 +55,7 @@
                         sections: []
                     },
                     {
-                        text: 'Quices',
+                        text: 'Quices (Evidencias)',
                         active: false,
                         icon: 'fa fa-question',
                         cf: 'quices/explorar',

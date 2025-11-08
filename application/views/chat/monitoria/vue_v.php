@@ -1,45 +1,4 @@
 <script>
-// Variables y datos
-//-----------------------------------------------------------------------------
-
-const funciones = [
-    {   funcion_id: 10,
-        nombre: 'motivacion',
-        titulo_corto: 'Motivación',
-        titulo: 'Motivación o Contextualización',
-        descripcion: 'Genera un texto introductorio que ayude al profesor a motivar a los estudiantes sobre la importancia del tema, resaltando su utilidad en la vida académica, profesional y cotidiana.',
-        active: true,
-        nombre_archivo: 'f1_motivacion.docx'
-    },
-    {
-        funcion_id: 20,
-        nombre: 'exposicion',
-        titulo_corto: 'Exposición',
-        titulo: 'Exposición o Presentación de Nueva Información',
-        descripcion: 'Complementa el contenido original del tema con información adicional relevante, aportando nuevas perspectivas o ejemplos útiles para la clase.',
-        active: false,
-        nombre_archivo: 'f2_exposicion.docx'
-    },
-    {
-        funcion_id: 30,
-        nombre: 'estrategias',
-        titulo_corto: 'Estrategias',
-        titulo: 'Estrategias Didácticas',
-        descripcion: 'Sugiere al docente diferentes metodologías y estrategias para facilitar la enseñanza del tema, adaptables al contexto del aula presencial o virtual.',
-        active: false,
-        nombre_archivo: 'f3_estrategias_dinamicas.docx'
-    },
-    {
-        funcion_id: 40,
-        nombre: 'evaluacion',
-        titulo_corto: 'Evaluación',
-        titulo: 'Propuesta de Evaluación',
-        descripcion: 'Ofrece herramientas y modelos para evaluar el aprendizaje del tema, incluyendo desde preguntas tradicionales hasta alternativas como proyectos, dinámicas grupales, ejercicios orales o tareas.',
-        active: false,
-        nombre_archivo: 'f4_propuesta_evaluacion.docx'
-    },
-];
-
 const maxTokens = <?= $max_tokens ?>;
 
 // VueApp
@@ -52,8 +11,10 @@ var chatApp = createApp({
             conversationId: <?= $row->id ?>,
             userId: <?= $row->user_id ?>,
             messages: <?= json_encode($messages->result()) ?>,
+            displayMessagesList: false,
+            currentMessageIndex: 0,
             lastMessage: {
-                id: 0, 
+                id: 0,
             },
             user_input: 'Genera el contenido',
             responseText:'',
@@ -64,8 +25,8 @@ var chatApp = createApp({
             tema: <?= json_encode($tema) ?>,
             prompts: <?= json_encode($prompts->result()) ?>,
             deleteConfirmationTexts : {
-                title: 'Borrar mensajes',
-                text: '¿Confirma la eliminación de todos los mensajes?',
+                title: 'Borrar contenidos',
+                text: '¿Confirma la eliminación de todos los contenidos?',
                 buttonText: 'Eliminar'
             },
             arrAreas: <?= json_encode($arrAreas) ?>,
@@ -137,7 +98,6 @@ var chatApp = createApp({
         setResponseContent: function(){
             if ( this.messages.length > 0 ) {
                 this.lastMessage = this.messages.slice().reverse().find(msg => msg.role === 'model');
-                console.log(this.lastMessage);
                 this.responseHtml = this.lastMessage ? this.markdownToHtml(this.lastMessage.text) : '';
                 this.$nextTick(() => {
                     this.aplicarFadeInGeneratedContent();
@@ -211,9 +171,50 @@ var chatApp = createApp({
             const area = this.arrAreas.find(a => a.id === areaId);
             return area ? area.name : 'Área desconocida';
         },
-        /* goToNextMessage: function(direction) {
-            r
-        } */
+        setCurrentMessage: function(index){
+            this.currentMessageIndex = index;
+            if (index >= 0 && index < this.messages.length) {
+                this.lastMessage = this.messages[index];
+                this.responseHtml = this.markdownToHtml(this.lastMessage.text);
+                //this.aplicarFadeInGeneratedContent();
+            }
+        },
+        goToNextMessage: function(direction = 1) {
+            //Recorrer this.messages
+            if (this.messages.length === 0) return;
+
+            const currentIndex = this.messages.findIndex(msg => msg.id === this.lastMessage.id);
+            this.currentMessageIndex = currentIndex;
+            if (direction === 1 && currentIndex < this.messages.length - 1) {
+                // Buscar el siguiente mensaje del modelo
+                for (let i = currentIndex + 1; i < this.messages.length; i++) {
+                    if (this.messages[i].role === 'model') {
+                        this.lastMessage = this.messages[i];
+                        this.responseHtml = this.markdownToHtml(this.lastMessage.text);
+                        //this.aplicarFadeInGeneratedContent();
+                        break;
+                    }
+                }
+            } else if (direction === -1 && currentIndex > 0) {
+                // Buscar el mensaje anterior del modelo
+                for (let i = currentIndex - 1; i >= 0; i--) {
+                    if (this.messages[i].role === 'model') {
+                        this.lastMessage = this.messages[i];
+                        this.responseHtml = this.markdownToHtml(this.lastMessage.text);
+                        //this.aplicarFadeInGeneratedContent();
+                        break;
+                    }
+                }
+            }
+        },
+        dateFormat: function(date){
+            if (!date) return ''
+            return moment(date).format('D MMM YYYY HH:mm')
+        },
+        ago: function(date){
+            if (!date) return ''
+            return moment(date, 'YYYY-MM-DD HH:mm:ss').fromNow()            
+        },
     },
     mounted(){
         this.$nextTick(() => {

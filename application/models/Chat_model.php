@@ -28,6 +28,23 @@ class Chat_model extends CI_Model {
         return $data;
     }
 
+    function month_summarize()
+    {
+        $this->db->select("
+            DATE_FORMAT(created_at, '%Y-%m') AS mes_formateado,
+            SUM(prompt_token_count) AS sum_prompt_token_count,
+            SUM(candidates_token_count) AS sum_candidates_token_count,
+            SUM(prompt_token_count + candidates_token_count) AS sum_total_token_count
+        ");
+        $this->db->from('iachat_messages');
+        $this->db->group_by("DATE_FORMAT(created_at, '%Y-%m')");
+        $this->db->order_by("mes_formateado", 'DESC');
+
+        $query = $this->db->get();
+
+        return $query;
+    }
+
 // GESTIÓN DE CONVERSACIONES
 //-----------------------------------------------------------------------------
 
@@ -96,13 +113,13 @@ class Chat_model extends CI_Model {
      * @return CI_DB_result El resultado de la consulta a la base de datos.
      * 
      */
-    function messages($conversation_id, $limit = 100)
+    function messages($conversation_id, $settings)
     {
         $this->db->select('id, conversation_id, role, text, response_details, created_at');
         $this->db->from('iachat_messages');
         $this->db->where('conversation_id', $conversation_id);
-        $this->db->order_by('created_at', 'ASC');
-        $this->db->limit($limit);
+        $this->db->order_by($settings['order_by'], $settings['order_type']);
+        $this->db->limit($settings['limit']);
 
         $messages = $this->db->get();
 
@@ -191,9 +208,9 @@ class Chat_model extends CI_Model {
             'conversation_id' => $conversation_id,
             'role' => 'model',
             'text' => $message_text,
-            'model_version' => $response_details['response']['modelVersion'] ?? '-',
-            'prompt_token_count' => $response_details['response']['usageMetadata']['promptTokenCount'] ?? 0,
-            'candidates_token_count' => $response_details['response']['usageMetadata']['candidatesTokenCount'] ?? 0,
+            'model_version' => $response_details['modelVersion'] ?? '-',
+            'prompt_token_count' => $response_details['usageMetadata']['promptTokenCount'] ?? 0,
+            'candidates_token_count' => $response_details['usageMetadata']['candidatesTokenCount'] ?? 0,
             'response_details' => json_encode($response_details),
             'creator_id' => $this->session->userdata('user_id'),
             'updater_id' => $this->session->userdata('user_id'),

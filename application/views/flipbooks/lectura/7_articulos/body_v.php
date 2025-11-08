@@ -33,6 +33,12 @@
                 </iframe>
             </div>
 
+            <div v-show="section == 'chat-ia-v2'" class="container mt-3">
+                <iframe v-bind:src="`<?= URL_APP ?>chat/monitoria_inicio/monitoria-tema/` + currentArticulo.tema_id"
+                    frameborder="0" style="width: 100%; height: calc(100vh - 80px);">
+                </iframe>
+            </div>
+
             <?php $this->load->view('flipbooks/lectura/7_articulos/anotaciones_v') ?>
     
             <?php $this->load->view('flipbooks/lectura/7_articulos/audios_modal_v') ?>

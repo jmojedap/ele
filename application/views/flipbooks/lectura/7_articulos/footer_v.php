@@ -1,3 +1,13 @@
+<?php
+    $display_monitoria = false;
+    if ( in_array($this->session->userdata('institucion_id'), [5]) ) {
+        $display_monitoria = true;
+    }
+    if ( in_array($this->session->userdata('rol_id'), [0,1,2]) ) {
+        $display_monitoria = true;
+    }
+?>
+
 <footer class="fixed-bottom footer d-flex justify-content-center">
     <div>
         <a class="btn btn-light me-1" href="<?= base_url() ?>">
@@ -22,25 +32,6 @@
         <?php $this->load->view('flipbooks/lectura/7_articulos/audios_button_v') ?>
         <?php $this->load->view('flipbooks/lectura/7_articulos/animaciones_button_v') ?>
         <?php $this->load->view('flipbooks/lectura/7_articulos/quices_button_v') ?>
-
-        <!-- Links asociados al tema DESACTIVADOS 2024-07-07 -->
-        <!-- <div class="btn-group dropup">
-            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
-                aria-expanded="false" v-bind:disabled="filteredLinks.length == 0">
-                <span class="badge rounded-pill bg-danger me-1">
-                    {{ filteredLinks.length }}
-                </span>
-                <span class="only-lg">Enlaces</span>
-                <span class="only-sm"><i class="fas fa-link"></i></span>
-                
-            </button>
-            <ul class="dropdown-menu">
-                <li v-for="link in filteredLinks">
-                    <a class="dropdown-item" v-bind:href="link.url" target="_blank">{{ link.titulo }}</a>
-                </li>
-            </ul>
-        </div> -->
-
         
     </div>
 
@@ -55,15 +46,37 @@
                 <i class="fas fa-plus"></i>
             </a>
         </div>
+        <?php if ( $display_monitoria ) : ?>
+            <a
+                title="Contenidos complementarios con inteligencia artificial"
+                class="btn btn-light" type="button" v-on:click="section = 'chat-ia-v2'"
+                >
+                <img src="<?= URL_IMG . 'flipbook/v6_ia_icon_2.png' ?>" style="height: 18px;"> MonitorIA
+            </a>
+        <?php endif; ?>
     <?php endif; ?>
 
-    <?php if ( $this->input->get('demo-ia') == 1 ) : ?>
-        <a
-            title="Contenidos complementarios con inteligencia artificial"
-            class="btn btn-light" type="button" v-on:click="section = 'chat-ia'"
-            >
-            <img src="<?= URL_IMG . 'flipbook/v6_ia_icon_2.png' ?>" style="height: 18px;">
-        </a>
-    <?php endif; ?>
+
+    <div>
+        <!-- Links asociados al tema DESACTIVADOS 2024-07-07 -->
+        <!-- Links asociados al tema REACTIVADOS 2025-10-10 -->
+        <div class="btn-group dropup" v-show="filteredLinks.length > 0">
+            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown"
+                aria-expanded="false" v-bind:disabled="filteredLinks.length == 0">
+                <span class="badge rounded-pill bg-danger me-1">
+                    {{ filteredLinks.length }}
+                </span>
+                <span class="only-lg">Juegos</span>
+                <span class="only-sm"><i class="fas fa-link"></i></span>
+                
+            </button>
+            <ul class="dropdown-menu">
+                <li v-for="link in filteredLinks">
+                    <a class="dropdown-item" v-bind:href="link.url" target="_blank">{{ link.titulo }}</a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
 
 </footer>

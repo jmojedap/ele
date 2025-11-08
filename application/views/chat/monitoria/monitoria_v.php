@@ -50,7 +50,8 @@
                                 @keydown.enter="handleKeyDown"
                                 required
                                 placeholder="Haz una petición a MonitorIA de En Línea Editores"></textarea>
-                        </div>
+                            </div>
+                            <div class="form-text mb-2">Agrega o edita instrucciones específicas para generar el contenido</div>
                         <div class="text-end">
                             <button class="btn btn-submit btn-round btn-lg" type="submit">
                                 Generar
@@ -62,8 +63,12 @@
             </div>
             <div class="col-md-7">
                 <div class="center_box_750">
+                    <!-- BARRA SUPERIOR DE HERRAMIENTAS -->
                     <div class="tools-bar my-2">
-                        <button class="btn btn-sm btn-light me-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                        <a class="btn btn-sm btn-light me-1" title="Volver a inicio" v-bind:href="`<?= URL_APP ?>chat/monitoria_inicio/monitoria-tema/` + conversation.related_id">
+                            <i class="fas fa-home"></i>
+                        </a>
+                        <button class="btn btn-sm btn-light me-1" data-bs-toggle="modal" data-bs-target="#deleteModal">
                             <i class="fas fa-sync"></i>
                         </button>
                         <a class="btn btn-sm btn-light" title="Imprimir resultado" v-bind:href="`<?= URL_APP ?>chat/monitoria_print/` + conversationId + `/` + lastMessage.id"
@@ -71,6 +76,7 @@
                             <i class="fas fa-print"></i>
                         </a>
                     </div>
+                    <!-- CONTENIDO GENERADO -->
                     <h1 class="text-center">{{ tema.nombre_tema }}</h1>
                     <div v-show="loading" class="text-center p-4">
                         <i class="fas fa-spin fa-spinner fa-3x text-main"></i>
@@ -78,14 +84,15 @@
                     <div class="progress mb-2" style="height: 2px;" v-bind:title="`Uso de tokens: ${percentUsageTokens}%`">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" v-bind:style="`width: ${percentUsageTokens}%`"></div>
                     </div>
+
+                    <!-- EXPLORACIÓN DE CONTENIDOS -->
                     <div class="d-flex my-2 justify-content-between">
-                        <button class="btn btn-circle">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="btn btn-circle">
-                            <i class="fas fa-chevron-right"></i>
+                        <button class="btn" v-on:click="displayMessagesList = !displayMessagesList"
+                            v-bind:class="{'btn-light': displayMessagesList }" title="Ver lista de contenidos generados" v-show="messages.length > 0">
+                            <i class="fas fa-list"></i>
                         </button>
                     </div>
+                    <?php $this->load->view('chat/monitoria/contenidos_v') ?>
                     <div v-html="responseHtml" id="generated-content" v-show="!loading"></div>
                 </div>
             </div>
@@ -94,4 +101,5 @@
     <?php $this->load->view('common/bs5/modal_delete_set_v') ?>
 </div>
 
+<?php $this->load->view('chat/monitoria/scripts_v') ?>
 <?php $this->load->view('chat/monitoria/vue_v') ?>

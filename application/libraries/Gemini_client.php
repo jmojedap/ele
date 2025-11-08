@@ -7,7 +7,7 @@ class Gemini_client {
 
     /**
      * Funciones para solicitar respuestas la API de Gemini
-     * Versión 2025-08-25
+     * Versión 2025-10-02
     */
     
     /**
@@ -54,9 +54,8 @@ class Gemini_client {
         $data = [
             'model_id' => $request_settings['model_id'],
             'response_text' => $responseData['response_text'] ?? '',
-            'response_details' => json_encode($responseData),
-            'error' => '',
-            'url' => $url
+            'response_details' => $responseData['response'] ?? [],
+            'error' => ''
         ];
         
         return $data;

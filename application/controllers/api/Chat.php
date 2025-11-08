@@ -31,7 +31,8 @@ class Chat extends CI_Controller{
         $data['saved_id'] = $this->Db_model->save('iachat_conversations', $condition, $arr_row);
         
         //Si se recibe ya una petición inicial
-        if ( ! empty($this->input->post('user_input')) ) {
+        /*if ( ! empty($this->input->post('user_input')) ) {
+            echo 'creando';
             $user_input = $this->input->post('user_input');
             if ( $data['saved_id'] > 0 ) {
                 $data['answer'] = $this->Chat_model->get_answer(
@@ -40,7 +41,7 @@ class Chat extends CI_Controller{
                     'monitoria-ele'
                 );
             }
-        }
+        }*/
         
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
@@ -59,7 +60,7 @@ class Chat extends CI_Controller{
         // Guardar el mensaje del usuario
         $user_message_id = $this->Chat_model->save_user_message(
             $conversation_id,
-            $user_input,
+            $user_input
         );
 
         // Preparar la instrucción del sistema
@@ -80,7 +81,7 @@ class Chat extends CI_Controller{
         $model_message_id = $this->Chat_model->save_model_message(
             $conversation_id,
             $data['response_text'] ?? '',
-            $data
+            $data['response_details']
         );
 
         $data['model_message_id'] = $model_message_id;
@@ -161,7 +162,7 @@ class Chat extends CI_Controller{
         $model_message_id = $this->Chat_model->save_model_message(
             $conversation_id,
             $data['response_text'] ?? '',
-            $data
+            $data['response_details']
         );
 
         $data['model_message_id'] = $model_message_id;

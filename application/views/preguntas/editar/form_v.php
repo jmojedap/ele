@@ -78,7 +78,7 @@
         <div class="form-group row">
             <label for="enunciado_id" class="col-md-4 col-form-label text-right">Lectura asociada</label>
             <div class="col-md-8">
-                <?php echo form_dropdown('enunciado_id', $options_enunciado, '', 'class="form-control chosen-select" v-model="form_values.enunciado_id"') ?>
+                <?php echo form_dropdown('enunciado_id', $options_enunciado, '', 'class="form-control chosen-select_no" v-model="form_values.enunciado_id"') ?>
             </div>
         </div>
     

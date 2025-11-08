@@ -8,11 +8,11 @@ div.container_narrow{
 
 .body_start{
     height: 100vh;
-    background: rgb(111,202,247);
-    background: -moz-linear-gradient(180deg, rgba(111,202,247,1) 0%, rgba(23,177,203,1) 100%);
-    background: -webkit-linear-gradient(180deg, rgba(111,202,247,1) 0%, rgba(23,177,203,1) 100%);
-    background: linear-gradient(180deg, rgba(111,202,247,1) 0%, rgba(23,177,203,1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#89cb4e",endColorstr="#99eb3f",GradientType=1);
+    background: #43BAF3;
+    background: -moz-linear-gradient(180deg,  rgba(67,186,243,1) 0%, rgba(25,103,148,1) 100%);
+    background: -webkit-linear-gradient(180deg, rgba(67,186,243,1) 0%, rgba(25,103,148,1) 100%);
+    background: linear-gradient(180deg, rgba(67,186,243,1) 0%, rgba(25,103,148,1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#43BAF3",endColorstr="#99eb3f",GradientType=1);
     padding-top: 30px;
 }
 
