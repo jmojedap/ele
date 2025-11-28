@@ -58,6 +58,7 @@
             selected: [],
             all_selected: false,
             filters: <?php echo json_encode($filters) ?>,
+            str_filters: '<?php echo $str_filters ?>',
             displayFilters: false,
             qty_selectorp: <?php echo $qty_selectorp ?>,
             loading: false
@@ -72,6 +73,7 @@
                     this.max_page = response.data.max_page;
                     $('#head_subtitle').html(response.data.search_num_rows);
                     history.pushState(null, null, url_app + this.cf + this.num_page + '/?' + response.data.str_filters);
+                    this.str_filters = response.data.str_filters;
                     this.all_selected = false;
                     this.selected = [];
                     this.loading = false;

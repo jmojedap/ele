@@ -1820,14 +1820,14 @@ class Usuarios extends CI_Controller{
     /**
      * Listado de usuarios por username
      */
-    function get_by_username()
+    function get_by_username($limit = 10)
     {
         $this->db->select('usuario.id, nombre, apellidos, usuario.institucion_id, grupo_id, username, nombre_institucion, grupo.nivel AS level');
         $this->db->join('institucion', 'institucion.id = usuario.institucion_id');
         $this->db->join('grupo', 'grupo.id = usuario.grupo_id');
         $this->db->where('username', $this->input->post('username'));
         $this->db->where('rol_id > 2');
-        $users = $this->db->get('usuario', 10);
+        $users = $this->db->get('usuario', $limit);
 
         $data['users'] = $users->result();
 

@@ -66,6 +66,18 @@ class Pregunta_model extends CI_Model{
 
         return $data;
     }
+
+    /**
+     * Segmento Select SQL, con diferentes formatos, consulta de preguntas
+     * 2025-11-20
+     */
+    function select($format = 'general')
+    {
+        $arr_select['general'] = 'pregunta.*';
+        $arr_select['export'] = 'pregunta.*';
+
+        return $arr_select[$format];
+    }
     
     /**
      * String con condición WHERE SQL para filtrar post
@@ -204,6 +216,21 @@ class Pregunta_model extends CI_Model{
         );
         
         return $options_order;
+    }
+
+    /**
+     * Query para exportar
+     * 2025-11-20
+     */
+    function query_export($filters)
+    {
+        $this->db->select($this->select('export'));
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('pregunta', 25000);  //Hasta 25.000 registros
+        //$query = $this->db->get('pregunta');
+
+        return $query;
     }
     
 // EDICIÓN

@@ -1446,6 +1446,27 @@ class App_model extends CI_Model {
         return $opciones_post;
     }
 
+    /**
+     * Array con posts, especificando código y nombre. Filtrados por condición
+     * 2025-11-28
+     * 
+     * @param string $condition
+     * @return array $options
+     */
+    function arr_posts($condition)
+    {
+        $select = 'id, id AS cod, nombre_post AS name, slug';
+
+        $query = $this->db->select($select)
+            ->where($condition)
+            ->order_by('id', 'ASC')
+            ->get('post');
+        
+        $options = $query->result_array();
+        
+        return $options;
+    }
+
     function areas($condicion = 'id > 0')
     {
         $this->db->select('id, item AS nombre_area, abreviatura, item_corto AS nombre_corto, slug');

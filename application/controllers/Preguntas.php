@@ -50,6 +50,7 @@ class Preguntas extends CI_Controller{
             $data['arr_difficulty_level'] = $this->Item_model->arr_item('158', 'id_interno_num');
             $data['arr_nivel'] = $this->Item_model->arr_interno('categoria_id = 3');
 
+
         //Especiales
             $data['qty_selectorp'] = 0;
             if ( ! is_null($this->session->userdata('arr_selectorp')) ) {
@@ -68,47 +69,60 @@ class Preguntas extends CI_Controller{
         $data = $this->Pregunta_model->get($num_page);
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-    
-    /**
-     * Exporta el resultado de la búsqueda a un archivo de Excel
-     */
-    function exportar()
+
+    public function export()
     {
-        
-        set_time_limit(120);    //120 segundos, 2 minutos para el proceso
-        //Cargando
-            $this->load->model('Busqueda_model');
-            $this->load->model('Search_model');
-            $this->load->model('Pcrn_excel');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Pregunta_model->search($busqueda); //Para calcular el total de resultados
-            $max_reg_export = 10000;
-        
-            if ( $resultados_total->num_rows() <= $max_reg_export ) 
-            {
-                //Preparar datos
-                    $datos['nombre_hoja'] = 'Preguntas';
-                    $datos['query'] = $resultados_total;
+        set_time_limit(120);
 
-                //Preparar archivo
-                    $objWriter = $this->Pcrn_excel->archivo_query($datos);
+        $this->load->model('Search_model');
+        $filters = $this->Search_model->filters();
 
-                $data['objWriter'] = $objWriter;
-                $data['nombre_archivo'] = date('Ymd_His'). '_preguntas'; //save our workbook as this file name
+        $max_reg_export = 25000;
+        $search_num_rows = $this->Pregunta_model->search_num_rows($filters);
 
-                $this->load->view('app/descargar_phpexcel_v', $data);
-            } else {
-                $data['head_title'] = 'Plataforma En Línea';
-                $data['mensaje'] = "El número de registros que quiere exportar es de {$resultados_total->num_rows()}. El máximo permitido es de " . $max_reg_export . " registros. Puede filtrar los datos por algún criterio para poder exportarlos.";
-                $data['link_volver'] = "preguntas/explorar/?{$busqueda_str}";
-                $data['view_a'] = 'app/mensaje_v';
-                
-                $this->load->view(TPL_ADMIN_NEW, $data);
+        if ($search_num_rows > $max_reg_export) {
+
+            $data['head_title'] = 'Plataforma En Línea';
+            $data['mensaje'] = "El número de registros que quiere exportar es de {$search_num_rows}. El máximo permitido es de {$max_reg_export}. Puede filtrar los datos.";
+            $data['link_volver'] = "preguntas/explorar/";
+            $data['view_a'] = 'app/mensaje_v';
+            $this->load->view(TPL_ADMIN_NEW, $data);
+
+        } elseif ($search_num_rows > 0) {
+
+            $query = $this->Pregunta_model->query_export($filters);
+            $file_name = date('Ymd_His') . '_preguntas.csv';
+
+            header('Content-Type: text/csv; charset=UTF-8');
+            header('Content-Disposition: attachment; filename="' . $file_name . '"');
+            header("Pragma: no-cache");
+            header("Expires: 0");
+
+            $output = fopen('php://output', 'w');
+
+            // BOM UTF-8
+            fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            $delimiter = ';'; // <-- clave para Excel en español
+            $first_row = true;
+
+            foreach ($query->result_array() as $row) {
+                if ($first_row) {
+                    // Encabezados
+                    fputcsv($output, array_keys($row), $delimiter);
+                    $first_row = false;
+                }
+                // Datos
+                fputcsv($output, $row, $delimiter);
             }
-            
+
+            fclose($output);
+            exit;
+
+        } else {
+            $data = array('message' => 'No se encontraron registros para exportar');
+            $this->output->set_content_type('application/json')->set_output(json_encode($data));
+        }
     }
     
     /**
@@ -158,7 +172,8 @@ class Preguntas extends CI_Controller{
             $data = $this->Pregunta_model->basic($pregunta_id);
 
         //Variables
-            $data['options_enunciado'] = $this->App_model->opciones_post('tipo_id = 4401');
+            $data['options_enunciado'] = $this->App_model->arr_posts('tipo_id = 4401');
+            $data['arrEnunciados'] = $this->App_model->arr_posts('tipo_id = 4401');
             $data['options_letras'] = $this->Item_model->opciones('categoria_id = 57 AND id_interno <= 4');
             $data['options_nivel'] = $this->App_model->opciones_nivel('item_largo');
             $data['options_area'] = $this->Item_model->opciones_id('categoria_id = 1');

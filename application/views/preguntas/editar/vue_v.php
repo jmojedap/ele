@@ -19,6 +19,7 @@ var edicion_preguntas = new Vue({
         loading: false,
         arrHabilidades: <?= json_encode($arrHabilidades) ?>,
         arrProcesos: <?= json_encode($arrProcesos) ?>,
+        arrEnunciados: <?= json_encode($arrEnunciados) ?>,
         tema: tema,
         temas: [],
         fields: {

@@ -72,7 +72,7 @@ var arr_niveles = <?= json_encode($arr_niveles); ?>;
             },
             get_user: function(){
                 this.no_users = false
-                axios.post(url_app + 'usuarios/get_by_username/', $("#user_form").serialize())
+                axios.post(url_app + 'usuarios/get_by_username/50', $("#user_form").serialize())
                 .then(response => {
                     if ( response.data.users.length > 0 )
                     {
