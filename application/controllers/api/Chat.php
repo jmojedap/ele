@@ -71,7 +71,7 @@ class Chat extends CI_Controller{
         $request_settings = [
             'user_input' => $this->input->post('user_input'),
             'system_instruction_parts' => $system_instruction_parts,
-            'model' => 'gemini-2.0-flash-lite',
+            'model' => 'gemini-2.5-flash-lite',
             'contents' => $this->Chat_model->get_messages_as_contents($conversation_id),
         ];
 

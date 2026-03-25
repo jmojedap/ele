@@ -45,10 +45,12 @@
     </tbody>
 </table>
 
+<?php if ( $this->session->userdata('srol') != 'estudiante' ) : ?>
 <div>
-    <a class="btn btn-light" title="Crear cuestionario desde temas del contenido" v-bind:href="`<?= base_url('admin/flipbooks/crear_cuestionario/') ?>` + flipbook.id"
+    <a class="btn btn-light" title="Generar evaluación desde temas del contenido" v-bind:href="`<?= base_url('admin/flipbooks/crear_cuestionario/') ?>` + flipbook.id"
         target="_blank" 
     >
-        <i class="fas fa-plus"></i> Crear cuestionario
+        <i class="fas fa-plus"></i> Generar evaluación
     </a>
 </div>
+<?php endif; ?>

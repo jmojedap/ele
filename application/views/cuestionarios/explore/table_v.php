@@ -22,7 +22,7 @@
 
                 <td class="table-warning">{{ element.id }}</td>
                     
-                </td>
+                
                 <td>
                     <a v-bind:href="`<?php echo base_url("cuestionarios/index") ?>/` + element.id">
                         {{ element.nombre_cuestionario }}

@@ -33,13 +33,14 @@ class Gemini_client {
                 'parts' => $request_settings['system_instruction_parts']
             ],
             "generationConfig" => [
-                "temperature" => 1.6,
+                "temperature" => 1.2,
                 "maxOutputTokens" => 1000,
                 "responseMimeType" => "text/plain"
             ],
         ];
 
         $payload = json_encode($requestData);
+        log_message('debug', 'Payload: ' . $payload);
 
         $responseData = $this->execute_request($url, $payload);
         //$responseData = $this->generate_mock($url, $payload);

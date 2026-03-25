@@ -22,37 +22,7 @@ class Paginas extends CI_Controller{
 
     function explorar()
     {
-        //$this->output->enable_profiler(TRUE);
-        $this->load->model('Busqueda_model');
-        
-        //Datos de consulta, construyendo array de búsqueda
-            $busqueda = $this->Busqueda_model->busqueda_array();
-            $busqueda_str = $this->Busqueda_model->busqueda_str();
-            $resultados_total = $this->Pagina_model->buscar($busqueda); //Para calcular el total de resultados
-        
-        //Paginación
-            $this->load->library('pagination');
-            $config = $this->App_model->config_paginacion(2);
-            $config['base_url'] = base_url("paginas/explorar/?{$busqueda_str}");
-            $config['total_rows'] = $resultados_total->num_rows();
-            $this->pagination->initialize($config);
-            
-        //Generar resultados para mostrar
-            $offset = $this->input->get('per_page');
-            $resultados = $this->Pagina_model->buscar($busqueda, $config['per_page'], $offset);
-        
-        //Variables para vista
-            $data['cant_resultados'] = $config['total_rows'];
-            $data['busqueda'] = $busqueda;
-            $data['busqueda_str'] = $busqueda_str;
-            $data['resultados'] = $resultados;
-        
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Páginas';
-            $data['subtitulo_pagina'] = $resultados_total->num_rows();
-            $data['vista_a'] = 'paginas/explorar_v';
-            $data['vista_menu'] = 'paginas/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+        redirect('admin/paginas/explore');
     }
     
     /**
@@ -87,7 +57,7 @@ class Paginas extends CI_Controller{
             } else {
                 $data['titulo_pagina'] = 'Plataforma Enlace';
                 $data['mensaje'] = "El número de registros es de {$resultados_total->num_rows()}. El máximo permitido es de " . $max_reg_export . " registros de páginas. Puede filtrar los datos por algún criterio para poder exportarlos.";
-                $data['link_volver'] = "paginas/explorar/?{$busqueda_str}";
+                $data['link_volver'] = "admin/paginas/explore/?{$busqueda_str}";
                 $data['vista_a'] = 'app/mensaje_v';
                 
                 $this->load->view(PTL_ADMIN, $data);
@@ -155,18 +125,12 @@ class Paginas extends CI_Controller{
             $this->load->view(PTL_ADMIN, $output);
     }
     
-    function nuevo()
+    function nuevo($arg1 = NULL, $arg2 = NULL)
     {
-        //Render del grocery crud
-            $gc_output = $this->Pagina_model->crud_nuevo();
-            
-        //Solicitar vista
-            $data['titulo_pagina'] = 'Páginas';
-            $data['subtitulo_pagina'] = 'Nueva';
-            $data['vista_a'] = 'comunes/gc_v';
-            $data['vista_menu'] = 'paginas/explorar_menu_v';
-            $output = array_merge($data,(array)$gc_output);
-            $this->load->view(PTL_ADMIN, $output);
+        $url = 'admin/paginas/nuevo';
+        if (!is_null($arg1)) $url .= '/' . $arg1;
+        if (!is_null($arg2)) $url .= '/' . $arg2;
+        redirect($url);
     }
     
     /**
@@ -182,7 +146,7 @@ class Paginas extends CI_Controller{
         $this->Pagina_model->eliminar($pf_id);
         
         $busqueda_str = $this->Busqueda_model->busqueda_str();
-        $destino = "paginas/explorar/?{$busqueda_str}";
+        $destino = "admin/paginas/explore/?{$busqueda_str}";
         redirect($destino);
         
     }
@@ -195,29 +159,7 @@ class Paginas extends CI_Controller{
      */
     function asignar()
     {
-        
-        //Iniciales
-            $nombre_archivo = '07_formato_asignacion_paginas.xlsx';
-            $parrafos_ayuda = array();
-        
-        //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo asignar páginas?';
-            $data['nota_ayuda'] = 'Se asignarán los archivos de páginas de contenidos a los temas';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
-        
-        //Variables específicas
-            $data['destino_form'] = 'paginas/asignar_e';
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'paginas_tema';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
-            
-        //Variables generales
-            $data['titulo_pagina'] = 'Páginas';
-            $data['subtitulo_pagina'] = 'Asignar páginas';
-            $data['vista_a'] = 'comunes/importar_v';
-            $data['vista_menu'] = 'paginas/explorar_menu_v';
-        
-        $this->load->view(PTL_ADMIN, $data);
+        redirect('admin/paginas/asignar');
     }
     
     /**
@@ -225,34 +167,7 @@ class Paginas extends CI_Controller{
      */
     function asignar_e()
     {
-        
-        //Proceso
-            $this->load->model('Pcrn_excel');
-            $no_importados = array();
-            $letra_columna = 'D';   //Última columna con datos
-            
-            $resultado = $this->Pcrn_excel->array_hoja_default($letra_columna);
-
-            if ( $resultado['valido'] )
-            {
-                $this->load->model('Tema_model');
-                $no_importados = $this->Pagina_model->asignar($resultado['array_hoja']);
-            }
-        
-        //Cargue de variables
-            $data['valido'] = $resultado['valido'];
-            $data['mensaje'] = $resultado['mensaje'];
-            $data['array_hoja'] = $resultado['array_hoja'];
-            $data['nombre_hoja'] = $this->input->post('nombre_hoja');
-            $data['no_importados'] = $no_importados;
-            $data['destino_volver'] = "paginas/explorar/";
-        
-        //Cargar vista
-            $data['titulo_pagina'] = 'Páginas';
-            $data['subtitulo_pagina'] = 'Resultado asignación';
-            $data['vista_a'] = 'comunes/resultado_importacion_v';
-            $data['vista_menu'] = 'paginas/explorar_menu_v';
-            $this->load->view(PTL_ADMIN, $data);
+        redirect('admin/paginas/asignar_e');
     }
     
     

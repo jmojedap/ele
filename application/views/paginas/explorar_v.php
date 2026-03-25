@@ -122,7 +122,7 @@
             },
             success: function(){
                 //alert(rta);
-                window.location = base_url + 'paginas/explorar/?' + busqueda_str;
+                window.location = base_url + 'admin/paginas/explore/?' + busqueda_str;
             }
         });
     }
@@ -183,7 +183,7 @@
                 <?php
                     //Variables
                         $nombre_elemento = $this->Pcrn->si_strlen($row_resultado->titulo_pagina, '> Sin título <');
-                        $link_elemento = anchor("paginas/ver/{$row_resultado->pf_id}", $nombre_elemento);
+                        $link_elemento = anchor("admin/paginas/info/{$row_resultado->pf_id}", $nombre_elemento);
 
                     //Checkbox
                         $att_check['data-id'] = $row_resultado->pf_id;
@@ -207,7 +207,7 @@
                     </td>
                     
                     <td class="<?= $clases_col['img_pagina'] ?>">
-                        <?= anchor("paginas/ver/{$row_resultado->pf_id}", img($att_mini)) ?>
+                        <?= anchor("admin/paginas/info/{$row_resultado->pf_id}", img($att_mini)) ?>
                     </td>
                     
                     <td class="<?= $clases_col['tema'] ?>">

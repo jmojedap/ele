@@ -2,7 +2,7 @@
 var cuestionariosApp = new Vue({
     el: '#cuestionariosApp',
     created: function(){
-        //this.getCuestionarios()
+        this.getCuestionarios()
         this.getAsignados()
     },
     data: {

@@ -1,7 +1,7 @@
 <?php $this->load->view('assets/bs4_chosen'); ?>
 
 <?php
-    $seccion = $this->uri->segment(2);
+    $seccion = $this->uri->segment(3);
 
     //Opciones institución
         $opciones_institucion = $this->Pcrn->query_to_array($instituciones, 'nombre_institucion', 'institucion_id');
@@ -50,7 +50,7 @@
                         $clase_grupo = 'btn btn-light';
                         if ( $grupo_id == $row_grupo->id ) { $clase_grupo = 'btn btn-primary'; }
                     ?>
-                    <a href="<?= base_url("flipbooks/{$seccion}/{$row->id}/?i={$institucion_id}&g={$row_grupo->id}") ?>" class="<?= $clase_grupo ?>">
+                    <a href="<?= URL_FRONT . "admin/flipbooks/{$seccion}/{$row->id}/?i={$institucion_id}&g={$row_grupo->id}" ?>" class="<?= $clase_grupo ?>">
                         <?= $row_grupo->nivel . '-' .$row_grupo->grupo ?>
                     </a>
                 <?php endforeach ?>

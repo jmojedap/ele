@@ -8,7 +8,7 @@
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-search"></i>',
             'texto' => 'Explorar',
-            'link' => "paginas/explorar/",
+            'link' => "admin/paginas/explore/",
             'atributos' => 'title="Explorar paginas"'
         );
             

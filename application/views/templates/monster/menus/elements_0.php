@@ -65,7 +65,7 @@
                         text: 'Páginas',
                         active: false,
                         icon: 'far fa-file',
-                        cf: 'paginas/explorar',
+                        cf: 'admin/paginas/explore',
                         sections: []
                     },
                 ],
@@ -252,6 +252,13 @@
                         active: false,
                         icon: 'fa fa-database',
                         cf: 'develop/tablas/item',
+                        sections: []
+                    },
+                    {
+                        text: 'Base de datos SYNC',
+                        active: false,
+                        icon: 'fa fa-database',
+                        cf: 'admin/sync/panel',
                         sections: []
                     },
                     {

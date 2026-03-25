@@ -1,5 +1,9 @@
 <?php
-    $quan_not_imported = count($results) - $qty_imported;
+    $qty_not_imported = 'NA';
+    if ( ! empty($results) ) {
+        $qty_not_imported = count($results) - $qty_imported;
+    }
+
 
     $status_icons = array(
         0 => 'fa fa-exclamation-triangle',
@@ -19,7 +23,7 @@
 
 <div class="container">
 
-    <a href="<?php echo base_url($back_destination) ?>" class="btn btn-light mb-2 w120p">
+    <a href="<?= base_url($back_destination) ?>" class="btn btn-light mb-2 w120p">
         <i class="fa fa-arrow-left"></i> Volver
     </a>
     
@@ -30,27 +34,34 @@
             <tr>
                 <td width="200px">Nombre hoja cálculo</td>
                 <td width="50px"></td>
-                <td><?php echo $sheet_name ?></td>
+                <td><?= $sheet_name ?></td>
             </tr>
             <tr>
-                <td>Filas encontradas</td>
-                <td><i class="fa fa-info-circle text-info"></i></td>
-                <td><?php echo count($results) ?></td>
+                <td width="200px">Mensaje</td>
+                <td width="50px"></td>
+                <td><?= $message ?></td>
             </tr>
+            <?php if ( !empty($results) ) : ?>
+                <tr>
+                    <td>Filas encontradas</td>
+                    <td><i class="fa fa-info-circle text-info"></i></td>
+                    <td><?= count($results) ?></td>
+                </tr>
+            <?php endif; ?>
             <tr>
                 <td>Filas importadas</td>
                 <td><i class="fa fa-check-circle text-success"></i></td>
-                <td><?php echo $qty_imported ?></td>
+                <td><?= $qty_imported ?></td>
             </tr>
-            <tr class="<?php echo $class_not_imported ?>">
+            <tr class="<?= $class_not_imported ?>">
                 <td>Filas no importadas</td>
                 <td>
-                    <?php if ( $quan_not_imported > 0 ) { ?>
+                    <?php if ( $qty_not_imported > 0 ) { ?>
                         <i class="fa fa-exclamation-triangle text-warning"></i>
                     <?php } ?>
                 </td>
                 <td>
-                    <?php echo $quan_not_imported ?>
+                    <?= $qty_not_imported ?>
                 </td>
             </tr>
         </tbody>
@@ -68,14 +79,14 @@
         <tbody>
             <?php foreach ( $results as $row_number => $result ) { ?>
                 <tr>
-                    <td><?php echo $row_number ?></td>
+                    <td><?= $row_number ?></td>
                     <td class="table-">
-                        <i class="text-<?php echo $status_cl[$result['status']] ?> <?php echo $status_icons[$result['status']] ?>"></i>
+                        <i class="text-<?= $status_cl[$result['status']] ?> <?= $status_icons[$result['status']] ?>"></i>
                     </td>
                     <td>
-                        <?php echo $status_text[$result['status']] ?>
+                        <?= $status_text[$result['status']] ?>
                     </td>
-                    <td><?php echo $result['text'] ?></td>
+                    <td><?= $result['text'] ?></td>
                 </tr>
             <?php } ?>
         </tbody>

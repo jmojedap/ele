@@ -39,7 +39,7 @@ public $url_controller = URL_APP . 'chat/';
 
     /**
      * Vista de chat, conversación
-     * 2025-05-22
+     * 2026-01-23
      */
     function conversacion($conversation_id)
     {
@@ -47,7 +47,11 @@ public $url_controller = URL_APP . 'chat/';
         $data['sidebar'] = $this->views_folder . 'sidebar/sidebar_v';
         $data['view_a'] = $this->views_folder . 'conversacion/conversacion_v';
 
-        $data['messages'] = $this->Chat_model->messages($conversation_id);
+        $messages_settings['limit'] = 100;
+        $messages_settings['order_by'] = 'created_at';
+        $messages_settings['order_type'] = 'DESC';
+
+        $data['messages'] = $this->Chat_model->messages($conversation_id, $messages_settings);
 
         $this->App_model->view('templates/easypml/sidebar', $data);
     }

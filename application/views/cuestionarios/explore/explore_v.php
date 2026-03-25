@@ -25,7 +25,7 @@
                     data-target="#delete_filtered_modal"
                     v-bind:disabled="search_num_rows > 500"
                     >
-                    <i class="fa fa-trash"></i> Masiva...
+                    <i class="fas fa-trash"></i> Masiva...
                 </button>
             <?php endif; ?>
             

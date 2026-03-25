@@ -132,11 +132,14 @@ class Chat_model extends CI_Model {
      * 
      * @param int $conversation_id El ID de la conversación.
      * @return array Un array con los mensajes convertidos a un formato de contenido.
-     * 2025-05-25
+     * 2026-01-23
      */
     function get_messages_as_contents($conversation_id, $limit = 100)
     {
-        $messages = $this->messages($conversation_id, $limit)->result_array();
+        $messages_settings['limit'] = $limit;
+        $messages_settings['order_by'] = 'created_at';
+        $messages_settings['order_type'] = 'ASC';
+        $messages = $this->messages($conversation_id, $messages_settings)->result_array();
 
         // Convertir los mensajes a un formato de contenido
         $contents = [];

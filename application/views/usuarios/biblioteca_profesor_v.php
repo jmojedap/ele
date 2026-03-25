@@ -93,7 +93,7 @@
     </div>
 
     <h1 class="estante" style="background-color: #1BA160">
-        Escribe
+        Anotaciones
     </h1>
 
     <div class="flipbooks_wrapper" style="height: 150px; overflow-x: <?= $att_flibooks['overflow_x'] ?>; overflow-y: hidden; width: 715px; margin: 0px auto;">

@@ -53,6 +53,7 @@ var flipbookApp = createApp({
             .then(response => {
                 this.bookData = response.data;
                 this.getContenidoUnidad(this.currentUnidad.numero)
+                this.getAnotaciones()
             })
             .catch(function (error) { console.log(error) })
         },

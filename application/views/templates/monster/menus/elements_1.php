@@ -69,7 +69,7 @@
                         text: 'Páginas',
                         active: false,
                         icon: 'far fa-file',
-                        cf: 'paginas/explorar',
+                        cf: 'admin/paginas/explore',
                         sections: []
                     },
                 ],

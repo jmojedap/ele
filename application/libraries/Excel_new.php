@@ -13,32 +13,37 @@ class Excel_new {
      * Convierte un listado de una hoja de cálculo en un array
      * Desde la columna A y la fila 2
      * 
-     * @param type $file
-     * @param type $sheet_name
+     * @param object $file
+     * @param string $sheet_name
      * @return array
      */
     public function get_array($file, $sheet_name)
     {
-        //Valor inicial
-        $data = array('status' => 0, 'arr_sheet' => array(), 'message' => 'Se presentó un error al leer el archivo');
+        $data = array('status' => 0, 'arr_sheet' => array(),
+            'message' => 'Se presentó un error al leer el archivo'
+        );
         
-        //Cargando archivo
+        // Cargar sin filtrar por hoja aún
         $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
-        $reader->setLoadSheetsOnly($sheet_name);
         $spreadsheet = $reader->load($file);
-        $worksheet = $spreadsheet->getActiveSheet();
-        
-        if ( ! is_null($worksheet) )
+
+        // Verificar si la hoja existe
+        $worksheet = $spreadsheet->getSheetByName($sheet_name);
+
+        if (is_null($worksheet))
         {
-            $data['status'] = 1;
-            
-            $end_column = $worksheet->getHighestColumn();  //Última columna con datos
-            $end_row = $worksheet->getHighestRow();        //Última fila con datos
-            $range = "A2:{$end_column}{$end_row}";
-            
-            $data['arr_sheet'] = $worksheet->rangeToArray($range, NULL, TRUE, FALSE);
-            $data['message'] = 'Filas encontradas: ' . intval($end_row - 1);
+            $data['message'] = "La hoja '{$sheet_name}' no existe en el archivo";
+            return $data;
         }
+
+        $data['status'] = 1;
+        
+        $end_column = $worksheet->getHighestColumn();
+        $end_row    = $worksheet->getHighestRow();
+        $range      = "A2:{$end_column}{$end_row}";
+        
+        $data['arr_sheet'] = $worksheet->rangeToArray($range, NULL, TRUE, FALSE);
+        $data['message']   = 'Filas encontradas: ' . intval($end_row - 1);
         
         return $data;
     }

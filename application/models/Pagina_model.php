@@ -10,16 +10,125 @@ class Pagina_model extends CI_Model{
      * @return string
      */
     function basico($pf_id)
-    {
-        
+    {   
         $row = $this->Pcrn->registro_id('pagina_flipbook', $pf_id);
         
         $basico['pagina_id'] = $pf_id;
         $basico['row'] = $row;
         $basico['titulo_pagina'] = $this->Pcrn->si_strlen($row->titulo_pagina, '>> Sin título <<');
-        $basico['vista_a'] = 'paginas/pagina_v';
+        $basico['head_title'] = $this->Pcrn->si_strlen($row->titulo_pagina, "Página {$pf_id}");
+        $basico['view_a'] = 'paginas/pagina_v';
+        $basico['nav_2'] = 'admin/paginas/menus/row_v';
         
         return $basico;
+    }
+
+// EXPLORE FUNCTIONS - paginas/explore
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Array con los datos para la vista de exploración
+     */
+    function explore_data($filters, $num_page, $per_page = 50)
+    {
+        //Data inicial, de la tabla
+            $data = $this->get($filters, $num_page, $per_page);
+        
+        //Elemento de exploración
+            $data['controller'] = 'paginas';                       //Nombre del controlador
+            $data['cf'] = 'paginas/explore/';                      //Nombre del controlador
+            $data['views_folder'] = 'admin/paginas/explore/';      //Carpeta donde están las vistas de exploración
+            $data['numPage'] = $num_page;                       //Número de la página
+            
+        //Vistas
+            $data['head_title'] = 'Páginas';
+            $data['view_a'] = $data['views_folder'] . 'explore_v';
+            $data['nav_2'] = 'admin/paginas/menus/explore_v';
+        
+        return $data;
+    }
+
+    function get($filters, $num_page, $per_page = 50)
+    {
+        //Load
+            $this->load->model('Search_model');
+
+        //Búsqueda y Resultados
+            $data['filters'] = $filters;
+            $data['perPage'] = $per_page;
+            $offset = ($num_page - 1) * $per_page;      //Número de la página de datos que se está consultado
+            $elements = $this->search($filters, $per_page, $offset);    //Resultados para página
+        
+        //Cargar datos
+            $data['list'] = $elements->result();
+            $data['strFilters'] = $this->Search_model->str_filters($filters, TRUE);
+            $data['qtyResults'] = $this->qty_results($filters);
+            $data['maxPage'] = ceil($this->Pcrn->si_cero($data['qtyResults'],1) / $per_page);   //Cantidad de páginas
+
+        return $data;
+    }
+
+    /**
+     * Query con resultados filtrados, por página y offset
+     */
+    function search($filters, $per_page = NULL, $offset = NULL)
+    {
+        $this->db->select('pagina_flipbook.*, pagina_flipbook.id as pf_id, tema.nombre_tema');
+        $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id', 'LEFT');
+        $this->db->order_by('titulo_pagina', 'ASC');
+
+        //Filtros
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+            
+        //Obtener resultados
+        if ( is_null($per_page) ){
+            $query = $this->db->get('pagina_flipbook');
+        } else {
+            $query = $this->db->get('pagina_flipbook', $per_page, $offset); //Resultados por página
+        }
+        
+        return $query;
+    }
+
+    /**
+     * String con condición WHERE SQL para filtrar post
+     */
+    function search_condition($filters)
+    {
+        $condition = NULL;
+
+        $condition .= 'pagina_flipbook.id > 0 AND ';
+
+        //q words condition
+        $words_condition = $this->Search_model->words_condition($filters['q'],['titulo_pagina', 'archivo_imagen']);
+        if ( $words_condition )
+        {
+            $condition .= $words_condition . ' AND ';
+        }
+        
+        //Otros filtros
+        if ( $filters['a'] != '' ) { $condition .= "area_id = {$filters['a']} AND "; }
+        if ( $filters['n'] != '' ) { $condition .= "nivel = {$filters['n']} AND "; }
+        
+        //Quitar cadena final de ' AND '
+        if ( strlen($condition) > 0 ) { $condition = substr($condition, 0, -5);}
+        
+        return $condition;
+    }
+    
+    /**
+     * Devuelve la cantidad de registros encontrados en la tabla con los filtros
+     */
+    function qty_results($filters)
+    {
+        $this->db->select('pagina_flipbook.id');
+        $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id', 'LEFT');
+        $search_condition = $this->search_condition($filters);
+        if ( $search_condition ) { $this->db->where($search_condition);}
+        $query = $this->db->get('pagina_flipbook');
+
+        return $query->num_rows();
     }
     
     
@@ -381,7 +490,7 @@ class Pagina_model extends CI_Model{
             'title' =>  $row_pf->titulo_pagina,
             'alt'   =>  $row_pf->titulo_pagina,
             'src'   =>  $src,
-            'class' =>  'pf',
+            'class' =>  'pf w-100',
             'onError' => "this.src='{$src_alt}'" //Imagen alternativa
         );
         
@@ -707,9 +816,9 @@ class Pagina_model extends CI_Model{
      * Guarda masivamente la asignación de páginas a los temas
      * tabla pagina_flipbook
      * 
-     * @param type $array_hoja    Array con los datos de los programas
+     * @param array $array_hoja    Array con los datos de los programas
      */
-    function asignar($array_hoja)
+    function asignar_ant($array_hoja)
     {   
         $this->load->model('Esp');
         
@@ -749,6 +858,64 @@ class Pagina_model extends CI_Model{
         }
         
         return $no_importados;
+    }
+
+    /**
+     * Asigna masivamente páginas de flibpook a un listado de temas en archivo Excel.
+     * 2026-03-24
+     */
+    function asignar($arr_sheet)
+    {
+        $data = array('qty_imported' => 0, 'results' => array());
+        
+        foreach ( $arr_sheet as $key => $row_data )
+        {
+            $data_import = $this->asignar_tema_v2($row_data);
+            $data['qty_imported'] += $data_import['status'];
+            $data['results'][$key + 2] = $data_import;
+        }
+        
+        return $data;
+    }
+
+    /**
+     * Asigna una página de flipbook a un tema, con los datos de una fila del archivo Excel.
+     * Si tiene el mismo tema y orden, se edita el registro.
+     * 2026-03-25
+     */
+    function asignar_tema_v2($row_data)
+    {
+        //Validar
+            $error_text = '';
+            if ( strlen($row_data[0]) == 0 ) { $error_text = "La columna A (Tema) está vacía. "; }
+
+            //Identificar valores
+                $tema_id = $this->Db_model->field('tema', "cod_tema = '{$row_data[0]}'", 'id');  // Columna A
+            
+            //Complementar registro
+                $arr_row['tema_id'] = $tema_id;              //Columna A
+                $arr_row['archivo_imagen'] = $row_data[1];   //Columna B
+                $arr_row['titulo_pagina'] = $row_data[2];    //Columna C
+                $arr_row['orden'] = $row_data[3] - 1;        //Columna D
+                $arr_row['editado'] = date('Y-m-d H:i:s');
+                
+            //Validar
+                if ( is_null($tema_id) ) { $error_text = 'El tema no fue identificado. '; }
+                if ( strlen($arr_row['archivo_imagen']) == 0 ) { $error_text .= 'El nombre de archivo está vacío. '; }
+                if ( intval($arr_row['orden']) <= -1 ) { $error_text .= 'El orden no es válido. '; }
+
+        //Si no hay error
+            if ( $error_text == '' )
+            {
+                $condition = "tema_id = {$arr_row['tema_id']} AND orden = {$arr_row['orden']}";
+                $pf_id = $this->Db_model->save('pagina_flipbook', $condition, $arr_row);
+
+                $data = ['status' => 1, 'text' => "Archivo {$arr_row['archivo_imagen']} asignado al tema ID {$tema_id}", 'imported_id' => $pf_id];
+            } else {
+                $data = ['status' => 0, 'text' => $error_text, 'imported_id' => 0];
+            }
+
+        return $data;
     }
     
 }

@@ -47,14 +47,14 @@
         $arr_menus['explorar'] = array(
             'icono' => '<i class="fa fa-arrow-left"></i>',
             'texto' => 'Explorar',
-            'link' => "paginas/explorar/",
+            'link' => "admin/paginas/explore/",
             'atributos' => 'title="Explorar paginas"'
         );
             
         $arr_menus['ver'] = array(
             'icono' => '<i class="fa fa-file"></i>',
             'texto' => 'Ver',
-            'link' => "paginas/ver/{$row->id}",
+            'link' => "admin/paginas/info/{$row->id}",
             'atributos' => ''
         );
             

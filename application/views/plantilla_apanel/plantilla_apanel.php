@@ -43,7 +43,7 @@
                 <li><a href="<?= base_url()?>admin/temas/explore" class="<?= $clase_sm['temas'] ?>"><i class="fa fa-bars"></i><span>temas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>flipbooks/explorar" class="<?= $clase_sm['flipbooks'] ?>"><i class="fa fa-book"></i><span>contenidos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>quices/explorar" class="<?= $clase_sm['quices'] ?>"><i class="fa fa-question"></i><span>quices</span></a></li>
-                <li><a href="<?= base_url()?>paginas/explorar" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-files-o"></i><span>páginas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>admin/paginas/explore" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-files-o"></i><span>páginas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder-o"></i><span>archivos</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>"><i class="fa fa-globe"></i><span>links</span></a></li> <!-- subitem -->
             </ul>

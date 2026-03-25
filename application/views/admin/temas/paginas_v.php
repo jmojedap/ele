@@ -25,10 +25,10 @@
             $row_tema = $this->Pcrn->registro_id('tema', $row_pagina->tema_id);
         ?>
         
-        <div class="card card-default">
-            <div class="card-body">
-                <div class="pf_img_mini">
-                    <?= anchor("paginas/ver/{$row_pagina->id}", $img_pagina) ?>
+        <div class="card">
+            <div class="card-body d-flex">
+                <div class="w180p mr-3">
+                    <?= anchor("admin/paginas/info/{$row_pagina->id}", $img_pagina) ?>
                 </div>
     
                 <div class="pf_datos">
@@ -44,10 +44,10 @@
                     <span class="suave"><?= $row_pagina->archivo_imagen ?></span>
     
     
-                    <p>
-                        <?= anchor("admin/temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_subir}", '<i class="fa fa-caret-up"></i>', 'class="btn btn-light btn-sm"') ?>
-                        <?= anchor("admin/temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_bajar}", '<i class="fa fa-caret-down"></i>', 'class="btn btn-light btn-sm"') ?>
-                        <?= $this->Pcrn->anchor_confirm("admin/temas/quitar_pf/{$row->id}/{$row_pagina->id}", '<i class="fa fa-times"></i>', 'class="btn btn-light btn-sm" title="Quitar página de este libro"', '¿Desea quitar esta página del libro?') ?>
+                    <p class="mt-2">
+                        <?= anchor("admin/temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_subir}", '<i class="fa fa-chevron-up"></i>', 'class="btn btn-light"') ?>
+                        <?= anchor("admin/temas/mover_pagina/{$row->id}/{$row_pagina->id}/{$num_bajar}", '<i class="fa fa-chevron-down"></i>', 'class="btn btn-light"') ?>
+                        <?= $this->Pcrn->anchor_confirm("admin/temas/quitar_pf/{$row->id}/{$row_pagina->id}", '<i class="fa fa-times"></i>', 'class="btn btn-light" title="Quitar página de este libro"', '¿Desea quitar esta página del libro?') ?>
                     </p>
                 </div>
             </div>

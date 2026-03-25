@@ -113,7 +113,7 @@
                 ?>
                 <div class="pf_mini mb-2 clearfix">
                     <div class="pf_img_mini">
-                        <?= anchor("paginas/ver/{$row_pagina->pf_id}", $img_pagina) ?>
+                        <?= anchor("admin/paginas/info/{$row_pagina->pf_id}", $img_pagina) ?>
                     </div>
 
                     <div class="pf_datos">

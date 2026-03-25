@@ -2,7 +2,7 @@
 <h4 class="alert_error"><?= $mensajes ?></h4>
 <?php endif ?>
 
-<div class="mb-2">
+<div class="mb-2 center_box_750">
     <a href="<?php echo base_url("paginas/cargar/{$row->id}/0") ?>" class="btn btn-secondary">
         Insertar página al inicio
     </a>
@@ -20,10 +20,12 @@
         $row_tema = $this->Pcrn->registro_id('tema', $row_pagina->tema_id);
     ?>
     
-    <div class="card mb-3" style="max-width: 540px;">
+    <div class="card mb-3 center_box_750">
         <div class="row no-gutters">
             <div class="col-md-4">
-                <img src="<?php echo $img_pagina['src'] ?>" class="card-img" alt="Imagen página del contenido" onerror="<?php echo $img_pagina['onError'] ?>">
+                <a href="<?= base_url("admin/paginas/info/{$row_pagina->pagina_id}") ?>">
+                    <img src="<?php echo $img_pagina['src'] ?>" class="card-img" alt="Imagen página del contenido" onerror="<?php echo $img_pagina['onError'] ?>">
+                </a>
             </div>
             <div class="col-md-8">
                 <div class="card-body">
@@ -44,7 +46,7 @@
         </div>
     </div>
 
-    <div class="my-1">
+    <div class="my-2 center_box_750">
         <a href="<?php echo base_url("paginas/cargar/{$row->id}/{$num_pagina_mostrar}") ?>" class="btn btn-secondary">
             Insertar página aquí
         </a>

@@ -159,9 +159,9 @@
         $opciones_menus['quices/editar'] = array('recursos', 'quices', 'quices');
         $opciones_menus['quices/temas'] = array('recursos', 'quices', 'quices');
 
-        $opciones_menus['paginas/explorar'] = array('recursos', 'paginas', 'páginas');
+        $opciones_menus['admin/paginas/explore'] = array('recursos', 'paginas', 'páginas');
         $opciones_menus['paginas/asignar'] = array('recursos', 'paginas', 'páginas');
-        $opciones_menus['paginas/ver'] = array('recursos', 'paginas', 'páginas');
+        $opciones_menus['paginas/ver/'] = array('recursos', 'paginas', 'páginas');
         $opciones_menus['paginas/editar'] = array('recursos', 'paginas', 'páginas');
         $opciones_menus['paginas/nuevo'] = array('recursos', 'paginas', 'páginas');
 
@@ -348,7 +348,7 @@
                     </a>
                 </li>
                 <li><a href="<?= base_url()?>quices/explorar" class="<?= $clase_sm['quices'] ?>"><i class="fa fa-question"></i><span>quices</span></a></li>
-                <li><a href="<?= base_url()?>paginas/explorar" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-file"></i><span>páginas</span></a></li> <!-- subitem -->
+                <li><a href="<?= base_url()?>admin/paginas/explore" class="<?= $clase_sm['paginas'] ?>"><i class="fa fa-file"></i><span>páginas</span></a></li> <!-- subitem -->
                 <li><a href="<?= base_url()?>recursos/archivos" class="<?= $clase_sm['archivos'] ?>"><i class="fa fa-folder"></i><span>archivos</span></a></li> <!-- subitem -->
                 <li>
                     <a href="<?= base_url()?>recursos/links" class="<?= $clase_sm['links'] ?>">

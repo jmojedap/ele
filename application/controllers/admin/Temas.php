@@ -790,7 +790,7 @@ public $url_controller = URL_ADMIN . 'temas/';
             $resultado['mensaje'] = 'La página fue quitada del tema, pero todavía se encuentra en la plataforma sin tema asignado';
             $this->session->set_flashdata('resultado', $resultado);
             
-            redirect("temas/paginas/{$tema_id}");
+            redirect("admin/temas/paginas/{$tema_id}");
     }
     
     /**
