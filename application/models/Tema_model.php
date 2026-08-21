@@ -1655,7 +1655,6 @@ class Tema_Model extends CI_Model{
         //Si no hay error
             if ( $error_text == '' )
             {
-                //Guardar en tabla item
                 $this->db->where('referente_1_id', $row_data[0]);   //ID tema
                 $this->db->where('tipo_id', 121);   //Tipo pregunta abierta
                 if ( strlen($row_data[1]) > 0 ) $this->db->where('referente_2_id', $row_data[1]);

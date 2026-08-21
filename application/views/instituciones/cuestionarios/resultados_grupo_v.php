@@ -4,6 +4,9 @@
     $total_correctas = 0;
 ?>
 
+<?php $this->load->view('head_includes/highcharts') ?>
+<?php $this->load->view('head_includes/grafico_grupo') ?>
+
 <div class="row">
     <div class="col col-md-4">
         <p>

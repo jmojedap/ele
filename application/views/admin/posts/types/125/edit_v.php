@@ -99,7 +99,7 @@ function uploadImage(file, callback) {
 
 
                         <div class="mb-3">
-                            <textarea name="contenido" id="field-contenido"><?= $row->contenido ?></textarea>
+                            <textarea name="contenido" id="field-contenido"><?= $contenido ?></textarea>
                         </div>
 
                         <div class="mb-3 row">

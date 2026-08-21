@@ -927,8 +927,9 @@ class Instituciones extends CI_Controller
     }
     
     /**
-     * Muestra el resultado obtenido por los grupos de una institución en la ejecución de un cuestionario,
-     * los resultados se muestran en un gráfico.
+     * Muestra el resultado obtenido por los grupos de una institución en la ejecución
+     * de un cuestionario, los resultados se muestran en un gráfico.
+     * 2026-06-26
      */
     function resultados_grupo($institucion_id, $cuestionario_id = NULL)
     {
@@ -942,11 +943,6 @@ class Instituciones extends CI_Controller
             //Sí tiene, cuestionario asosciados
             $cuestionario_id = $this->Pcrn->si_nulo($cuestionario_id, $data['cuestionarios']->row()->id);
             $view_a = 'instituciones/cuestionarios/resultados_grupo_v';
-            
-            //Head includes específicos para la página, para gráficos
-                $head_includes[] = 'highcharts';
-                $head_includes[] = 'grafico_grupo';
-                $data['head_includes'] = $head_includes;
 
             //Variables para el gráfico
 

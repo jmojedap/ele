@@ -169,12 +169,12 @@ class Estadisticas extends CI_Controller{
             $data['destino_exportar'] = "estadisticas/login_diario_exportar/";
         
         //Cargar vista
-            $data['titulo_pagina'] = 'Estadísticas';
-            $data['subtitulo_pagina'] = 'Login diario';
-            $data['vista_b'] = 'estadisticas/login/login_diario_v';
-            $data['vista_submenu'] = 'estadisticas/login/login_submenu_v';
+            $data['head_title'] = 'Estadísticas';
+            $data['head_subtitle'] = 'Login diario';
+            $data['view_a'] = 'estadisticas/login/login_diario_v';
+            $data['nav_2'] = 'estadisticas/login/login_nav2_v';
         
-        $this->load->view(PTL_ADMIN, $data);
+        $this->load->view(TPL_ADMIN_NEW, $data);
     }
     
     /**

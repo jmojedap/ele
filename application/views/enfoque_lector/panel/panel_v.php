@@ -1,39 +1,32 @@
 <link rel="stylesheet" href="<?= URL_RESOURCES ?>css/enfoque_lector.css"/>
+<?php $this->load->view('enfoque_lector/style_v') ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 <?php $this->load->view('assets/bootstrap_datepicker'); ?>
-
-<?php if ( strlen($row->archivo_fondo) > 0 ) : ?>
-    <!-- PERSONALIZAR FONDO DEL PANEL -->
-    <style>
-        .inicio {
-            background-image: url('<?= URL_CONTENT . 'fondos_enfoque_lector/' . $row->archivo_fondo ?>');
-        }
-    </style>
-<?php endif; ?>
 
 <div id="enfoqueLectorApp">
     <div class="container my-2" v-show="seccion != 'inicio'">
         <div class="d-flex">
-            <button class="btn btn-primary btn-circle text-white" v-on:click="seccion = 'inicio'">
-                <i class="fas fa-arrow-left"></i>
+            <button type="button" class="btn btn-primary btn-circle text-white panel-back-button"
+                aria-label="Volver al inicio" title="Volver al inicio" v-on:click="seccion = 'inicio'">
+                <i class="fas fa-arrow-left" aria-hidden="true"></i>
             </button>
 
-            <div class="text-center w-100" v-show="seccion == 'ritmo-lector'">
-                <h3 class="text-center titulo-seccion">
+            <div class="panel-section-heading text-center w-100" v-show="seccion == 'ritmo-lector'">
+                <h3 class="titulo-seccion">
                     <img src="<?= URL_IMG ?>enfoque_lector/icono-ritmo-lector.png" alt="Icono ritmo lector" class="w40p me-3">
                     Ritmo lector
                 </h3>
             </div>
 
-            <div class="text-center w-100" v-show="seccion == 'practica-lectora-2'">
-                <h3 class="text-center titulo-seccion">
+            <div class="panel-section-heading text-center w-100" v-show="seccion == 'practica-lectora-2'">
+                <h3 class="titulo-seccion">
                     <img src="<?= URL_IMG ?>enfoque_lector/icono-practica-lectora.png" alt="Icono práctica lectora" class="w40p me-3">
                     Práctica lectora 2
                 </h3>
             </div>
 
-            <div class="text-center w-100" v-show="seccion == 'practica-lectora-3'">
-                <h3 class="text-center titulo-seccion">
+            <div class="panel-section-heading text-center w-100" v-show="seccion == 'practica-lectora-3'">
+                <h3 class="titulo-seccion">
                     <img src="<?= URL_IMG ?>enfoque_lector/icono-practica-lectora.png" alt="Icono práctica lectora" class="w40p me-3">
                     Práctica lectora 3
                 </h3>
@@ -49,54 +42,54 @@
                 <h1 class="principal fw-bold">Bienvenido</h1>
                 <h2 class="subtitulo"><?= $row->titulo_contenido ?></h2>
             </div>
-            <div class="d-flex flex-wrap">
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setVerLibro()">
+            <nav class="panel-navigation" aria-label="Secciones del enfoque lector">
+                <button type="button" class="btn-el-1 panel-nav-item d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setVerLibro()">
                     <div class="only-lg">
-                        <i class="fas fa-chevron-circle-right"></i>
+                        <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
                     </div>
                     <div class="ms-1">
                         Ver libro
                     </div>
-                </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'ritmo-lector'">
+                </button>
+                <button type="button" class="btn-el-1 panel-nav-item d-flex animate__animated animate__bounceIn animate__slow" v-on:click="seccion = 'ritmo-lector'">
                     <div class="only-lg">
-                        <i class="fas fa-chevron-circle-right"></i>
-                    </div>
-                    <div class="ms-1">
-                        Velocidad <br> lectora
-                    </div>
-                </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('practicas_lectoras')"
-                    v-bind:class="{'active': contenido == 'practicas_lectoras' }"
-                >
-                    <div class="only-lg">
-                        <i class="fas fa-chevron-circle-right"></i>
-                    </div>
-                    <div class="ms-1">
-                        Actividades
-                    </div>
-                </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
-                    v-bind:class="{'active': contenido == 'lecturas' }"
-                >
-                    <div class="only-lg">
-                        <i class="fas fa-chevron-circle-right"></i>
+                        <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
                     </div>
                     <div class="ms-1">
                         Ritmo lector
                     </div>
-                </a>
-                <a class="btn-el-1 d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('juegos_descargables')"
+                </button>
+                <button type="button" class="btn-el-1 panel-nav-item d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('practicas_lectoras')"
+                    v-bind:class="{'active': contenido == 'practicas_lectoras' }"
+                >
+                    <div class="only-lg">
+                        <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
+                    </div>
+                    <div class="ms-1">
+                        Actividades
+                    </div>
+                </button>
+                <button type="button" class="btn-el-1 panel-nav-item d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('lecturas')"
+                    v-bind:class="{'active': contenido == 'lecturas' }"
+                >
+                    <div class="only-lg">
+                        <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
+                    </div>
+                    <div class="ms-1">
+                        Velocidad <br> lectora
+                    </div>
+                </button>
+                <button type="button" class="btn-el-1 panel-nav-item d-flex animate__animated animate__bounceIn animate__slow" v-on:click="setContenido('juegos_descargables')"
                     v-bind:class="{'active': contenido == 'juegos_descargables' }"
                 >
                     <div class="only-lg">
-                        <i class="fas fa-chevron-circle-right"></i>
+                        <i class="fas fa-chevron-circle-right" aria-hidden="true"></i>
                     </div>
                     <div class="ms-1">
                         Recursos <br> descargables
                     </div>
-                </a>
-            </div>
+                </button>
+            </nav>
         </div>
         <div class="contenidos">
             <!-- CONTENIDO LECTURAS -->
@@ -123,7 +116,7 @@
                             </div>
                             <div class="text-center">
                                 <div>
-                                    <p class="lead">{{ herramienta.texto }}NO</p>
+                                    <p class="lead">{{ herramienta.texto }}</p>
                                 </div>
                             </div>
                         </div>
@@ -132,7 +125,7 @@
             </div>
 
             <!-- CONTENIDO PRÁCTICAS LECTORAS -->
-            <div class="container_no" v-show="contenido == 'practicas_lectoras'">
+            <div class="container" v-show="contenido == 'practicas_lectoras'">
                 <h3 class="titulo-subseccion">Selecciona la práctica que deseas realizar</h3>
                 <div class="d-flex justify-content-center flex-wrap">
                     <div v-for="herramienta in practicasLectoras" v-on:click="seccion = herramienta.seccion"
@@ -150,49 +143,9 @@
                 </div>
             </div>
 
-            <!-- CONTENIDO JUEGOS DESCARGABLES DESCARGABLES -->
+            <!-- CONTENIDO JUEGOS DESCARGABLES -->
             <div class="container" v-show="contenido == 'juegos_descargables'">
-                <h3 class="text-center mb-5" style="color:white;">Selecciona el archivo que vas a ver o descargar</h3>
-                <div class="center_box_750">
-                    <p class="text-center" style="color:white;" v-show="archivosDescargables.length == 0">Todavía no hay archivos asignados a este contenido</p>
-                    <table class="table archivos-descargables">
-                        <tbody>
-                            <tr v-for="(archivo, keyArchivo) in archivosDescargables">
-                                <td width="10px">{{ keyArchivo + 1 }}</td>
-                                <td>
-                                    {{ archivo.title }}
-                                    <div class="only-sm">
-                                        <a v-bind:href="archivo.url" target="_blank" title="Ver archivo">
-                                            Abrir
-                                        </a>
-                                        &middot;
-                                        <a v-bind:href="archivo.url" target="_blank" title="Descargar archivo" download>
-                                            Descargar
-                                        </a>
-                                    </div>
-                                </td>
-                                <?php if ( $this->session->userdata('srol') == 'institucional' ) : ?>
-                                    <td width="10px">
-                                        <button class="btn btn-light btn-sm" title="Programar archivo a grupo"
-                                            data-bs-toggle="modal" data-bs-target="#modal-asignar-archivo" v-on:click="setCurrentArchivo(keyArchivo)">
-                                            <i class="fas fa-calendar-plus"></i>
-                                        </button>
-                                    </td>
-                                <?php endif; ?>
-                                <td width="10px" class="only-lg">
-                                    <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Ver archivo">
-                                        <i class="fas fa-external-link-alt"></i>
-                                    </a>
-                                </td>
-                                <td width="10px" class="only-lg">
-                                    <a v-bind:href="archivo.url" class="btn btn-light btn-sm" target="_blank" title="Descargar archivo" download>
-                                        <i class="fas fa-download"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <?php $this->load->view('enfoque_lector/panel/juegos_descargables_v') ?>
             </div>
         </div>
     </div>

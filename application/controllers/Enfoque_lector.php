@@ -89,4 +89,34 @@ public $url_controller = URL_APP . 'enfoque_lector/';
 
         $this->App_model->view('templates/easypml/empty', $data);
     }
+
+// Plan Lector Panel y Herramientas
+//-----------------------------------------------------------------------------
+    
+    /**
+     * Vista panel principal de lectura de contenidos módulo plan lector
+     * 2024-02-19
+     */
+    function panel_plan_lector($post_id)
+    {
+        $data = $this->Post_model->basic($post_id);
+        $data['row'] = $this->Post_model->row($post_id, 'plan_lector');
+
+        //Lecturas dinámicas
+            $idsCondition = 'id = 0';
+            if ( strlen($data['row']->lecturas) > 0 ) {
+                $idsCondition = "id IN ({$data['row']->lecturas})";
+            } 
+            
+            $this->db->select('id, nombre_post');
+            $this->db->where($idsCondition);
+            $data['lecturas'] = $this->db->get('post');
+
+        //Archivos de enfoque lector tipo 10
+        $data['files'] = $this->Post_model->files($post_id, 'album_id = 10');
+
+        $data['head_title'] = 'Plan Lector';
+        $data['view_a'] = 'plan_lector/panel/panel_v';
+        $this->App_model->view('templates/easypml/full', $data);
+    }
 }

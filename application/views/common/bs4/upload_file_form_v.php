@@ -15,7 +15,7 @@
                 </button>
             </div>
         </div>
-    <fieldset>
+    </fieldset>
 </form>
 
 <div id="upload_response"></div>

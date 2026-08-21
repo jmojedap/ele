@@ -59,7 +59,7 @@
             <h1 class="articulo-titulo"><?= $row->nombre_post ?></h1>
             <p class="subtitulo">{{ articulo.subtitle }}</p>
             <p class="epigrafe" v-show="articulo.resumen.length > 1">{{ articulo.resumen }}</p>
-            <div class="contenido" v-html="articulo.contenido"></div>
+            <div class="contenido" v-html="contenido"></div>
         </div>
     </div>    
 </div>
@@ -72,6 +72,7 @@ var readArticleApp = new Vue({
     },
     data: {
         articulo: <?= json_encode($row) ?>,
+        contenido: "<?= $contenido ?>",
         loading: false,
     },
     methods: {

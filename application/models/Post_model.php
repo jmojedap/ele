@@ -69,6 +69,8 @@ class Post_model extends CI_Model{
         $arr_select['lectura_dinamica'] = 'id, nombre_post';
         $arr_select['enfoque_lector'] = 'id, nombre_post AS titulo_contenido, tipo_id, texto_1 AS lecturas, 
             texto_2 AS archivo_fondo, integer_1 AS nivel';
+        $arr_select['plan_lector'] = 'id, nombre_post AS titulo_contenido, tipo_id, texto_1 AS lecturas, 
+            texto_2 AS archivo_fondo, integer_1 AS nivel';
 
         return $arr_select[$format];
     }
@@ -227,7 +229,7 @@ class Post_model extends CI_Model{
 
     /**
      * Guardar un registro en la tabla posts
-     * 2022-07-27
+     * 2026-08-20
      */
     function save($arr_row = null)
     {
@@ -250,6 +252,14 @@ class Post_model extends CI_Model{
         }
 
         $data['saved_id'] = $post_id;
+
+        if ( $post_id > 0 ) {
+            // Actualizar archivo de contenido txt
+            if ( isset($arr_row['contenido']) ) {
+                $data['file_content_info'] = $this->save_file_contenido($post_id, $arr_row['contenido']);
+            }
+        }
+
         return $data;
     }
 
@@ -472,6 +482,84 @@ class Post_model extends CI_Model{
         $files = $this->db->get('files');
 
         return $files;
+    }
+
+// CONTENIDO POST EN ARCHIVO TXT
+//-----------------------------------------------------------------------------
+
+    /**
+     * Guardar contenido de un post en un archivo .txt, y actualizar el registro en la tabla post
+     * 2026-08-20
+     */
+    function save_file_contenido($post_id, $content)
+    {
+        // Estado inicial: se mantiene como fallido hasta comprobar que el archivo
+        // fue escrito correctamente.
+        $data = array('status' => 0, 'file_path' => '');
+
+        // Verificar que el post exista antes de construir la ruta del archivo.
+        $row_post = $this->Db_model->row_id('post', $post_id);
+        if ( is_null($row_post) || ! is_string($content) )
+        {
+            return $data;
+        }
+
+        // Organizar los archivos por el año de creación del post.
+        $year_created = date('Y', strtotime($row_post->creado));
+        $folder_path = FCPATH . "content/posts_contenido/{$year_created}/";
+        $file_name = "post_{$post_id}.txt";
+        $file_path = $folder_path . $file_name;
+
+        // Crear la carpeta si todavía no existe. El tercer parámetro permite
+        // crear también cualquier carpeta intermedia necesaria.
+        if ( ! is_dir($folder_path) && ! mkdir($folder_path, 0755, TRUE) )
+        {
+            return $data;
+        }
+
+        // Guardar el contenido tal como llega, normalmente en UTF-8. LOCK_EX
+        // evita que dos procesos escriban el mismo archivo simultáneamente.
+        $bytes_written = file_put_contents($file_path, $content, LOCK_EX);
+
+        // file_put_contents() devuelve FALSE cuando no puede escribir. No se
+        // debe actualizar la ruta ni informar éxito en ese caso.
+        if ( $bytes_written === FALSE )
+        {
+            return $data;
+        }
+
+        // Registrar la ubicación del archivo únicamente después de confirmar
+        // que la escritura terminó correctamente.
+        $arr_row['contenido_ruta'] = $file_path;
+        $this->db->where('id', $post_id);
+        $this->db->update('post', $arr_row);
+
+        // Informar al llamador que el archivo fue guardado correctamente.
+        $data['status'] = 1;
+        $data['file_path'] = $file_path;
+
+        return $data;
+    }
+
+    /**
+     * Leer el contenido de un archivo .txt asociado a un post, según la ruta
+     * almacenada en la tabla post. Devuelve una cadena vacía si no puede leer
+     * el archivo o si no existe.
+     * 2026-08-20
+     */
+    function read_file_contenido($post_id)
+    {
+        $row_post = $this->Db_model->row_id('post', $post_id);
+        if ( is_null($row_post) || ! isset($row_post->contenido_ruta) || ! file_exists($row_post->contenido_ruta) )
+        {
+            return '';
+        }
+
+        // Leer el contenido del archivo y devolverlo. file_get_contents() devuelve
+        // FALSE si no puede leer el archivo, pero aquí se devuelve una cadena vacía
+        // en ese caso.
+        $content = file_get_contents($row_post->contenido_ruta);
+        return $content !== FALSE ? $content : '';
     }
 
 // POST INFO

@@ -53,7 +53,6 @@ public $url_controller = 'temas/';
             
             $data['view_a'] = $this->views_folder . 'lectura_dinamica/lectura_dinamica_v';
             $data['head_title'] = $data['ledin']->nombre_post;
-            //$data['subtitle_head'] = 'Lecturas dinámicas';
             $this->load->view('templates/easypml/empty', $data);
         }
     }

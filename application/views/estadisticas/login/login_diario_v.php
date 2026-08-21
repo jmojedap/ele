@@ -1,3 +1,5 @@
+<?php $this->load->view('assets/highcharts') ?>
+
 <?php
     //Variables gráfico
         $primera_fila = $serie->row();
@@ -73,8 +75,6 @@ $(function () {
 <?php
     $promedio = $this->Pcrn->dividir($sum_cant_usuarios, $serie->num_rows());
 ?>
-
-<?php $this->load->view($vista_submenu); ?>
 
 <div class="row">
     <div class="col col-md-9">

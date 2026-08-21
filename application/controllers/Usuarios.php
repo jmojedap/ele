@@ -1626,10 +1626,10 @@ class Usuarios extends CI_Controller{
     function actividad_links($usuario_id, $flipbook_id = NULL)
     {
         $data = $this->Usuario_model->basico($usuario_id);
-        //$data['estudiantes'] = $this->Usuario_model->estudiantes($usuario_id);
 
         //Flipbooks
             $flipbooks = $this->Usuario_model->flipbooks($data['row']);
+            $options_flipbook = array();
             foreach( $flipbooks->result() as $row_flipbook ) {
                 $options_flipbook['0' . $row_flipbook->flipbook_id] = $this->App_model->nombre_flipbook($row_flipbook->flipbook_id);
             }

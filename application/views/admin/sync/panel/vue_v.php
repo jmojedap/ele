@@ -18,7 +18,6 @@ var syncPanelApp = new Vue({
     el: '#syncPanelApp',
     data: {
         env: '<?= ENV ?>',
-        //env: 'development',
         loading: false,
         fields: {},
         currentIndex: 0,

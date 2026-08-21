@@ -378,4 +378,13 @@ class App extends CI_Controller{
         //Salida JSON
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
+
+    /**
+     * Muestra información de PHP
+     * 2026-08-14
+     */
+    function php_info()
+    {
+        phpinfo();
+    }
 }

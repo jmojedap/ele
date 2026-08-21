@@ -50,7 +50,8 @@ class Unidades extends CI_Controller{
     function files($postId)
     {
         $data = $this->Post_model->basic($postId);
-        $condition = null;
+        // Esta vista administra los archivos del álbum de archivos de la unidad.
+        $condition = 'album_id = 10';
         if ( null !== $this->input->post('condition') ) {
             $condition = $this->input->post('condition');
         }

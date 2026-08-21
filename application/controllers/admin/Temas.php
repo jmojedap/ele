@@ -1219,32 +1219,27 @@ public $url_controller = URL_ADMIN . 'temas/';
 
     /**
      * Vista formulario importación de lecturas ledins para temas
-     * 2019-10-17
+     * 2026-08-17
      */
     function importar_lecturas_dinamicas()
     {
-        //Iniciales
-            $nombre_archivo = '32_formato_cargue_lecturas.xlsx';
-            $parrafos_ayuda = array();
-        
-        //Instructivo
-            $data['titulo_ayuda'] = '¿Cómo importar lecturas dinámicas?';
-            $data['nota_ayuda'] = 'Se importarán lecturas dinámicas asociadas a cada tema';
-            $data['parrafos_ayuda'] = $parrafos_ayuda;
-        
-        //Variables específicas
-            $data['destino_form'] = 'admin/temas/importar_lecturas_dinamicas_e';
-            $data['nombre_archivo'] = $nombre_archivo;
-            $data['nombre_hoja'] = 'lecturas';
-            $data['url_archivo'] = base_url("assets/formatos_cargue/{$nombre_archivo}");
-            
-        //Variables generales
+            //Configuración
+            $data['help_note'] = '¿Cómo importar lecturas dinámicas?';
+            $data['help_tips'] = array(
+                'Se importarán lecturas dinámicas asociadas a cada tema',
+            );
+            $data['template_file_name'] = '32_formato_cargue_lecturas.xlsx';
+            $data['url_file'] = base_url("assets/formatos_cargue/{$data['template_file_name']}");
+            $data['sheet_name'] = 'temas_preguntas';
+            $data['destination_form'] = 'admin/temas/importar_lecturas_dinamicas_e';
+
+        //Vista
             $data['head_title'] = 'Temas';
             $data['head_subtitle'] = 'Importar lecturas dinámicas';
-            $data['view_a'] = 'comunes/bs4/importar_v';
+            $data['view_a'] = 'common/import_v';
             $data['nav_2'] = $this->views_folder . 'menus/explore_v';
             $data['nav_3'] = $this->views_folder  . 'menus/importar_v';
-        
+            
         $this->load->view(TPL_ADMIN_NEW, $data);
     }
     

@@ -241,6 +241,30 @@ class Posts extends CI_Controller{
 //-----------------------------------------------------------------------------
 
     /**
+     * Genera archivos de contenido para los posts que no tienen ruta generada
+     * 2026-08-21
+     */
+    function generar_archivos_contenido($limit = 10)
+    {
+        // Seleccionar 10 posts más grandes por contenido_largo, sin ruta generada
+        $this->db->select('id, contenido, contenido_largo');
+        $this->db->order_by('contenido_largo', 'DESC');
+        $this->db->where('contenido_ruta =', '');
+        $this->db->limit($limit);
+        $posts = $this->db->get('post');
+
+        $posts_procesados = [];
+        foreach ($posts->result() as $post)
+        {
+            $posts_procesados[] = $this->Post_model->save_file_contenido($post->id, $post->contenido);
+        }
+
+        $data['posts_procesados'] = $posts_procesados;
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+
+    /**
      * Actualización del campo posts.qty_read, masiva, todos los posts
      * 2020-11-11
      */

@@ -77,7 +77,7 @@
                 <hr>
                 <div>
                     <h4 class="text-muted">Contenido</h4>
-                    <?= $row->contenido ?>
+                    <?= $contenido ?>
                 </div>
                 <hr>
                 <div>

@@ -307,7 +307,7 @@ class Chat_model extends CI_Model {
                         ]
                     ]
                 ],
-                'modelVersion' => 'gemini-2.0-flash-lite',
+                'modelVersion' => 'gemini-2.5-flash-lite',
                 'usageMetadata' => [
                     'promptTokenCount' => 10,
                     'candidatesTokenCount' => 20

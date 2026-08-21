@@ -253,8 +253,8 @@ class File_model extends CI_Model{
         $this->load->helper('string');  //Para activar función random_string
         
         $config['upload_path'] = PATH_UPLOADS . date('Y/m');    //Carpeta año y mes
-        $config['allowed_types'] = 'zip|gif|jpg|png|jpeg|pdf|json';
-        $config['max_size']	= '50000';       //Tamaño máximo en Kilobytes
+        $config['allowed_types'] = 'zip|gif|jpg|png|jpeg|pdf|json|mp4|avi|mov';
+        $config['max_size']	= '200000';      //Tamaño máximo en Kilobytes
         $config['max_width']  = '10000';     //Ancho máxima en pixeles
         $config['max_height']  = '10000';    //Altura máxima en pixeles
         $config['file_name']  = $user_id . '_' . date('YmdHis') . '_' . random_string('numeric', 2);
@@ -527,7 +527,7 @@ class File_model extends CI_Model{
      */
     function get_position($arr_row)
     {
-        $condition = "table_id = {$arr_row['table_id']} AND related_1 = {$arr_row['related_1']}";
+        $condition = "table_id = {$arr_row['table_id']} AND related_1 = {$arr_row['related_1']} AND album_id = {$arr_row['album_id']}";
         $num_rows = $this->Db_model->num_rows('files', $condition);
 
         $position = $num_rows;
@@ -545,32 +545,38 @@ class File_model extends CI_Model{
 
         //Identificar file
         $file = $this->Db_model->row_id('files', $file_id);
+        if ( is_null($file) ) return $data;
 
-        //Establecer posición máxima, según número de elementos
-        $condition = "table_id = {$file->table_id} AND related_1 = {$file->related_1} AND album_id = {$file->album_id}";
-        $max_position = $this->Db_model->num_rows('files', $condition);
+        $new_position = intval($new_position);
 
-        if ( $new_position >= 0 && $new_position < $max_position ) {
-            if ( $new_position > $file->position ) {
-                //Si la posición aumenta, modificar anteriores
-                $sql = "UPDATE files SET position = (position-1)
-                    WHERE table_id = {$file->table_id} AND related_1 = {$file->related_1}
-                    AND position <= {$new_position} AND position > {$file->position} AND position > 0";
-                $this->db->query($sql);
+        //Obtener únicamente los archivos del mismo post y álbum, ordenados actualmente.
+        $this->db->where('table_id', $file->table_id);
+        $this->db->where('related_1', $file->related_1);
+        $this->db->where('album_id', $file->album_id);
+        $this->db->order_by('position', 'ASC');
+        $this->db->order_by('id', 'ASC');
+        $files = $this->db->get('files')->result();
 
-            } else if ( $new_position < $file->position ) {
-                //Si la posición disminuye, modificar siguientes
-                $sql = "UPDATE files SET position = (position+1)
-                WHERE table_id = {$file->table_id} AND related_1 = {$file->related_1}
-                AND position >= {$new_position} AND position < {$file->position}";
-                $this->db->query($sql);
+        $max_position = count($files);
+        if ( $new_position < 0 || $new_position >= $max_position ) return $data;
+
+        //Construir el nuevo orden y normalizar las posiciones desde cero.
+        $ordered_files = array();
+        foreach ( $files as $item ) {
+            if ( intval($item->id) != intval($file_id) ) {
+                $ordered_files[] = $item;
             }
-    
-            //Actualizar position, del archivo
-            $this->db->query("UPDATE files SET position = {$new_position} WHERE id = {$file_id}");
-    
-            if ( $this->db->affected_rows() > 0) $data['status'] = 1;
         }
+        array_splice($ordered_files, $new_position, 0, array($file));
+
+        $this->db->trans_start();
+        foreach ( $ordered_files as $position => $item ) {
+            $this->db->where('id', $item->id);
+            $this->db->update('files', array('position' => $position));
+        }
+        $this->db->trans_complete();
+
+        if ( $this->db->trans_status() ) $data['status'] = 1;
 
         return $data;
     }

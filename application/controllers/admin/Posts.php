@@ -87,6 +87,7 @@ class Posts extends CI_Controller{
 
     /**
      * Abrir o redireccionar a la vista pública de un post
+     * 2026-08-17
      */
     function open($post_id, $meta_id = 0)
     {
@@ -94,7 +95,9 @@ class Posts extends CI_Controller{
         //$row_meta = $this->Db_model->row_id('users_meta', $meta_id); //Registro de asignación
         $destination = "admin/posts/read/{$post_id}";
 
+        if ( $row->tipo_id == 125 ) $destination = "temas/lectura_dinamica/{$row->id}/";
         if ( $row->tipo_id == 127 ) $destination = "enfoque_lector/panel/{$row->id}/";
+        if ( $row->tipo_id == 128 ) $destination = "enfoque_lector/panel_plan_lector/{$row->id}/";
         
         redirect($destination);
     }
@@ -119,6 +122,7 @@ class Posts extends CI_Controller{
     {        
         //Datos básicos
         $data = $this->Post_model->basic($post_id);
+        $data['contenido'] = $this->Post_model->read_file_contenido($post_id);
         $data['back_link'] = $this->url_controller . 'explore';
         $data['view_a'] = $data['type_folder'] . 'info_v';
 
@@ -187,6 +191,13 @@ class Posts extends CI_Controller{
         //Datos básicos
         $data = $this->Post_model->basic($post_id);
 
+        if ( $data['row']->contenido_ruta == '' ) {
+            // No existe, crear archivo de contenido
+            $data['contenido'] = $this->Post_model->save_file_contenido($post_id, $data['row']->contenido);
+        }
+
+        $data['contenido'] = $this->Post_model->read_file_contenido($post_id);
+
         $data['arrType'] = $this->Item_model->arr_options('categoria_id = 33');
         $data['arrStatus'] = $this->Item_model->arr_options('categoria_id = 42');
         
@@ -250,7 +261,8 @@ class Posts extends CI_Controller{
     function files($post_id)
     {
         $data = $this->Post_model->basic($post_id);
-        $condition = null;
+        // Esta vista administra los archivos del álbum de archivos del post.
+        $condition = 'album_id = 10';
         if ( null !== $this->input->post('condition') ) {
             $condition = $this->input->post('condition');
         }

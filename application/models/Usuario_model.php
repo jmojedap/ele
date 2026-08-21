@@ -2289,8 +2289,8 @@ class Usuario_model extends CI_Model{
      * Inserta masivamente estudiantes en un grupo
      * en la tabla usuario
      * 
-     * @param type $grupo_id
-     * @param type $usuarios    Array con los datos de los usuarios
+     * @param int $grupo_id
+     * @param array $usuarios    Array con los datos de los usuarios
      * @return type
      */
     function insert_estudiantes($grupo_id, $usuarios)

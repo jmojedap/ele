@@ -1,9 +1,9 @@
 <?php
     $display_monitoria = false;
-    if ( in_array($this->session->userdata('institucion_id'), [5]) ) {
+    /*if ( in_array($this->session->userdata('institucion_id'), [5]) ) {
         $display_monitoria = true;
-    }
-    if ( in_array($this->session->userdata('rol_id'), [0,1,2]) ) {
+    }*/
+    if ( in_array($this->session->userdata('rol_id'), [0,1,2,3,4,5]) ) {
         $display_monitoria = true;
     }
 ?>
@@ -70,9 +70,16 @@
                 <span class="only-sm"><i class="fas fa-link"></i></span>
                 
             </button>
-            <ul class="dropdown-menu">
+            <!-- <ul class="dropdown-menu">
                 <li v-for="link in filteredLinks">
                     <a class="dropdown-item" v-bind:href="link.url" target="_blank">{{ link.titulo }}</a>
+                </li>
+            </ul> -->
+            <ul class="dropdown-menu">
+                <li v-for="link in filteredLinks">
+                    <a class="dropdown-item" 
+                    v-bind:href="`<?= base_url('admin/temas/open_link/') ?>` + currentArticulo.tema_id + `/` + link.id + `/` + flipbook.area_id + `/` + flipbook.nivel + `/?url_link=` + link.url + `&flipbook_id=` + flipbook.id"
+                    target="_blank">{{ link.titulo }}</a>
                 </li>
             </ul>
         </div>

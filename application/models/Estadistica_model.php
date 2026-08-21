@@ -285,15 +285,15 @@ class Estadistica_Model extends CI_Model{
 
     function ctn_correctas_incorrectas($filtros)
     {
-        $this->db->select('mes, SUM(cant_respondidas) AS sum_cant_respondidas, SUM(cant_correctas) AS sum_cant_correctas');
-        $this->db->where("mes >= '2019-01'");
+        $this->db->select('periodo_id, SUM(cant_respondidas) AS sum_cant_respondidas, SUM(cant_correctas) AS sum_cant_correctas');
+        $this->db->where("periodo_id >= '202401'");
         
         if ( strlen($filtros['i']) > 0 ) { $this->db->where("institucion_id = {$filtros['i']}"); }
         //if ( strlen($filtros['n']) > 0 ) { $this->db->where('nivel = ' . substr($filtros['n'], 1)); }   //Sin primer caracter (0)
         if ( strlen($filtros['a']) > 0 ) { $this->db->where("area_id = {$filtros['a']}"); }
 
-        $this->db->group_by('mes');
-        $this->db->order_by('mes', 'ASC');
+        $this->db->group_by('periodo_id');
+        $this->db->order_by('periodo_id', 'ASC');
         $query = $this->db->get('dw_usuario_pregunta');
 
         return $query;

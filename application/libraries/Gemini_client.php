@@ -19,7 +19,7 @@ class Gemini_client {
     function generate($request_settings)
     {
         // Solicitar respuesta a la API de Gemini
-        $request_settings['model_id'] = $request_settings['model'] ?? 'gemini-2.0-flash-lite';
+        $request_settings['model_id'] = $request_settings['model'] ?? 'gemini-2.5-flash-lite';
         $request_settings['generate_content_format'] = $request_settings['generate_content_format'] ?? 'generateContent';
         $request_settings['api_key'] = K_API_GEMINI;
 
@@ -136,7 +136,7 @@ class Gemini_client {
                         ]
                     ]
                 ],
-                'modelVersion' => 'gemini-2.0-flash-lite',
+                'modelVersion' => 'gemini-2.5-flash-lite',
                 'usageMetadata' => [
                     'promptTokenCount' => 10,
                     'candidatesTokenCount' => 20

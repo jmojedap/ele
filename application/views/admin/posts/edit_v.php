@@ -45,7 +45,7 @@
 
                     <div class="mb-3">
                         <label for="contenido">Contenido</label>
-                        <textarea name="contenido" class="summernote"><?= $row->contenido ?></textarea>
+                        <textarea name="contenido" class="summernote"><?= $contenido ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="contenido">Contenido incrustado (embed)</label>

@@ -259,11 +259,11 @@ class App_model extends CI_Model {
     /**
      * Array con los valores de posts.type_id, que tiene un formato especial
      * para menú, edición, y lectura en el administrador
-     * 2022-08-20
+     * 2026-08-17
      */
     function posts_special_types()
     {
-        $special_types = [60,125,126,127];
+        $special_types = [60,125,126,127,128];
         return $special_types;
     }
 
