@@ -1,5 +1,21 @@
 <IfModule mod_rewrite.c> 
-    RewriteEngine on 
+    RewriteEngine on
+
+    # Bloqueo temprano de exploraciones de WordPress.
+    # Esta aplicacion usa CodeIgniter y no publica estas rutas.
+    RewriteRule (^|/)(?:wp-admin|wp-content|wp-includes)(?:/|$) - [R=404,L,NC]
+    RewriteRule (^|/)(?:wp-login|xmlrpc|wp-cron)\.php(?:/|$) - [R=404,L,NC]
+
+    # Bloqueo de archivos y repositorios sensibles.
+    RewriteRule (^|/)(?:\.env(?:\.[^/]+)?|\.git|\.svn)(?:/|$) - [R=404,L,NC]
+
+    # Bloqueo de exploraciones conocidas de PHPUnit.
+    RewriteRule (^|/)(?:vendor/phpunit|phpunit)(?:/|$) - [R=404,L,NC]
+
+    # Impedir la descarga de archivos internos del proyecto.
+    RewriteRule (^|/)(?:composer\.(?:json|lock)|phpunit\.xml(?:\.dist)?)(?:/|$) - [R=404,L,NC]
+
+    # Enrutamiento normal de CodeIgniter.
     RewriteCond %{REQUEST_FILENAME} !-f 
     RewriteCond %{REQUEST_FILENAME} !-d 
     RewriteRule ^(.*)$ index.php?/$1 [L] 

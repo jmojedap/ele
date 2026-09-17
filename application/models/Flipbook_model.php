@@ -761,12 +761,12 @@ class Flipbook_model extends CI_Model {
 
     function paginas($flipbook_id)
     {
-        $this->db->select('pagina_id, num_pagina, pagina_flipbook.tema_id, archivo_imagen, nombre_tema, titulo_tema');
-        $this->db->select('archivo_imagen');
+        $this->db->select('flipbook_contenido.id AS contenido_id, pagina_id, num_pagina, pagina_flipbook.tema_id, titulo_pagina, archivo_imagen, nombre_tema, titulo_tema');
         $this->db->join('pagina_flipbook', 'flipbook_contenido.pagina_id = pagina_flipbook.id');
         $this->db->join('tema', 'pagina_flipbook.tema_id = tema.id', 'LEFT');
         $this->db->where('flipbook_id', $flipbook_id);
         $this->db->order_by('num_pagina', 'ASC');
+        $this->db->order_by('flipbook_contenido.id', 'ASC');
         $paginas = $this->db->get('flipbook_contenido');
 
         return $paginas;
@@ -1488,6 +1488,70 @@ class Flipbook_model extends CI_Model {
 
 //---------------------------------------------------------------------------------------------------
 // EDICIÓN DE FLIPBOOKS
+
+    /**
+     * Mueve una página a una posición específica dentro de un flipbook y
+     * normaliza el campo flipbook_contenido.num_pagina desde cero.
+     * 2026-09-17 Codex
+     *
+     * @param int $flipbook_id
+     * @param int $contenido_id ID de la relación en flipbook_contenido
+     * @param int $nueva_posicion
+     * @return array
+     */
+    function mover_pagina($flipbook_id, $contenido_id, $nueva_posicion)
+    {
+        $data = array(
+            'status' => 0,
+            'qty_affected' => 0,
+        );
+
+        $flipbook_id = intval($flipbook_id);
+        $contenido_id = intval($contenido_id);
+        $nueva_posicion = intval($nueva_posicion);
+
+        $this->db->select('id, pagina_id, num_pagina');
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->order_by('num_pagina', 'ASC');
+        $this->db->order_by('id', 'ASC');
+        $paginas = $this->db->get('flipbook_contenido')->result();
+
+        $cantidad_paginas = count($paginas);
+        if ( $cantidad_paginas == 0 || $nueva_posicion < 0 || $nueva_posicion >= $cantidad_paginas ) {
+            return $data;
+        }
+
+        $posicion_actual = NULL;
+        foreach ( $paginas as $posicion => $pagina ) {
+            if ( intval($pagina->id) == $contenido_id ) {
+                $posicion_actual = $posicion;
+                break;
+            }
+        }
+
+        if ( is_null($posicion_actual) ) return $data;
+
+        $pagina_movida = array_splice($paginas, $posicion_actual, 1);
+        array_splice($paginas, $nueva_posicion, 0, $pagina_movida);
+
+        $this->db->trans_start();
+        foreach ( $paginas as $posicion => $pagina ) {
+            if ( intval($pagina->num_pagina) != $posicion ) {
+                $this->db->where('id', $pagina->id);
+                $this->db->update('flipbook_contenido', array('num_pagina' => $posicion));
+                $data['qty_affected'] += 1;
+            }
+        }
+        $this->db->trans_complete();
+
+        if ( $this->db->trans_status() ) {
+            $data['status'] = 1;
+        } else {
+            $data['qty_affected'] = 0;
+        }
+
+        return $data;
+    }
 
     /**
      * Cambiar el orden de una página, modificando el campo flipbook_contenido.num_pagina

@@ -61,7 +61,7 @@
             <div v-show="mostrarResultado == true">
                 <div class="alert resultado text-center">
                     Leíste <b>{{ palabrasPorMinuto }}</b> palabras por minuto. 
-                    Mejora tu ritmo lector resolviendo el taller correspondiente en la sección Lecturas.
+                    <!-- Mejora tu ritmo lector resolviendo el taller correspondiente en la sección Lecturas. -->
                 </div>
             </div>
             

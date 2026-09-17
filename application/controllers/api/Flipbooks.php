@@ -28,7 +28,7 @@ class Flipbooks extends CI_Controller{
         $data = $this->Flipbook_model->get($filters, $num_page, $per_page);
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
-    
+
     /**
      * AJAX JSON
      * Eliminar un conjunto de flipbooks seleccionados
@@ -264,4 +264,50 @@ class Flipbooks extends CI_Controller{
         $this->output->set_content_type('application/json')->set_output(json_encode($data));
     }
 
+//GESTIÓN DE PÁGINAS DE FLIPBOOK
+//---------------------------------------------------------------------------------------------------
+
+    /**
+     * Mueve una página a una posición específica dentro de un flipbook.
+     * 2026-09-17
+     *
+     * @param int $flipbook_id
+     * @param int $contenido_id ID de la relación en flipbook_contenido
+     * @param int $nueva_posicion Posición basada en cero
+     */
+    function mover_pagina($flipbook_id, $contenido_id, $nueva_posicion)
+    {
+        $flipbook_id = intval($flipbook_id);
+        $contenido_id = intval($contenido_id);
+        $nueva_posicion = intval($nueva_posicion);
+
+        $data = $this->Flipbook_model->mover_pagina($flipbook_id, $contenido_id, $nueva_posicion);
+        $data['list'] = $this->Flipbook_model->paginas($flipbook_id)->result();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
+
+    /**
+     * Quita una página del flipbook sin eliminar el registro de la página.
+     *
+     * @param int $flipbook_id
+     * @param int $contenido_id ID de la relación en flipbook_contenido
+     */
+    function quitar_pagina($flipbook_id, $contenido_id)
+    {
+        $flipbook_id = intval($flipbook_id);
+        $contenido_id = intval($contenido_id);
+
+        $this->db->where('flipbook_id', $flipbook_id);
+        $this->db->where('id', $contenido_id);
+        $this->db->delete('flipbook_contenido');
+
+        $data['qty_deleted'] = $this->db->affected_rows();
+        if ( $data['qty_deleted'] > 0 ) {
+            $this->Flipbook_model->reenumerar_flipbook($flipbook_id);
+        }
+
+        $data['status'] = ($data['qty_deleted'] > 0) ? 1 : 0;
+        $data['list'] = $this->Flipbook_model->paginas($flipbook_id)->result();
+        $this->output->set_content_type('application/json')->set_output(json_encode($data));
+    }
 }

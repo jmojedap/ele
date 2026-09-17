@@ -345,7 +345,7 @@ class Flipbooks extends CI_Controller{
         
         //Solicitar vista
             //$data['cargado'] = FALSE;
-            $data['view_a'] = 'admin/flipbooks/paginas_v';
+            $data['view_a'] = 'admin/flipbooks/paginas/paginas_v';
             $this->load->view(TPL_ADMIN_NEW, $data);
     }
     

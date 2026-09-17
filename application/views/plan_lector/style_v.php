@@ -63,14 +63,15 @@
     }
 
     #enfoqueLectorApp .juego-descargable-card {
+        position: relative;
         display: flex;
         flex-direction: column;
-        min-height: 205px;
-        padding: 0.75rem;
+        min-height: 0;
+        padding: 0.45rem 0.55rem;
         color: #555;
         background-color: #fff;
         border: 1px solid #e8e8e8;
-        border-radius: 0.75rem;
+        border-radius: 0.65rem;
         box-shadow: 0 3px 8px rgba(21, 124, 193, 0.15);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
@@ -80,33 +81,50 @@
         box-shadow: 0 8px 18px rgba(21, 124, 193, 0.25);
     }
 
-    #enfoqueLectorApp .juego-descargable-icon {
-        margin: 0.5rem 0 0.35rem;
-        color: #d42839;
-        text-align: center;
-        font-size: 2.5rem;
-        line-height: 1;
-    }
-
     #enfoqueLectorApp .juego-descargable-title {
-        flex: 1;
-        margin-bottom: 0.75rem;
+        margin: 0 0 0.4rem;
+        padding: 0 2rem 0 0;
         overflow-wrap: anywhere;
         text-align: center;
+        font-size: 0.92rem;
         font-weight: 600;
+        line-height: 1.15;
     }
 
     #enfoqueLectorApp .juego-descargable-actions {
         display: flex;
-        gap: 0.5rem;
+        gap: 0.35rem;
     }
 
     #enfoqueLectorApp .juego-descargable-actions .btn {
         flex: 1;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+        line-height: 1.2;
+    }
+
+    #enfoqueLectorApp .juego-descargable-download {
+        flex: 0 0 auto;
+        padding: 0.25rem 0.45rem;
+        color: #5f6368;
+        background-color: #f1f3f4;
+        border-color: #d9dde1;
+        font-size: 0.8rem;
+    }
+
+    #enfoqueLectorApp .juego-descargable-download:hover,
+    #enfoqueLectorApp .juego-descargable-download:focus {
+        color: #495057;
+        background-color: #e2e6ea;
+        border-color: #c8cdd2;
     }
 
     #enfoqueLectorApp .juego-descargable-schedule {
+        position: absolute;
+        top: 0.4rem;
+        right: 0.45rem;
         flex: 0 0 auto;
+        z-index: 1;
     }
 
     #enfoqueLectorApp .panel-download-title,
